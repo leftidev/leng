@@ -1,11 +1,15 @@
 #include "window.h"
+#include "shader.h"
 
 #include <string>
 #include <iostream>
 
 int main() {
     leng::Window window("leng++", 800, 600);
+    window.set_vsync(true);
 
+    leng::Shader vertex_shader("assets/shaders/pong.vert", GL_VERTEX_SHADER);
+    
     bool running = true;
     SDL_Event event;
     while (running) {

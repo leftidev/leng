@@ -53,4 +53,8 @@ void Window::swap_window() {
     SDL_GL_SwapWindow(window);
 }
 
+void Window::set_vsync(bool flag) {
+    SDL_GL_SetSwapInterval(flag);
+}
+    
 } // namespace leng

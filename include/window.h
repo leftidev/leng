@@ -11,7 +11,8 @@ public:
     Window(const char* title, int width, int height);
     ~Window();
     void swap_window();
-
+    void set_vsync(bool flag);
+    
 private:
     SDL_GLContext context;
     SDL_Window* window;
