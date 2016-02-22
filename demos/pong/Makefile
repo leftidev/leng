@@ -6,8 +6,8 @@ INC = -I ../../include
 # common source files
 C_FILES= $(wildcard ../../src/*.cpp)
 
-CFLAGS_DBG = -g -Wall -Wextra -Werror -Wwrite-strings -pedantic-errors -Wno-unused
-CFLAGS_REL = -O3 -Wall -Wextra -Werror -Wwrite-strings -pedantic-errors -Wno-unused
+CFLAGS_DBG = -g -std=c++11 -Wall -Wextra -Werror -Wwrite-strings -pedantic-errors -Wno-unused
+CFLAGS_REL = -O3 -std=c++11 -Wall -Wextra -Werror -Wwrite-strings -pedantic-errors -Wno-unused
 
 # external libraries
 LFLAGS = -lSDL2 -lSDL2_mixer -lGL -lGLEW -lSOIL -lm
