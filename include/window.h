@@ -1,14 +1,20 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <SDL2/SDL.h>
+#include <GL/glew.h>
+
 namespace leng {
 
 class Window {
 public:
     Window(const char* title, int width, int height);
     ~Window();
-    
-    void create();
+    void swap_window();
+
+private:
+    SDL_GLContext context;
+    SDL_Window* window;
 };
 
 }  // namespace leng

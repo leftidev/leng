@@ -1,9 +1,6 @@
 #include <iostream>
 #include <string>
 
-#include <SDL2/SDL.h>
-#include <GL/glew.h>
-
 #include "window.h"
 
 void error(std::string message, std::string error) {
@@ -18,16 +15,16 @@ Window::Window(const char* title, int width, int height) {
 	error("Could not initialize SDL: ", SDL_GetError());
     }
 
-    SDL_Window* window = SDL_CreateWindow(title,
-					  100, 100,
-					  width, height,
-					  SDL_WINDOW_OPENGL);
+    window = SDL_CreateWindow(title,
+			      100, 100,
+			      width, height,
+			      SDL_WINDOW_OPENGL);
     // Error checking
     if(window == nullptr) {
 	error("Could not create window: ", SDL_GetError());
     }
 
-    SDL_GLContext context = SDL_GL_CreateContext(window);
+    context = SDL_GL_CreateContext(window);
 
     // Error checking
     if(context == nullptr) {
@@ -43,13 +40,17 @@ Window::Window(const char* title, int width, int height) {
     std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
     
     glEnable(GL_DEPTH_TEST);
-    
-    // Enable alpha blending
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
 }
 
-Window::~Window() {}    
+Window::~Window() {
+    SDL_GL_DeleteContext(context);
+    SDL_Quit();
+}    
+
+void Window::swap_window() {
+    SDL_GL_SwapWindow(window);
+}
 
 } // namespace leng
