@@ -13,14 +13,12 @@ public:
 
     void link_shaders(const std::vector<Shader>& shaders);
     void enable_attribute(const std::string& attr_name, int count, int stride, void* ptr);
-    GLint get_uniform_location(const std::string& uniformName);
+    GLuint get_uniform_location(const std::string& uniformName);
     //void set_mat4(GLuint shader_program, const char* name, mat4 val);
     void enable();
     void disable();
-
-private:
-    GLuint shader_program;
-    int num_attributes;
+    
+    GLuint program_id;
 };
     
 } // namespace leng
