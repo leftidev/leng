@@ -10,9 +10,8 @@ class Shader {
 public:
     Shader(const std::string& path, GLenum shader_type);
     ~Shader();
-	
-private:
-    GLuint shader_id;
+    
+    GLuint shader_id;	
 };
     
 } // namespace leng

@@ -13,7 +13,8 @@ uniform mat4 proj;
 
 void main()
 {
-    gl_Position = proj * view * world * vec4(position, 1.0f);
+    //gl_Position = proj * view * world * vec4(position, 1.0f);
+    gl_Position = vec4(position, 1.0f);
     my_color = color;
     tex_coord = vec2(text_coord.x, 1.0f - text_coord.y);
 }
