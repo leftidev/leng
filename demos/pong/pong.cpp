@@ -9,6 +9,7 @@
 #include "camera_2d.h"
 #include "renderer.h"
 #include "texture.h"
+#include "sprite.h"
 
 #define GLM_FORCE_RADIANS
 
@@ -94,14 +95,11 @@ int main() {
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);
     */
-    leng::Texture texture("assets/textures/awesomeface.png");
+    //leng::Texture texture("assets/textures/awesomeface.png");
+    leng::Sprite sprite(0, 0, 100, 100, "assets/textures/awesomeface.png");
     // Set up the camera
     leng::Camera2D camera;
     camera.init(800, 600);
-
-    // Zoom out the camera by 2x
-    const float CAMERA_SCALE = 1.0f / 1.0f;
-    camera.set_scale(CAMERA_SCALE);
     
     bool running = true;
     SDL_Event event;
@@ -123,7 +121,7 @@ int main() {
 
 	// Bind Textures using texture units
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture.id);
+        glBindTexture(GL_TEXTURE_2D, sprite.texture.id);
         glUniform1i(glGetUniformLocation(shader_program.program_id, "my_texture"), 0);
 	
 	shader_program.enable();
@@ -139,7 +137,7 @@ int main() {
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 	*/
-	renderer.render();
+	renderer.draw();
 	
 	shader_program.disable();
 	// Swap buffers

@@ -2,7 +2,11 @@
 
 namespace leng {
 
-Texture::Texture(const char* path) {
+Texture::Texture() { }
+    
+Texture::~Texture() { }
+
+void Texture::init(const char* path) {
     // Generate and bind texture
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_2D, id);
@@ -29,7 +33,5 @@ Texture::Texture(const char* path) {
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
-    
-Texture::~Texture() { }
 
 } // namespace leng

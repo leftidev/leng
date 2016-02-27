@@ -7,9 +7,9 @@
 namespace leng {
 
 struct Texture {
-    Texture(const char* path);
+    Texture();
     ~Texture();
-
+    void init(const char* path);
     GLuint id;
 };
     
