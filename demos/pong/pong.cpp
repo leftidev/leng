@@ -30,7 +30,7 @@ void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shade
     shader_program.link_shaders(shaders);
 }
 
-void do_collisions(leng::Entity player, leng::Entity enemy, leng::Entity ball) {
+void do_collisions(leng::Entity& player, leng::Entity& enemy, leng::Entity& ball) {
     if(do_boxes_intersect(player.aabb, ball.aabb)) {
 	ball.vel.x *= -1;
     }
@@ -43,14 +43,6 @@ void do_collisions(leng::Entity player, leng::Entity enemy, leng::Entity ball) {
     if(ball.pos.y < -SCREEN_HEIGHT / 2 || ball.pos.y > SCREEN_HEIGHT / 2 - 24) {
 	ball.vel.y *= -1;
     }
-}
-
-void enemy_update(leng::Entity enemy) {
-    
-}
-
-void ball_update(leng::Entity ball) {
-    
 }
 
 void pong_events(SDL_Event event, leng::Player& player) {
@@ -78,15 +70,15 @@ int main() {
     leng::Renderer renderer(shader_program);
 
     leng::Player player(-SCREEN_WIDTH / 2, 0, 24, 128, "assets/textures/paddle_24x128.png");
-    player.vel.x = 5.0f;
-    player.vel.y = 5.0f;
 
     leng::Entity enemy(SCREEN_WIDTH / 2 - 24, 0, 24, 128, "assets/textures/paddle_24x128.png");
-    enemy.vel.x = 5.0f;
     enemy.vel.y = 5.0f;
     
     leng::Entity ball(0, 0, 24, 24, "assets/textures/ball_24x24.png");
-
+    ball.vel.x = 5.0f;
+    ball.vel.y = 5.0f;
+    ball.moving = true;
+    
     leng::Sprite mid_line(-5, -SCREEN_HEIGHT / 2, 10, 1024, "assets/textures/midline_10x1024.png");
     
     // Set up the camera
@@ -109,8 +101,10 @@ int main() {
 	}
 	camera.update();
 	player.update();
-	//enemy.update();
+	enemy.update();
 	ball.update();
+	do_collisions(player, enemy, ball);
+	
 	// Rendering
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -131,8 +125,8 @@ int main() {
 	renderer.draw(enemy.sprite);
 	renderer.draw(ball.sprite);
 
-	
 	shader_program.disable();
+	
 	// Swap buffers
 	window.swap_window();
     }

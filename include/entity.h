@@ -16,6 +16,7 @@ namespace leng {
 	Box aabb;
 	Sprite sprite;
 	Velocity vel;
+	bool moving;
     };
 } // namespace leng
 

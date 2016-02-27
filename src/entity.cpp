@@ -7,7 +7,9 @@ Entity::Entity(float x, float y, float _width, float _height, const char* path) 
     pos.y = y;
     width = _width;
     height = _height;
-	
+    
+    moving = false;
+    
     // AABB Origin at center
     aabb.x = pos.x + (width / 2);
     aabb.y = pos.y + (height / 2);
@@ -21,6 +23,11 @@ Entity::Entity(float x, float y, float _width, float _height, const char* path) 
 Entity::~Entity() { }
     
 void Entity::update() {
+    if(moving) {
+	// Update position
+	pos.x += vel.x;
+	pos.y += vel.y;
+    }
     // Update aabb
     aabb.x = pos.x + (width / 2);
     aabb.y = pos.y + (height / 2);	
