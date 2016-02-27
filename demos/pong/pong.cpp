@@ -8,6 +8,7 @@
 #include "shader_program.h"
 #include "camera_2d.h"
 #include "renderer.h"
+#include "texture.h"
 
 #define GLM_FORCE_RADIANS
 
@@ -65,6 +66,7 @@ int main() {
     
     glBindVertexArray(0);
     */
+    /*
     GLuint texture;
     // Generate and bind texture
     glGenTextures(1, &texture);
@@ -91,7 +93,8 @@ int main() {
     // De-allocate resources and unbind
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);
-
+    */
+    leng::Texture texture("assets/textures/awesomeface.png");
     // Set up the camera
     leng::Camera2D camera;
     camera.init(800, 600);
@@ -120,7 +123,7 @@ int main() {
 
 	// Bind Textures using texture units
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindTexture(GL_TEXTURE_2D, texture.id);
         glUniform1i(glGetUniformLocation(shader_program.program_id, "my_texture"), 0);
 	
 	shader_program.enable();
