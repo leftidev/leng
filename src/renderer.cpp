@@ -37,8 +37,9 @@ void Renderer::create_vertex_array(leng::ShaderProgram& shader_program) {
 }
 
 
-    
+
 void Renderer::update_vertices() {
+    
     // Set up vertex data (and buffer(s)) and attribute pointers
     GLfloat vertices[] = {
          // Positions          // Colors                     // Texture Coords
@@ -56,8 +57,9 @@ void Renderer::update_vertices() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Renderer::draw() {
-    update_vertices();
+void Renderer::draw(leng::Sprite& sprite) {
+    update_vertices(sprite);
+    glBindTexture(GL_TEXTURE_2D, sprite.texture.id);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

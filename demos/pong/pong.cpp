@@ -121,7 +121,6 @@ int main() {
 
 	// Bind Textures using texture units
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, sprite.texture.id);
         glUniform1i(glGetUniformLocation(shader_program.program_id, "my_texture"), 0);
 	
 	shader_program.enable();
@@ -137,7 +136,7 @@ int main() {
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 	*/
-	renderer.draw();
+	renderer.draw(sprite);
 	
 	shader_program.disable();
 	// Swap buffers

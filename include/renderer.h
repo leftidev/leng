@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 #include "shader_program.h"
-
+#include "sprite.h"
 
 namespace leng {
 
@@ -13,7 +13,7 @@ public:
     ~Renderer();
     void create_vertex_array(leng::ShaderProgram& shader_program);
     void update_vertices();
-    void draw();
+    void draw(leng::Sprite& sprite);
     
 private:
     GLuint VBO;
