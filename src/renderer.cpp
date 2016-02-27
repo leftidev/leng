@@ -38,15 +38,14 @@ void Renderer::create_vertex_array(leng::ShaderProgram& shader_program) {
 
 
 
-void Renderer::update_vertices() {
-    
+void Renderer::update_vertices(leng::Sprite& sprite) {
     // Set up vertex data (and buffer(s)) and attribute pointers
     GLfloat vertices[] = {
          // Positions          // Colors                     // Texture Coords
-	 100.5f,  100.5f,  1.0f, 1.0f, 1.0f, 1.0f,   1.0f, 1.0f, // Top Right
-	 100.5f, -100.5f,  1.0f, 1.0f, 1.0f, 1.0f,   1.0f, 0.0f, // Bottom Right
-        -100.5f, -100.5f,  1.0f, 1.0f, 1.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
-        -100.5f,  100.5f,  1.0f, 1.0f, 1.0f, 1.0f,   0.0f, 1.0f  // Top Left 
+	 sprite.vertex_data[0].position.x, sprite.vertex_data[0].position.y,  sprite.vertex_data[0].color.r, sprite.vertex_data[0].color.g, sprite.vertex_data[0].color.b, sprite.vertex_data[0].color.a,   sprite.vertex_data[0].uv.u, sprite.vertex_data[0].uv.v, // Top Right
+	 sprite.vertex_data[1].position.x, sprite.vertex_data[1].position.y,  sprite.vertex_data[1].color.r, sprite.vertex_data[1].color.g, sprite.vertex_data[1].color.b, sprite.vertex_data[1].color.a,   sprite.vertex_data[1].uv.u, sprite.vertex_data[1].uv.v, // Bottom Right
+	 sprite.vertex_data[2].position.x, sprite.vertex_data[2].position.y,  sprite.vertex_data[2].color.r, sprite.vertex_data[2].color.g, sprite.vertex_data[2].color.b, sprite.vertex_data[2].color.a,  sprite.vertex_data[2].uv.u, sprite.vertex_data[2].uv.v, // Bottom Left
+	 sprite.vertex_data[3].position.x, sprite.vertex_data[3].position.y,  sprite.vertex_data[3].color.r, sprite.vertex_data[3].color.g, sprite.vertex_data[3].color.b, sprite.vertex_data[3].color.a,   sprite.vertex_data[3].uv.u, sprite.vertex_data[3].uv.v  // Top Left 
     };
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -64,7 +63,5 @@ void Renderer::draw(leng::Sprite& sprite) {
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
-
-
 
 } // namespace leng

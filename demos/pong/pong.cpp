@@ -97,6 +97,7 @@ int main() {
     */
     //leng::Texture texture("assets/textures/awesomeface.png");
     leng::Sprite sprite(0, 0, 100, 100, "assets/textures/awesomeface.png");
+    leng::Sprite sprite2(-300, 0, 300, 100, "assets/textures/awesomeface.png");
     // Set up the camera
     leng::Camera2D camera;
     camera.init(800, 600);
@@ -137,7 +138,7 @@ int main() {
         glBindVertexArray(0);
 	*/
 	renderer.draw(sprite);
-	
+	renderer.draw(sprite2);	
 	shader_program.disable();
 	// Swap buffers
 	window.swap_window();

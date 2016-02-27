@@ -12,7 +12,7 @@ public:
     Renderer(leng::ShaderProgram& shader_program);
     ~Renderer();
     void create_vertex_array(leng::ShaderProgram& shader_program);
-    void update_vertices();
+    void update_vertices(leng::Sprite& sprite);
     void draw(leng::Sprite& sprite);
     
 private:
