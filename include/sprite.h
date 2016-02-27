@@ -3,16 +3,17 @@
 
 #include "texture.h"
 #include "vertex.h"
+#include "leng.h"
 
 namespace leng {
 
 class Sprite {
 public:
-    Sprite(float _x, float _y, float _width, float _height, const char* path);
+    Sprite(float x, float y, float _width, float _height, const char* path);
     ~Sprite();
 
     Texture texture;
-    float x, y;
+    Position pos;
     float width, height;
     Vertex vertex_data[4];
 };

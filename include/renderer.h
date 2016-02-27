@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include "shader_program.h"
 #include "sprite.h"
+#include "entity.h"
 
 namespace leng {
 
