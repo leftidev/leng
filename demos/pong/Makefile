@@ -1,10 +1,10 @@
 CC = g++
 
 # where to search for headers
-INC = -I ../../include
+INC = -I ../../include -I ./include
 
 # common source files
-C_FILES= $(wildcard ../../src/*.cpp)
+C_FILES= $(wildcard ../../src/*.cpp) $(wildcard ./src/*.cpp)
 
 CFLAGS_DBG = -g -std=c++11 -Wall -Wextra -Werror -Wwrite-strings -pedantic-errors -Wno-unused
 CFLAGS_REL = -O3 -std=c++11 -Wall -Wextra -Werror -Wwrite-strings -pedantic-errors -Wno-unused

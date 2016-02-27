@@ -10,6 +10,7 @@
 #include "collision.h"
 #include "entity.h"
 #include "sprite.h"
+#include "player.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -48,29 +49,19 @@ void enemy_update(leng::Entity enemy) {
     
 }
 
-void player_update(leng::Entity player) {
-    if(up_held) {
-	player.pos.y += player.vel.y;
-	std::cout << "woop" << std::endl;
-    }
-    if(down_held) {
-	player.pos.y -= player.vel.y;
-    }
-}
-
 void ball_update(leng::Entity ball) {
     
 }
 
-void pong_events(SDL_Event event) {
+void pong_events(SDL_Event event, leng::Player& player) {
     switch(event.type) {
   case SDL_KEYDOWN:
-      if (event.key.keysym.sym == SDLK_UP) { up_held = true; }
-      if (event.key.keysym.sym == SDLK_DOWN) { down_held = true; }
+      if (event.key.keysym.sym == SDLK_UP) { player.up_held = true; }
+      if (event.key.keysym.sym == SDLK_DOWN) { player.down_held = true; }
   break;
   case SDL_KEYUP:
-    if (event.key.keysym.sym == SDLK_UP) { up_held = false; }
-    if (event.key.keysym.sym == SDLK_DOWN) { down_held = false; }
+    if (event.key.keysym.sym == SDLK_UP) { player.up_held = false; }
+    if (event.key.keysym.sym == SDLK_DOWN) { player.down_held = false; }
   break;
   }
     
@@ -86,7 +77,7 @@ int main() {
 
     leng::Renderer renderer(shader_program);
 
-    leng::Entity player(-SCREEN_WIDTH / 2, 0, 24, 128, "assets/textures/paddle_24x128.png");
+    leng::Player player(-SCREEN_WIDTH / 2, 0, 24, 128, "assets/textures/paddle_24x128.png");
     player.vel.x = 5.0f;
     player.vel.y = 5.0f;
 
@@ -114,11 +105,10 @@ int main() {
 		running = false;
 		break;
 	    }
-	    pong_events(event);
+	    pong_events(event, player);
 	}
 	camera.update();
 	player.update();
-	player_update(player);
 	//enemy.update();
 	ball.update();
 	// Rendering
