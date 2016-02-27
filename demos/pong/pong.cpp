@@ -11,16 +11,13 @@
 #include "entity.h"
 #include "sprite.h"
 #include "player.h"
+#include "enemy.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
-
-// Key inputs
-bool up_held = false;
-bool down_held = false;
 
 void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shader_program) {
     // Create and compile the shaders
@@ -71,8 +68,7 @@ int main() {
 
     leng::Player player(-SCREEN_WIDTH / 2, 0, 24, 128, "assets/textures/paddle_24x128.png");
 
-    leng::Entity enemy(SCREEN_WIDTH / 2 - 24, 0, 24, 128, "assets/textures/paddle_24x128.png");
-    enemy.vel.y = 5.0f;
+    leng::Enemy enemy(SCREEN_WIDTH / 2 - 24, 0, 24, 128, "assets/textures/paddle_24x128.png");
     
     leng::Entity ball(0, 0, 24, 24, "assets/textures/ball_24x24.png");
     ball.vel.x = 5.0f;
@@ -101,7 +97,7 @@ int main() {
 	}
 	camera.update();
 	player.update();
-	enemy.update();
+	enemy.update(ball);
 	ball.update();
 	do_collisions(player, enemy, ball);
 	
