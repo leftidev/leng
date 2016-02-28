@@ -12,6 +12,7 @@
 #include "sprite.h"
 #include "player.h"
 #include "enemy.h"
+#include "sound_manager.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -34,9 +35,12 @@ void do_collisions(leng::Entity& player, leng::Entity& enemy, leng::Entity& ball
     if(do_boxes_intersect(enemy.aabb, ball.aabb)) {
 	ball.vel.x *= -1;
     }
+    // Ball hits goal
     if(ball.pos.x < -SCREEN_WIDTH / 2 || ball.pos.x > SCREEN_WIDTH / 2 - 24) {
-	ball.vel.x *= -1;
+	ball.pos.x = 0;
+	ball.pos.y = 0;
     }
+    // Ball hits top or bot border
     if(ball.pos.y < -SCREEN_HEIGHT / 2 || ball.pos.y > SCREEN_HEIGHT / 2 - 24) {
 	ball.vel.y *= -1;
     }
