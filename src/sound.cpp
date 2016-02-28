@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "sound_manager.h"
+#include "sound.h"
 
 namespace leng {
     
@@ -22,7 +22,7 @@ void SoundEffect::play(int loops /* = 0 */) {
     }
 }
 
-SoundManager::SoundManager() {
+void sound_init() {
     // MIX_INIT_FAC, MIX_INIT_MOD, MIX_INIT_MP3, MIX_INIT_OGG
     if (Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG) == -1) {
 	std::cout << "Mix_Init error: " << Mix_GetError() << std::endl;
@@ -33,33 +33,34 @@ SoundManager::SoundManager() {
     }
 }
 
-SoundManager::~SoundManager() {
-    Mix_FreeMusic(music);
-}
-
-void SoundManager::load_music(const char* path) {
+Music::Music(const char* path) {
     music = Mix_LoadMUS(path);
     if(!music) {
 	std::cout << "Mix_LoadMUS error: " << Mix_GetError() << std::endl;
     }
 }	
+
+Music::~Music() {
+    Mix_FreeMusic(music);
+    music = nullptr;
+}
     
-void SoundManager::play(int loops /* = -1 */) {
+void Music::play(int loops /* = -1 */) {
     // loops -1 forever, n = number of times
     if(Mix_PlayMusic(music, loops) == -1) {
 	std::cout << "Mix_PlayMusic error:" << Mix_GetError() << std::endl;
     }
 }
 
-void SoundManager::pause() {
+void Music::pause() {
     Mix_PauseMusic();
 }
 
-void SoundManager::resume() {
+void Music::resume() {
     Mix_ResumeMusic();
 }
 
-void SoundManager::stop() {
+void Music::stop() {
     Mix_HaltMusic();
 }
 

@@ -12,13 +12,14 @@
 #include "sprite.h"
 #include "player.h"
 #include "enemy.h"
-#include "sound_manager.h"
+#include "sound.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
+
 
 void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shader_program) {
     // Create and compile the shaders
@@ -28,15 +29,18 @@ void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shade
     shader_program.link_shaders(shaders);
 }
 
-void do_collisions(leng::Entity& player, leng::Entity& enemy, leng::Entity& ball) {
+void do_collisions(leng::Entity& player, leng::Entity& enemy, leng::Entity& ball, leng::SoundEffect& ball_hits_player, leng::SoundEffect& ball_hits_enemy, leng::SoundEffect& scoring_point) {
     if(do_boxes_intersect(player.aabb, ball.aabb)) {
+	ball_hits_player.play();
 	ball.vel.x *= -1;
     }
     if(do_boxes_intersect(enemy.aabb, ball.aabb)) {
+	ball_hits_enemy.play();
 	ball.vel.x *= -1;
     }
     // Ball hits goal
     if(ball.pos.x < -SCREEN_WIDTH / 2 || ball.pos.x > SCREEN_WIDTH / 2 - 24) {
+	scoring_point.play();
 	ball.pos.x = 0;
 	ball.pos.y = 0;
     }
@@ -63,7 +67,13 @@ void pong_events(SDL_Event event, leng::Player& player) {
 int main() {
     leng::Window window("leng++ pong", SCREEN_WIDTH, SCREEN_HEIGHT);
     window.set_vsync(true);
+    
+    leng::sound_init();
 
+    leng::SoundEffect ball_hits_enemy("assets/sounds/ball_hits_enemy.wav");
+    leng::SoundEffect ball_hits_player("assets/sounds/ball_hits_player.wav");
+    leng::SoundEffect scoring_point("assets/sounds/scoring_point.wav");
+    
     std::vector<leng::Shader> shaders;
     leng::ShaderProgram shader_program;
     load_shaders(shaders, shader_program);
@@ -84,7 +94,8 @@ int main() {
     // Set up the camera
     leng::Camera2D camera;
     camera.init(800, 600);
-    
+
+
     bool running = true;
     SDL_Event event;
     while (running) {
@@ -103,7 +114,7 @@ int main() {
 	player.update();
 	enemy.update(ball);
 	ball.update();
-	do_collisions(player, enemy, ball);
+	do_collisions(player, enemy, ball, ball_hits_player, ball_hits_enemy, scoring_point);
 	
 	// Rendering
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

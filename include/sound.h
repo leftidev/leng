@@ -1,5 +1,5 @@
-#ifndef SOUND_MANAGER_H
-#define SOUND_MANAGER_H
+#ifndef SOUND_H
+#define SOUND_H
 
 #include <SDL2/SDL_mixer.h>
 
@@ -12,21 +12,24 @@ namespace leng {
 
 	void play(int loops = 0);
 
+    private:
 	Mix_Chunk* chunk;
     };
-
-    class SoundManager {
+    
+    class Music {
     public:
-	SoundManager();
-	~SoundManager();
-	void load_music(const char* path);
+	Music(const char* path);
+	~Music();
 	void play(int loops = -1);
 	void pause();
 	void resume();
 	void stop();
 	
-	Mix_Music* music;
+    private:
+	Mix_Music* music;	
     };
+    
+    void sound_init();
 } // namespace leng
 
-#endif // SOUND_MANAGER_H
+#endif // SOUND_H
