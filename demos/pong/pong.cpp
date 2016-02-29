@@ -13,13 +13,13 @@
 #include "player.h"
 #include "enemy.h"
 #include "sound.h"
+#include "game_state_manager.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
-
 
 void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shader_program) {
     // Create and compile the shaders
@@ -60,8 +60,7 @@ void pong_events(SDL_Event event, leng::Player& player) {
     if (event.key.keysym.sym == SDLK_UP) { player.up_held = false; }
     if (event.key.keysym.sym == SDLK_DOWN) { player.down_held = false; }
   break;
-  }
-    
+  }    
 }
 
 int main() {
