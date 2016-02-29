@@ -16,8 +16,7 @@ public:
     void handle_events();
     void draw();
     void quit() { running = false; }
-    
-private:
+
     std::vector<GameState*> game_states;
     bool running;
 };

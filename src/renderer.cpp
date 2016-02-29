@@ -2,12 +2,11 @@
 
 namespace leng {
     
-Renderer::Renderer(leng::ShaderProgram& shader_program) {
+Renderer::Renderer() {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
-    create_vertex_array(shader_program);
-
+    
     // EBO indices
     indices[0] = 0;
     indices[1] = 1;
@@ -23,7 +22,7 @@ Renderer::~Renderer() {
     glDeleteBuffers(1, &EBO);
 }
 
-void Renderer::create_vertex_array(leng::ShaderProgram& shader_program) {
+void Renderer::init_vao(leng::ShaderProgram& shader_program) {
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

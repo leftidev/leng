@@ -14,6 +14,7 @@
 #include "enemy.h"
 #include "sound.h"
 #include "game_state_manager.h"
+//#include "play_state.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -77,8 +78,8 @@ int main() {
     leng::ShaderProgram shader_program;
     load_shaders(shaders, shader_program);
 
-    leng::Renderer renderer(shader_program);
-
+    leng::Renderer renderer;
+    renderer.init(shader_program);
     leng::Player player(-SCREEN_WIDTH / 2, 0, 24, 128, "assets/textures/paddle_24x128.png");
 
     leng::Enemy enemy(SCREEN_WIDTH / 2 - 24, 0, 24, 128, "assets/textures/paddle_24x128.png");

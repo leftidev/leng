@@ -10,9 +10,9 @@ namespace leng {
 
 class Renderer {
 public:
-    Renderer(leng::ShaderProgram& shader_program);
+    Renderer();
     ~Renderer();
-    void create_vertex_array(leng::ShaderProgram& shader_program);
+    void init_vao(leng::ShaderProgram& shader_program);
     void update_vertices(leng::Sprite& sprite);
     void draw(leng::Sprite& sprite);
     

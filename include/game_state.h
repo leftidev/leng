@@ -4,11 +4,12 @@
 #include "window.h"
 
 namespace leng {
+
 class GameStateManager;
     
 class GameState {
 public:
-    GameState(leng::GameStateManager& _state_manager, Window& _window);
+    GameState(GameStateManager& _state_manager, Window& _window);
     ~GameState();
 
     virtual void init() = 0;
@@ -17,7 +18,6 @@ public:
     virtual void draw() = 0;
     void change_game_state(GameStateManager& manager, GameState* state);
 
-private:
     GameStateManager& state_manager;
     Window& window;
 };
