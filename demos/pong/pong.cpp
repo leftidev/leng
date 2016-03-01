@@ -1,6 +1,6 @@
 #include "window.h"
 #include "game_state_manager.h"
-#include "play_state.h"
+#include "menu_state.h"
 
 int main() {
     leng::Window window("leng++ pong", 800, 600);
@@ -8,7 +8,7 @@ int main() {
     leng::sound_init();
 
     leng::GameStateManager state_manager;
-    state_manager.change_game_state(new PlayState(state_manager, window));
+    state_manager.change_game_state(new MenuState(state_manager, window));
 
     SDL_Event event;
     while (state_manager.running) {

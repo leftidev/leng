@@ -19,7 +19,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
