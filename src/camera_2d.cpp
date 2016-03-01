@@ -3,7 +3,7 @@
 
 namespace leng {
 
-Camera2D::Camera2D() {
+Camera2D::Camera2D()  {
 }
 
 Camera2D::~Camera2D() {
@@ -13,7 +13,6 @@ void Camera2D::init(int _screen_width, int _screen_height) {
 	screen_width = _screen_width;
 	screen_height = _screen_height;
 	ortho_matrix = glm::ortho(0.0f, (float)screen_width, 0.0f, (float)screen_height);
-	scale = 1.0f;
 }
 
 // Updates the camera matrix if needed

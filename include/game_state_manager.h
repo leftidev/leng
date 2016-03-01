@@ -13,7 +13,7 @@ public:
 
     void change_game_state(GameState* state);
     void update();
-    void handle_events();
+    void handle_events(SDL_Event event);
     void draw();
     void quit() { running = false; }
 

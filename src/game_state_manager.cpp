@@ -25,8 +25,8 @@ void GameStateManager::update() {
     game_states.back()->update();
 }
 
-void GameStateManager::handle_events() {
-    game_states.back()->handle_events();
+void GameStateManager::handle_events(SDL_Event event) {
+    game_states.back()->handle_events(event);
 }
 
 void GameStateManager::draw() {

@@ -29,7 +29,7 @@ public:
     ~PlayState();
 
     void init() override;
-    void handle_events() override;
+    void handle_events(SDL_Event event) override;
     void update() override;
     void draw() override;
     void load_shaders();

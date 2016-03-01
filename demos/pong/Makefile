@@ -1,3 +1,4 @@
+# compiler
 CC = g++
 
 # where to search for headers
@@ -6,14 +7,16 @@ INC = -I ../../include -I ./include
 # common source files
 C_FILES= $(wildcard ../../src/*.cpp) $(wildcard ./src/*.cpp)
 
+# compiler flags debug
 CFLAGS_DBG = -g -std=c++11 -Wall -Wextra -Werror -Wwrite-strings -pedantic-errors -Wno-unused
+# compiler flags release
 CFLAGS_REL = -O3 -std=c++11 -Wall -Wextra -Werror -Wwrite-strings -pedantic-errors -Wno-unused
 
 # external libraries
 LFLAGS = -lSDL2 -lSDL2_mixer -lGL -lGLEW -lSOIL -lm
 
 # the build target executable:
-TARGET = main
+TARGET = pong
 
 all: $(TARGET)
 

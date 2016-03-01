@@ -14,16 +14,28 @@ void PlayState::load_shaders() {
 
 void PlayState::init() {
     load_shaders();
-    renderer.init_vao(shader_program);
-    camera.init(800, 600);
 
+    renderer.init_vao(shader_program);
+
+    camera.init(800, 600);
+    
     ball.vel.x = 5.0f;
     ball.vel.y = 5.0f;
     ball.moving = true;    
 }
 
-void PlayState::handle_events() {
-    
+void PlayState::handle_events(SDL_Event event) {
+    switch(event.type) {
+  case SDL_KEYDOWN:
+      if (event.key.keysym.sym == SDLK_UP) { player.up_held = true; }
+      if (event.key.keysym.sym == SDLK_DOWN) { player.down_held = true; }
+  break;
+  case SDL_KEYUP:
+    if (event.key.keysym.sym == SDLK_UP) { player.up_held = false; }
+    if (event.key.keysym.sym == SDLK_DOWN) { player.down_held = false; }
+  break;
+  } 
+
 }
 
 void PlayState::update() {
@@ -62,7 +74,7 @@ void PlayState::draw() {
 }
 
 void PlayState::do_collisions() {
-        if(do_boxes_intersect(player.aabb, ball.aabb)) {
+    if(do_boxes_intersect(player.aabb, ball.aabb)) {
 	ball_hits_player.play();
 	ball.vel.x *= -1;
     }

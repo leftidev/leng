@@ -31,8 +31,8 @@ public:
 
 private:
 	int screen_width, screen_height;
-	bool needs_matrix_update;
-	float scale;
+	bool needs_matrix_update {true};
+	float scale {1.0f};
 	glm::vec2 position;
 	glm::mat4 camera_matrix;
 	glm::mat4 ortho_matrix;

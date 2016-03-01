@@ -7,7 +7,7 @@ Renderer::Renderer() {
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
     
-    // EBO indices
+    // EBO indices for a quad
     indices[0] = 0;
     indices[1] = 1;
     indices[2] = 3;
