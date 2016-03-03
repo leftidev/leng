@@ -85,6 +85,19 @@ int main() {
         1, 2, 3  // Second Triangle
     };
     */
+
+    glm::vec3 cubePositions[] = {
+	glm::vec3( 0.0f,  0.0f,  0.0f), 
+	glm::vec3( 2.0f,  5.0f, -15.0f), 
+	glm::vec3(-1.5f, -2.2f, -2.5f),  
+	glm::vec3(-3.8f, -2.0f, -12.3f),  
+	glm::vec3( 2.4f, -0.4f, -3.5f),  
+	glm::vec3(-1.7f,  3.0f, -7.5f),  
+	glm::vec3( 1.3f, -2.0f, -2.5f),  
+	glm::vec3( 1.5f,  2.0f, -2.5f), 
+	glm::vec3( 1.5f,  0.2f, -1.5f), 
+	glm::vec3(-1.3f,  1.0f, -1.5f)  
+    };
     GLuint VBO, VAO;//, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -157,8 +170,8 @@ int main() {
 	shader_program.enable();
 
 
-	glm::mat4 model;
-	model = glm::rotate(model, glm::radians(50.0f) * SDL_GetTicks() * 0.0005f, glm::vec3(0.5f, 1.0f, 0.0f));
+	//glm::mat4 model;
+	//model = glm::rotate(model, glm::radians(50.0f) * SDL_GetTicks() * 0.0005f, glm::vec3(0.5f, 1.0f, 0.0f));
 
 	glm::mat4 view;
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
@@ -167,7 +180,7 @@ int main() {
 	projection = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
 	
 	GLuint model_loc = shader_program.get_uniform_location("model");
-	glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
+
 
 	GLuint view_loc = shader_program.get_uniform_location("view");
 	glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
@@ -178,7 +191,15 @@ int main() {
 	// Draw container
         glBindVertexArray(VAO);
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	for(GLuint i = 0; i < 10; i++) {
+		glm::mat4 model;
+		model = glm::translate(model, cubePositions[i]);
+		GLfloat angle = glm::radians(20.0f * i); 
+		model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+		glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
+
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	    }
 	glBindVertexArray(0);
 
 	shader_program.disable();

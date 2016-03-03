@@ -39,7 +39,7 @@ Window::Window(const char* title, int width, int height) {
     }
     std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
     
-    //glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
