@@ -144,6 +144,20 @@ int main() {
     // De-allocate resources and unbind
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    // Camera position
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+
+    // Camera direction
+    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+
+    // Right axis
+    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f); 
+    glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+
+    // Up axis
+    glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
     
     bool running = true;
     SDL_Event event;
@@ -170,22 +184,21 @@ int main() {
 	shader_program.enable();
 
 
-	//glm::mat4 model;
-	//model = glm::rotate(model, glm::radians(50.0f) * SDL_GetTicks() * 0.0005f, glm::vec3(0.5f, 1.0f, 0.0f));
-
-	glm::mat4 view;
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
+	// Camera/View transformation
+        glm::mat4 view;
+        GLfloat radius = 10.0f;
+        GLfloat camX = sin(SDL_GetTicks() * 0.0005f) * radius;
+        GLfloat camZ = cos(SDL_GetTicks() * 0.0005f) * radius;
+        view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	
 	glm::mat4 projection;
 	projection = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
 	
 	GLuint model_loc = shader_program.get_uniform_location("model");
-
-
 	GLuint view_loc = shader_program.get_uniform_location("view");
-	glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
-
 	GLuint proj_loc = shader_program.get_uniform_location("projection");
+	
+	glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(projection));
 
 	// Draw container
