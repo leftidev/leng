@@ -16,6 +16,10 @@
 int SCREEN_WIDTH = 800;
 int SCREEN_HEIGHT = 600;
 
+// Deltatime
+GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
+GLfloat lastFrame = 0.0f;  	// Time of last frame
+
 void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shader_program) {
     // Create and compile the shaders
     shaders.push_back(leng::Shader("assets/shaders/pong.vert", GL_VERTEX_SHADER));
@@ -145,27 +149,31 @@ int main() {
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    // Camera position
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-
-    // Camera direction
-    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
-
-    // Right axis
-    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f); 
-    glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-
-    // Up axis
-    glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-    
+    glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
+    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+    GLfloat cameraSpeed = 0.01f;
     bool running = true;
     SDL_Event event;
     while (running) {
+	GLfloat currentFrame = SDL_GetTicks();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
 	while(SDL_PollEvent(&event)) {
 	    switch(event.type){
 	    case SDL_KEYUP:
 		if (event.key.keysym.sym == SDLK_ESCAPE) { running = false; }
+		break;
+	    case SDL_KEYDOWN:
+		if(event.key.keysym.sym == SDLK_w)
+		    cameraPos += cameraSpeed * deltaTime * cameraFront;
+		if(event.key.keysym.sym == SDLK_s)
+		    cameraPos -= cameraSpeed * deltaTime * cameraFront;
+		if(event.key.keysym.sym == SDLK_a)
+		    cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;
+		if(event.key.keysym.sym == SDLK_d)
+		    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;  
 		break;
 	    case SDL_QUIT:
 		running = false;
@@ -186,10 +194,7 @@ int main() {
 
 	// Camera/View transformation
         glm::mat4 view;
-        GLfloat radius = 10.0f;
-        GLfloat camX = sin(SDL_GetTicks() * 0.0005f) * radius;
-        GLfloat camZ = cos(SDL_GetTicks() * 0.0005f) * radius;
-        view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 	
 	glm::mat4 projection;
 	projection = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
