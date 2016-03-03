@@ -13,6 +13,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+int SCREEN_WIDTH = 800;
+int SCREEN_HEIGHT = 600;
+
 void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shader_program) {
     // Create and compile the shaders
     shaders.push_back(leng::Shader("assets/shaders/pong.vert", GL_VERTEX_SHADER));
@@ -22,7 +25,7 @@ void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shade
 }
 
 int main() {
-    leng::Window window("leng++", 800, 600);
+    leng::Window window("leng++", SCREEN_WIDTH, SCREEN_HEIGHT);
     window.set_vsync(true);
 
     std::vector<leng::Shader> shaders;
@@ -30,34 +33,75 @@ int main() {
     load_shaders(shaders, shader_program);
 
     // Set up vertex data (and buffer(s)) and attribute pointers
+
+
     GLfloat vertices[] = {
-        // Positions          // Colors           // Texture Coords
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // Top Right
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // Bottom Right
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // Top Left 
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+	0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+	0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+	0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+	0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+	0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+	0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+	0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+	0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
+
+    /*
     GLuint indices[] = {  // Note that we start from 0!
         0, 1, 3, // First Triangle
         1, 2, 3  // Second Triangle
     };
-    GLuint VBO, VAO, EBO;
+    */
+    GLuint VBO, VAO;//, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+    //glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // Enable shader attributes
-    shader_program.enable_attribute("position", 3, 8, (GLvoid*)0);
-    shader_program.enable_attribute("color", 3, 8, (GLvoid*)(3 * sizeof(GLfloat)));
-    shader_program.enable_attribute("text_coord", 2, 8, (GLvoid*)(6 * sizeof(GLfloat)));
+    shader_program.enable_attribute("position", 3, 5, (GLvoid*)0);
+    //shader_program.enable_attribute("color", 3, 8, (GLvoid*)(3 * sizeof(GLfloat)));
+    shader_program.enable_attribute("text_coord", 2, 5, (GLvoid*)(3 * sizeof(GLfloat)));
     
     glBindVertexArray(0);
 
@@ -76,7 +120,7 @@ int main() {
 
     int width, height;
     // Load, and generate mipmaps
-    unsigned char* image = SOIL_load_image("assets/textures/awesomeface.png", &width, &height, 0, SOIL_LOAD_RGBA);
+    unsigned char* image = SOIL_load_image("assets/textures/container.jpg", &width, &height, 0, SOIL_LOAD_RGBA);
 
     // Create texture
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
@@ -112,18 +156,30 @@ int main() {
 	
 	shader_program.enable();
 
-	// Create transformations
-	glm::mat4 trans;
-	trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-	trans = glm::rotate(trans,(GLfloat)SDL_GetTicks() * glm::radians(50.0f) * 0.0005f, glm::vec3(0.0f, 0.0f, 1.0f));
 
-	GLuint transform_loc = shader_program.get_uniform_location("transform");
-	glUniformMatrix4fv(transform_loc, 1, GL_FALSE, glm::value_ptr(trans));
+	glm::mat4 model;
+	model = glm::rotate(model, glm::radians(50.0f) * SDL_GetTicks() * 0.0005f, glm::vec3(0.5f, 1.0f, 0.0f));
+
+	glm::mat4 view;
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+	glm::mat4 projection;
+	projection = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
 	
-        // Draw container
+	GLuint model_loc = shader_program.get_uniform_location("model");
+	glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
+
+	GLuint view_loc = shader_program.get_uniform_location("view");
+	glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
+
+	GLuint proj_loc = shader_program.get_uniform_location("projection");
+	glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(projection));
+
+	// Draw container
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
 
 	shader_program.disable();
 	// Swap buffers
