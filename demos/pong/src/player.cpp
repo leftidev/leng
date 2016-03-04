@@ -6,7 +6,7 @@ Player::Player(float x, float y, float width, float height, const char* path) : 
     up_held = false;
     down_held = false;
 
-    vel.y = 5.0f;
+    vel.y = 0.5f;
 }
 
 Player::~Player() { }

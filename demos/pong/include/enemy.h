@@ -1,7 +1,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "../../../include/entity.h"
+#include "entity.h"
 
 namespace leng {
     

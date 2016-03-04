@@ -49,7 +49,8 @@ void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shade
 int main() {
     leng::Window window("leng++", SCREEN_WIDTH, SCREEN_HEIGHT);
     window.set_vsync(true);
-
+    window.enable_depth_test();
+    
     std::vector<leng::Shader> shaders;
     leng::ShaderProgram shader_program;
     load_shaders(shaders, shader_program);

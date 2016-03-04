@@ -3,7 +3,7 @@
 namespace leng {
     
 Enemy::Enemy(float x, float y, float width, float height, const char* path) : Entity(x, y, width, height, path) {
-    vel.y = 5.0f;
+    vel.y = 0.5f;
 }
 
 Enemy::~Enemy() { }

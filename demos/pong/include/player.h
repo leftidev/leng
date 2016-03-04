@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "../../../include/entity.h"
+#include "entity.h"
 
 namespace leng {
 

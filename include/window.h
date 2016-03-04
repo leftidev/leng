@@ -10,6 +10,7 @@ class Window {
 public:
     Window(const char* title, int width, int height);
     ~Window();
+    void enable_depth_test();
     void swap_window();
     void set_vsync(bool flag);
     

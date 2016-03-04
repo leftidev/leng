@@ -21,8 +21,8 @@ void PlayState::init() {
     camera.set_scale(1.0f);
     camera.update();
     
-    ball.vel.x = 0.1f;
-    ball.vel.y = 0.1f;
+    ball.vel.x = 0.5f;
+    ball.vel.y = 0.5f;
     ball.moving = true;    
 }
 
