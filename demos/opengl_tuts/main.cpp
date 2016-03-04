@@ -6,6 +6,7 @@
 #include "window.h"
 #include "shader.h"
 #include "shader_program.h"
+#include "input_manager.h"
 
 #define GLM_FORCE_RADIANS
 
@@ -17,8 +18,25 @@ int SCREEN_WIDTH = 800;
 int SCREEN_HEIGHT = 600;
 
 // Deltatime
-GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
-GLfloat lastFrame = 0.0f;  	// Time of last frame
+float deltaTime = 0.0f;	// Time between current frame and last frame
+float lastFrame = 0.0f;  	// Time of last frame
+
+glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+GLfloat cameraSpeed = 0.01f;
+
+
+void handle_events(leng::InputManager& input_manager) {
+	if(input_manager.is_pressed(SDLK_w))
+	    cameraPos += cameraSpeed * deltaTime * cameraFront;
+	if(input_manager.is_pressed(SDLK_s))
+	    cameraPos -= cameraSpeed * deltaTime * cameraFront;
+	if(input_manager.is_pressed(SDLK_a))
+	    cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;
+	if(input_manager.is_pressed(SDLK_d))
+	    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;  
+}
 
 void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shader_program) {
     // Create and compile the shaders
@@ -149,37 +167,32 @@ int main() {
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
-    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
-    GLfloat cameraSpeed = 0.01f;
+    leng::InputManager input_manager;
+
     bool running = true;
     SDL_Event event;
     while (running) {
-	GLfloat currentFrame = SDL_GetTicks();
+	float currentFrame = SDL_GetTicks();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
 	while(SDL_PollEvent(&event)) {
 	    switch(event.type){
 	    case SDL_KEYUP:
-		if (event.key.keysym.sym == SDLK_ESCAPE) { running = false; }
+		//if (event.key.keysym.sym == SDLK_ESCAPE) { running = false; }
+		//break;
+		input_manager.handle_keyboard_event(event);
 		break;
 	    case SDL_KEYDOWN:
-		if(event.key.keysym.sym == SDLK_w)
-		    cameraPos += cameraSpeed * deltaTime * cameraFront;
-		if(event.key.keysym.sym == SDLK_s)
-		    cameraPos -= cameraSpeed * deltaTime * cameraFront;
-		if(event.key.keysym.sym == SDLK_a)
-		    cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;
-		if(event.key.keysym.sym == SDLK_d)
-		    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;  
+		input_manager.handle_keyboard_event(event);
 		break;
 	    case SDL_QUIT:
 		running = false;
 		break;
 	    }
 	}
+	handle_events(input_manager);
+	
 	// Rendering
         //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
