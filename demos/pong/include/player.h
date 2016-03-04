@@ -9,7 +9,7 @@ class Player : public Entity {
 public:
     Player(float x, float y, float width, float height, const char* path);
     ~Player();
-    void update();
+    void update(float delta_time);
 
     bool up_held;
     bool down_held;

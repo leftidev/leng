@@ -9,7 +9,7 @@ namespace leng {
     public:
 	Entity(float x, float y, float _width, float _height, const char* path);
 	~Entity();
-	void update();
+	void update(float delta_time);
 	
 	Position pos;
 	float width, height;

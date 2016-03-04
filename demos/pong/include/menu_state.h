@@ -21,7 +21,7 @@ public:
 
     void init() override;
     void handle_events(SDL_Event event) override;
-    void update() override;
+    void update(float delta_time) override;
     void draw() override;
     void load_shaders();
     void do_collisions();

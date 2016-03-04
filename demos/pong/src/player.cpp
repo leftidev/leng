@@ -11,14 +11,14 @@ Player::Player(float x, float y, float width, float height, const char* path) : 
 
 Player::~Player() { }
     
-void Player::update() {
-    Entity::update();
+void Player::update(float delta_time) {
+    Entity::update(delta_time);
 
     if(up_held) {
-	pos.y += vel.y;
+	pos.y += vel.y * delta_time;
     }
     if(down_held) {
-	pos.y -= vel.y;
+	pos.y -= vel.y * delta_time;
     }
 }
 

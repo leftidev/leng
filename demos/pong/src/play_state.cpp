@@ -18,9 +18,11 @@ void PlayState::init() {
     renderer.init_vao(shader_program);
 
     camera.init(800, 600);
+    camera.set_scale(1.0f);
+    camera.update();
     
-    ball.vel.x = 5.0f;
-    ball.vel.y = 5.0f;
+    ball.vel.x = 0.1f;
+    ball.vel.y = 0.1f;
     ball.moving = true;    
 }
 
@@ -38,12 +40,12 @@ void PlayState::handle_events(SDL_Event event) {
 
 }
 
-void PlayState::update() {
+void PlayState::update(float delta_time) {
     do_collisions();
     camera.update();
-    player.update();
-    enemy.update(ball);
-    ball.update();
+    player.update(delta_time);
+    enemy.update(ball, delta_time);
+    ball.update(delta_time);
 }
 
 void PlayState::draw() {

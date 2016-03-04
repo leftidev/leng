@@ -22,11 +22,11 @@ Entity::Entity(float x, float y, float _width, float _height, const char* path) 
     
 Entity::~Entity() { }
     
-void Entity::update() {
+void Entity::update(float delta_time) {
     if(moving) {
 	// Update position
-	pos.x += vel.x;
-	pos.y += vel.y;
+	pos.x += vel.x * delta_time;
+	pos.y += vel.y * delta_time;
     }
     // Update aabb
     aabb.x = pos.x + (width / 2);

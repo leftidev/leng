@@ -37,7 +37,7 @@ void MenuState::handle_events(SDL_Event event) {
 
 }
 
-void MenuState::update() {
+void MenuState::update(float delta_time) {
     do_collisions();
     camera.update();
 }

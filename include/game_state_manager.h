@@ -12,7 +12,7 @@ public:
     ~GameStateManager();
 
     void change_game_state(GameState* state);
-    void update();
+    void update(float delta_time);
     void handle_events(SDL_Event event);
     void draw();
     void quit() { running = false; }

@@ -15,7 +15,7 @@ public:
 
     virtual void init() = 0;
     virtual void handle_events(SDL_Event event) = 0;
-    virtual void update() = 0;
+    virtual void update(float delta_time) = 0;
     virtual void draw() = 0;
     void change_game_state(GameStateManager& manager, GameState* state);
 

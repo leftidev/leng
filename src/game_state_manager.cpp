@@ -21,8 +21,8 @@ void GameStateManager::change_game_state(GameState* state) {
     game_states.back()->init();
 }
 
-void GameStateManager::update() {
-    game_states.back()->update();
+void GameStateManager::update(float delta_time) {
+    game_states.back()->update(delta_time);
 }
 
 void GameStateManager::handle_events(SDL_Event event) {
