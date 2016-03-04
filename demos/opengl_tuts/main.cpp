@@ -51,6 +51,8 @@ int main() {
     window.set_vsync(true);
     window.enable_depth_test();
     
+    SDL_ShowCursor(SDL_DISABLE);
+    
     std::vector<leng::Shader> shaders;
     leng::ShaderProgram shader_program;
     load_shaders(shaders, shader_program);
@@ -178,8 +180,7 @@ int main() {
 	while(SDL_PollEvent(&event)) {
 	    switch(event.type){
 	    case SDL_KEYUP:
-		//if (event.key.keysym.sym == SDLK_ESCAPE) { running = false; }
-		//break;
+		if (event.key.keysym.sym == SDLK_ESCAPE) { running = false; }
 		input_manager.handle_keyboard_event(event);
 		break;
 	    case SDL_KEYDOWN:
