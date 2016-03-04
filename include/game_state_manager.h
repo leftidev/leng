@@ -5,6 +5,8 @@
 #include "game_state.h"
 
 namespace leng {
+
+class InputManager;
     
 class GameStateManager {
 public:
@@ -13,7 +15,7 @@ public:
 
     void change_game_state(GameState* state);
     void update(float delta_time);
-    void handle_events(SDL_Event event);
+    void handle_events(InputManager& input_manager);
     void draw();
     void quit() { running = false; }
 

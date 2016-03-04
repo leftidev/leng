@@ -56,8 +56,6 @@ int main() {
     load_shaders(shaders, shader_program);
 
     // Set up vertex data (and buffer(s)) and attribute pointers
-
-
     GLfloat vertices[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 	0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -204,7 +202,6 @@ int main() {
         glUniform1i(glGetUniformLocation(shader_program.program_id, "my_texture"), 0);
 	
 	shader_program.enable();
-
 
 	// Camera/View transformation
         glm::mat4 view;

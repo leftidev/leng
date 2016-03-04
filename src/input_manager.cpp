@@ -1,5 +1,7 @@
 #include "input_manager.h"
 
+#include <iostream>
+
 namespace leng {
     
 void InputManager::handle_keyboard_event(SDL_Event event) {

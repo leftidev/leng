@@ -1,6 +1,8 @@
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
+#include <unordered_map>
+
 #include "SDL2/SDL.h"
 
 namespace leng {
@@ -13,7 +15,7 @@ public:
     bool is_released(unsigned int key_code);
 
 private:
-    bool key_state[1024] {SDL_RELEASED};
+    std::unordered_map<unsigned int, bool> key_state;
 };
 
 } // namespace leng

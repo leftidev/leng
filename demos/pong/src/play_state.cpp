@@ -26,18 +26,15 @@ void PlayState::init() {
     ball.moving = true;    
 }
 
-void PlayState::handle_events(SDL_Event event) {
-    switch(event.type) {
-  case SDL_KEYDOWN:
-      if (event.key.keysym.sym == SDLK_UP) { player.up_held = true; }
-      if (event.key.keysym.sym == SDLK_DOWN) { player.down_held = true; }
-  break;
-  case SDL_KEYUP:
-    if (event.key.keysym.sym == SDLK_UP) { player.up_held = false; }
-    if (event.key.keysym.sym == SDLK_DOWN) { player.down_held = false; }
-  break;
-  } 
-
+void PlayState::handle_events(leng::InputManager& input_manager) {
+    if(input_manager.is_pressed(SDLK_UP))
+	player.up_held = true;
+    if(input_manager.is_pressed(SDLK_DOWN))
+	player.down_held = true;
+    if(input_manager.is_released(SDLK_UP))
+	player.up_held = false;
+    if(input_manager.is_released(SDLK_DOWN))
+	player.down_held = false;
 }
 
 void PlayState::update(float delta_time) {

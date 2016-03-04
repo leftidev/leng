@@ -22,19 +22,13 @@ void MenuState::init() {
     camera.init(800, 600);
 }
 
-void MenuState::handle_events(SDL_Event event) {
-    switch(event.type) {
-  case SDL_KEYDOWN:
-      if (event.key.keysym.sym == SDLK_UP) { std::cout << "Up arrow pressed" << std::endl; }
-      if (event.key.keysym.sym == SDLK_DOWN) { std::cout << "Down arrow pressed" << std::endl; }
-      if (event.key.keysym.sym == SDLK_RETURN) {
-	  change_game_state(state_manager, new PlayState(state_manager, window));
-      }
-      break;
-  case SDL_KEYUP:
-      break;
-  } 
-
+void MenuState::handle_events(leng::InputManager& input_manager) {
+    if(input_manager.is_pressed(SDLK_UP))
+	std::cout << "Up arrow pressed" << std::endl;
+    if(input_manager.is_pressed(SDLK_DOWN))
+	std::cout << "Down arrow pressed" << std::endl;
+    if(input_manager.is_pressed(SDLK_RETURN))
+	change_game_state(state_manager, new PlayState(state_manager, window));
 }
 
 void MenuState::update(float delta_time) {

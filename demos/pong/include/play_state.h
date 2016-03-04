@@ -15,6 +15,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "entity.h"
+#include "input_manager.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -28,7 +29,7 @@ public:
     ~PlayState();
 
     void init() override;
-    void handle_events(SDL_Event event) override;
+    void handle_events(leng::InputManager& input_manager) override;
     void update(float delta_time) override;
     void draw() override;
     void load_shaders();

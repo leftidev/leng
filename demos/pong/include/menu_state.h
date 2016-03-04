@@ -1,7 +1,6 @@
 #ifndef MENU_STATE_H
 #define MENU_STATE_H
 
-
 #include "game_state.h"
 #include "window.h"
 #include "shader.h"
@@ -20,7 +19,7 @@ public:
     ~MenuState();
 
     void init() override;
-    void handle_events(SDL_Event event) override;
+    void handle_events(leng::InputManager& input_manager) override;
     void update(float delta_time) override;
     void draw() override;
     void load_shaders();
