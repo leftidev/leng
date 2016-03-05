@@ -184,7 +184,7 @@ int main() {
 		running = false;
 		break;
 	    case SDL_MOUSEMOTION:
-		input_manager.set_mouse_coords(float(event.motion.x), float(event.motion.y));
+		input_manager.set_mouse_coords(event);
 		break;
 	    case SDL_KEYUP:
 		if (event.key.keysym.sym == SDLK_ESCAPE) { running = false; }

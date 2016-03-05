@@ -15,7 +15,7 @@ public:
     void handle_mouse_event(SDL_Event event);
     bool is_pressed(unsigned int key_code);
     bool is_released(unsigned int key_code);
-    void set_mouse_coords(float x, float y);
+    void set_mouse_coords(SDL_Event event);
 
     Position mouse_coords;
 private:
