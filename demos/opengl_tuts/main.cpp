@@ -50,8 +50,9 @@ int main() {
     leng::Window window("leng++", SCREEN_WIDTH, SCREEN_HEIGHT);
     window.set_vsync(true);
     window.enable_depth_test();
-    
-    SDL_ShowCursor(SDL_DISABLE);
+
+    // Hide cursor and trap mouse to window
+    SDL_SetRelativeMouseMode(SDL_TRUE);
     
     std::vector<leng::Shader> shaders;
     leng::ShaderProgram shader_program;
@@ -179,6 +180,12 @@ int main() {
 
 	while(SDL_PollEvent(&event)) {
 	    switch(event.type){
+	    case SDL_QUIT:
+		running = false;
+		break;
+	    case SDL_MOUSEMOTION:
+		input_manager.set_mouse_coords(float(event.motion.x), float(event.motion.y));
+		break;
 	    case SDL_KEYUP:
 		if (event.key.keysym.sym == SDLK_ESCAPE) { running = false; }
 		input_manager.handle_keyboard_event(event);
@@ -186,13 +193,16 @@ int main() {
 	    case SDL_KEYDOWN:
 		input_manager.handle_keyboard_event(event);
 		break;
-	    case SDL_QUIT:
-		running = false;
+	    case SDL_MOUSEBUTTONUP:
+		input_manager.handle_mouse_event(event);
+		break;
+	    case SDL_MOUSEBUTTONDOWN:
+		input_manager.handle_mouse_event(event);
 		break;
 	    }
 	}
 	handle_events(input_manager);
-	
+
 	// Rendering
         //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
