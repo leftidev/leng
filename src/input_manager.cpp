@@ -19,9 +19,9 @@ bool InputManager::is_released(unsigned int key_code) {
     return (key_state[key_code] == SDL_RELEASED);
 }
 
-void InputManager::set_mouse_coords(SDL_Event event) {
-    mouse_coords.x = float(event.motion.x);
-    mouse_coords.y = float(event.motion.y);
+void InputManager::set_mouse_coords(float x, float y) {
+    mouse_coords.x = x;
+    mouse_coords.y = y;
 }
 
 } // namespace leng

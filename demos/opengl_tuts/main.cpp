@@ -25,7 +25,11 @@ glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 GLfloat cameraSpeed = 0.01f;
-
+GLfloat yaw    = -90.0f;	// Yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right (due to how Eular angles work) so we initially rotate a bit to the left.
+GLfloat pitch  =  0.0f;
+GLfloat lastX  =  SCREEN_WIDTH  / 2.0;
+GLfloat lastY  =  SCREEN_HEIGHT / 2.0;
+GLfloat fov =  45.0f;
 
 void handle_events(leng::InputManager& input_manager) {
 	if(input_manager.is_pressed(SDLK_w))
@@ -46,13 +50,39 @@ void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shade
     shader_program.link_shaders(shaders);
 }
 
+void mouse_movement(float x, float y)
+{
+    GLfloat xoffset = -x;
+    GLfloat yoffset = y; // Reversed since y-coordinates go from bottom to left
+
+    GLfloat sensitivity = 0.1;  // Change this value to your liking
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw   += xoffset;
+    pitch += yoffset;
+
+    // Make sure that when pitch is out of bounds, screen doesn't get flipped
+    if(pitch > 89.0f)
+        pitch = 89.0f;
+    if(pitch < -89.0f)
+        pitch = -89.0f;
+
+    glm::vec3 front;
+    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(front);
+}  
+
 int main() {
     leng::Window window("leng++", SCREEN_WIDTH, SCREEN_HEIGHT);
     window.set_vsync(true);
     window.enable_depth_test();
 
     // Hide cursor and trap mouse to window
-    SDL_SetRelativeMouseMode(SDL_TRUE);
+    //SDL_SetRelativeMouseMode(SDL_TRUE);
+    SDL_ShowCursor(SDL_DISABLE);
     
     std::vector<leng::Shader> shaders;
     leng::ShaderProgram shader_program;
@@ -171,6 +201,10 @@ int main() {
 
     leng::InputManager input_manager;
 
+    float x_offset, y_offset;
+
+    SDL_WarpMouseInWindow(window.window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+    
     bool running = true;
     SDL_Event event;
     while (running) {
@@ -184,7 +218,11 @@ int main() {
 		running = false;
 		break;
 	    case SDL_MOUSEMOTION:
-		input_manager.set_mouse_coords(event);
+		input_manager.set_mouse_coords(float(event.motion.x), float(event.motion.y));
+		// FPS Camera movement
+		x_offset = SCREEN_WIDTH / 2 - event.motion.x;
+		y_offset = SCREEN_HEIGHT / 2 - event.motion.y;
+		mouse_movement(x_offset, y_offset);
 		break;
 	    case SDL_KEYUP:
 		if (event.key.keysym.sym == SDLK_ESCAPE) { running = false; }
@@ -202,6 +240,8 @@ int main() {
 	    }
 	}
 	handle_events(input_manager);
+
+	SDL_WarpMouseInWindow(window.window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
 	// Rendering
         //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

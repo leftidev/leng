@@ -14,9 +14,10 @@ public:
     void swap_window();
     void set_vsync(bool flag);
     
+    SDL_Window* window;
+    
 private:
     SDL_GLContext context;
-    SDL_Window* window;
 };
 
 }  // namespace leng
