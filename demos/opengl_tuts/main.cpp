@@ -7,39 +7,31 @@
 #include "shader.h"
 #include "shader_program.h"
 #include "input_manager.h"
+#include "camera_3d.h"
 
 #define GLM_FORCE_RADIANS
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-int SCREEN_WIDTH = 800;
-int SCREEN_HEIGHT = 600;
+float SCREEN_WIDTH = 800.0f;
+float SCREEN_HEIGHT = 600.0f;
 
 // Deltatime
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f;  	// Time of last frame
 
-glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
-GLfloat cameraSpeed = 0.01f;
-GLfloat yaw    = -90.0f;	// Yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right (due to how Eular angles work) so we initially rotate a bit to the left.
-GLfloat pitch  =  0.0f;
-GLfloat lastX  =  SCREEN_WIDTH  / 2.0;
-GLfloat lastY  =  SCREEN_HEIGHT / 2.0;
-GLfloat fov =  45.0f;
+leng::Camera3D camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 void handle_events(leng::InputManager& input_manager) {
 	if(input_manager.is_pressed(SDLK_w))
-	    cameraPos += cameraSpeed * deltaTime * cameraFront;
+	    camera.handle_keyboard(FORWARD, deltaTime);
 	if(input_manager.is_pressed(SDLK_s))
-	    cameraPos -= cameraSpeed * deltaTime * cameraFront;
+	    camera.handle_keyboard(BACKWARD, deltaTime);
 	if(input_manager.is_pressed(SDLK_a))
-	    cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;
+	    camera.handle_keyboard(LEFT, deltaTime);
 	if(input_manager.is_pressed(SDLK_d))
-	    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;  
+	    camera.handle_keyboard(RIGHT, deltaTime);
 }
 
 void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shader_program) {
@@ -49,7 +41,7 @@ void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shade
     // Link the shaders
     shader_program.link_shaders(shaders);
 }
-
+/*
 void mouse_movement(float x, float y)
 {
     GLfloat xoffset = -x;
@@ -74,7 +66,7 @@ void mouse_movement(float x, float y)
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraFront = glm::normalize(front);
 }  
-
+*/
 int main() {
     leng::Window window("leng++", SCREEN_WIDTH, SCREEN_HEIGHT);
     window.set_vsync(true);
@@ -222,7 +214,7 @@ int main() {
 		// FPS Camera movement
 		x_offset = SCREEN_WIDTH / 2 - event.motion.x;
 		y_offset = SCREEN_HEIGHT / 2 - event.motion.y;
-		mouse_movement(x_offset, y_offset);
+		camera.handle_mouse_movement(x_offset, y_offset);
 		break;
 	    case SDL_KEYUP:
 		if (event.key.keysym.sym == SDLK_ESCAPE) { running = false; }
@@ -256,10 +248,10 @@ int main() {
 
 	// Camera/View transformation
         glm::mat4 view;
-	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	view = camera.GetViewMatrix();
 	
 	glm::mat4 projection;
-	projection = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
+	projection = glm::perspective(45.0f, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1f, 1000.0f);
 	
 	GLuint model_loc = shader_program.get_uniform_location("model");
 	GLuint view_loc = shader_program.get_uniform_location("view");
