@@ -172,9 +172,12 @@ int main() {
 	GLint lightPosLoc = glGetUniformLocation(lighting_shader.Program, "lightPos");
         GLint objectColorLoc = glGetUniformLocation(lighting_shader.Program, "objectColor");
         GLint lightColorLoc  = glGetUniformLocation(lighting_shader.Program, "lightColor");
+	GLint viewPosLoc = glGetUniformLocation(lighting_shader.Program, "viewPos");
+
         glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
         glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f);
 	glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);  
+	glUniform3f(viewPosLoc, camera.Position.x, camera.Position.y, camera.Position.z);  
         // Create camera transformations
         glm::mat4 view;
         view = camera.GetViewMatrix();
