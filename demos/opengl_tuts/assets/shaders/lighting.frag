@@ -8,7 +8,8 @@ struct Material {
   
 struct Light {
     vec3 position;
-    //vec3 direction
+    vec3 direction;
+    float cutOff;
     
     vec3 ambient;
     vec3 diffuse;
@@ -31,6 +32,12 @@ uniform Light light;
 
 void main()
 {
+    vec3 lightDir = normalize(light.position - FragPos);
+
+    float theta = dot(lightDir, normalize(-light.direction));
+    
+    if(theta > light.cutOff) 
+    {       
     // Light attenuation
     float distance    = length(light.position - FragPos);
     float attenuation = 1.0f / (light.constant + light.linear * distance + 
@@ -56,4 +63,8 @@ void main()
     specular *= attenuation;
     
     color = vec4(ambient + diffuse + specular, 1.0f);  
+    }
+    else  // else, use ambient light so scene isn't completely dark outside the spotlight.
+      color = vec4(light.ambient * vec3(texture(material.diffuse, TexCoords)), 1.0f);
+
 }

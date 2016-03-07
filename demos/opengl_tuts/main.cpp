@@ -220,11 +220,16 @@ int main() {
 	// Light position and view position for lighting calculations
 	//GLint lightDirPos = glGetUniformLocation(lighting_shader.Program, "light.direction");
 	GLint lightPosLoc = glGetUniformLocation(lighting_shader.Program, "light.position");
+	GLint lightSpotdirLoc = glGetUniformLocation(lighting_shader.Program, "light.direction");
+	GLint lightSpotCutOffLoc = glGetUniformLocation(lighting_shader.Program, "light.cutOff");
 	GLint viewPosLoc = glGetUniformLocation(lighting_shader.Program, "viewPos");
 	//glUniform3f(lightDirPos, -0.2f, -1.0f, -0.3f);
-	glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
-	glUniform3f(viewPosLoc, camera.Position.x, camera.Position.y, camera.Position.z);
-
+	//glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
+	//glUniform3f(viewPosLoc, camera.Position.x, camera.Position.y, camera.Position.z);
+	glUniform3f(lightPosLoc,        camera.Position.x, camera.Position.y, camera.Position.z);	
+	glUniform3f(lightSpotdirLoc,    camera.Front.x, camera.Front.y, camera.Front.z);
+	glUniform1f(lightSpotCutOffLoc, glm::cos(glm::radians(12.5f)));
+	
 	// Set lights properties
         glUniform3f(glGetUniformLocation(lighting_shader.Program, "light.ambient"),  0.2f, 0.2f, 0.2f);
         glUniform3f(glGetUniformLocation(lighting_shader.Program, "light.diffuse"),  0.5f, 0.5f, 0.5f);
