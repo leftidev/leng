@@ -218,15 +218,21 @@ int main() {
         // Use cooresponding shader when setting uniforms/drawing objects
         lighting_shader.Use();
 	// Light position and view position for lighting calculations
-	GLint lightDirPos = glGetUniformLocation(lighting_shader.Program, "light.direction");
+	//GLint lightDirPos = glGetUniformLocation(lighting_shader.Program, "light.direction");
+	GLint lightPosLoc = glGetUniformLocation(lighting_shader.Program, "light.position");
 	GLint viewPosLoc = glGetUniformLocation(lighting_shader.Program, "viewPos");
-	glUniform3f(lightDirPos, -0.2f, -1.0f, -0.3f);  	
+	//glUniform3f(lightDirPos, -0.2f, -1.0f, -0.3f);
+	glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
 	glUniform3f(viewPosLoc, camera.Position.x, camera.Position.y, camera.Position.z);
 
 	// Set lights properties
         glUniform3f(glGetUniformLocation(lighting_shader.Program, "light.ambient"),  0.2f, 0.2f, 0.2f);
         glUniform3f(glGetUniformLocation(lighting_shader.Program, "light.diffuse"),  0.5f, 0.5f, 0.5f);
         glUniform3f(glGetUniformLocation(lighting_shader.Program, "light.specular"), 1.0f, 1.0f, 1.0f);
+	glUniform1f(glGetUniformLocation(lighting_shader.Program, "light.constant"),  1.0f);
+        glUniform1f(glGetUniformLocation(lighting_shader.Program, "light.linear"),    0.09);
+        glUniform1f(glGetUniformLocation(lighting_shader.Program, "light.quadratic"), 0.032);
+	// Set material properties
         glUniform1f(glGetUniformLocation(lighting_shader.Program, "material.shininess"), 32.0f);
 
         // Create camera transformations
@@ -248,8 +254,15 @@ int main() {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, specularMap);
 
+	// Draw the container (using container's vertex attributes)
+        /*glBindVertexArray(containerVAO);
+        glm::mat4 model;
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);*/
+
+	// Draw 10 containers with the same VAO and VBO information; only their world space coordinates differ
 	glm::mat4 model;
-        // Draw the container (using container's vertex attributes)
         glBindVertexArray(containerVAO);
 	for(GLuint i = 0; i < 10; i++) {
 	    model = glm::mat4();
