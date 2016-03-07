@@ -4,10 +4,9 @@
 #include <SOIL/SOIL.h>
 
 #include "window.h"
-#include "shader.h"
-#include "shader_program.h"
 #include "input_manager.h"
 #include "camera_3d.h"
+#include "shader.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -23,6 +22,9 @@ float lastFrame = 0.0f;  	// Time of last frame
 
 leng::Camera3D camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
+// Light attributes
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+
 void handle_events(leng::InputManager& input_manager) {
 	if(input_manager.is_pressed(SDLK_w))
 	    camera.handle_keyboard(FORWARD, deltaTime);
@@ -34,13 +36,6 @@ void handle_events(leng::InputManager& input_manager) {
 	    camera.handle_keyboard(RIGHT, deltaTime);
 }
 
-void load_shaders(std::vector<leng::Shader>& shaders, leng::ShaderProgram& shader_program) {
-    // Create and compile the shaders
-    shaders.push_back(leng::Shader("assets/shaders/pong.vert", GL_VERTEX_SHADER));
-    shaders.push_back(leng::Shader("assets/shaders/pong.frag", GL_FRAGMENT_SHADER));
-    // Link the shaders
-    shader_program.link_shaders(shaders);
-}
 /*
 void mouse_movement(float x, float y)
 {
@@ -75,121 +70,78 @@ int main() {
     // Hide cursor and trap mouse to window
     //SDL_SetRelativeMouseMode(SDL_TRUE);
     SDL_ShowCursor(SDL_DISABLE);
+
+        // Build and compile our shader program
+    leng::Shader lighting_shader("assets/shaders/lighting.vert", "assets/shaders/lighting.frag");
+    leng::Shader lamp_shader("assets/shaders/lamp.vert", "assets/shaders/lamp.frag");
     
-    std::vector<leng::Shader> shaders;
-    leng::ShaderProgram shader_program;
-    load_shaders(shaders, shader_program);
-
     // Set up vertex data (and buffer(s)) and attribute pointers
-    GLfloat vertices[] = {
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-	0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-	0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+   GLfloat vertices[] = {
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
 
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
 
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
 
-	0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
 
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-	0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f,  0.5f,
+         0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f, -0.5f,
 
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        -0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f
     };
 
-    /*
-    GLuint indices[] = {  // Note that we start from 0!
-        0, 1, 3, // First Triangle
-        1, 2, 3  // Second Triangle
-    };
-    */
-
-    glm::vec3 cubePositions[] = {
-	glm::vec3( 0.0f,  0.0f,  0.0f), 
-	glm::vec3( 2.0f,  5.0f, -15.0f), 
-	glm::vec3(-1.5f, -2.2f, -2.5f),  
-	glm::vec3(-3.8f, -2.0f, -12.3f),  
-	glm::vec3( 2.4f, -0.4f, -3.5f),  
-	glm::vec3(-1.7f,  3.0f, -7.5f),  
-	glm::vec3( 1.3f, -2.0f, -2.5f),  
-	glm::vec3( 1.5f,  2.0f, -2.5f), 
-	glm::vec3( 1.5f,  0.2f, -1.5f), 
-	glm::vec3(-1.3f,  1.0f, -1.5f)  
-    };
-    GLuint VBO, VAO;//, EBO;
-    glGenVertexArrays(1, &VAO);
+    // First, set the container's VAO (and VBO)
+    GLuint VBO, containerVAO;
+    glGenVertexArrays(1, &containerVAO);
     glGenBuffers(1, &VBO);
-    //glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // Enable shader attributes
-    shader_program.enable_attribute("position", 3, 5, (GLvoid*)0);
-    //shader_program.enable_attribute("color", 3, 8, (GLvoid*)(3 * sizeof(GLfloat)));
-    shader_program.enable_attribute("text_coord", 2, 5, (GLvoid*)(3 * sizeof(GLfloat)));
-    
+    glBindVertexArray(containerVAO);
+    // Position attribute
+    lamp_shader.enable_attribute("position", 3, 3, (GLvoid*)0);
     glBindVertexArray(0);
 
-    GLuint texture;
-    // Generate and bind texture
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    // Set texture parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    // Set texture filtering
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    int width, height;
-    // Load, and generate mipmaps
-    unsigned char* image = SOIL_load_image("assets/textures/container.jpg", &width, &height, 0, SOIL_LOAD_RGBA);
-
-    // Create texture
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-
-    // Generate mipmaps
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    // De-allocate resources and unbind
-    SOIL_free_image_data(image);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    // Then, we set the light's VAO (VBO stays the same. After all, the vertices are the same for the light object (also a 3D cube))
+    GLuint lightVAO;
+    glGenVertexArrays(1, &lightVAO);
+    glBindVertexArray(lightVAO);
+    // We only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need.
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    // Set the vertex attributes (only position data for the lamp))
+    lighting_shader.enable_attribute("position", 3, 3, (GLvoid*)0);
+    glBindVertexArray(0);
 
     leng::InputManager input_manager;
 
@@ -238,47 +190,55 @@ int main() {
 	// Rendering
         //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// Bind Textures using texture units
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glUniform1i(glGetUniformLocation(shader_program.program_id, "my_texture"), 0);
 	
-	shader_program.enable();
+        // Use cooresponding shader when setting uniforms/drawing objects
+        lighting_shader.Use();
+        GLint objectColorLoc = glGetUniformLocation(lighting_shader.Program, "objectColor");
+        GLint lightColorLoc  = glGetUniformLocation(lighting_shader.Program, "lightColor");
+        glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
+        glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f);
 
-	// Camera/View transformation
+        // Create camera transformations
         glm::mat4 view;
-	view = camera.GetViewMatrix();
-	
-	glm::mat4 projection;
-	projection = glm::perspective(45.0f, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1f, 1000.0f);
-	
-	GLuint model_loc = shader_program.get_uniform_location("model");
-	GLuint view_loc = shader_program.get_uniform_location("view");
-	GLuint proj_loc = shader_program.get_uniform_location("projection");
-	
-	glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(projection));
+        view = camera.GetViewMatrix();
+        glm::mat4 projection = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 1000.0f);
+        // Get the uniform locations
+        GLint modelLoc = glGetUniformLocation(lighting_shader.Program, "model");
+        GLint viewLoc  = glGetUniformLocation(lighting_shader.Program,  "view");
+        GLint projLoc  = glGetUniformLocation(lighting_shader.Program,  "projection");
+        // Pass the matrices to the shader
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-	// Draw container
-        glBindVertexArray(VAO);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	for(GLuint i = 0; i < 10; i++) {
-		glm::mat4 model;
-		model = glm::translate(model, cubePositions[i]);
-		GLfloat angle = glm::radians(20.0f * i); 
-		model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
-		glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
+        // Draw the container (using container's vertex attributes)
+        glBindVertexArray(containerVAO);
+        glm::mat4 model;
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-	    }
-	glBindVertexArray(0);
-
-	shader_program.disable();
+        // Also draw the lamp object, again binding the appropriate shader
+        lamp_shader.Use();
+        // Get location objects for the matrices on the lamp shader (these could be different on a different shader)
+        modelLoc = glGetUniformLocation(lamp_shader.Program, "model");
+        viewLoc  = glGetUniformLocation(lamp_shader.Program, "view");
+        projLoc  = glGetUniformLocation(lamp_shader.Program, "projection");
+        // Set matrices
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        model = glm::mat4();
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        // Draw the light object (using light's vertex attributes)
+        glBindVertexArray(lightVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
 	// Swap buffers
 	window.swap_window();
     }
-    glDeleteVertexArrays(1, &VAO);
+    glDeleteVertexArrays(1, &containerVAO);
+    glDeleteVertexArrays(1, &lightVAO);
     glDeleteBuffers(1, &VBO);
     
     return 0;

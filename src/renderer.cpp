@@ -21,7 +21,7 @@ Renderer::~Renderer() {
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
 }
-
+    /*
 void Renderer::init_vao(leng::ShaderProgram& shader_program) {
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -34,7 +34,7 @@ void Renderer::init_vao(leng::ShaderProgram& shader_program) {
     
     glBindVertexArray(0);
 }
-
+    */
 void Renderer::update_vertices(leng::Sprite& sprite) {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(sprite.vertex_data), sprite.vertex_data, GL_STATIC_DRAW);
