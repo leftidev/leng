@@ -7,7 +7,6 @@
 #include "input_manager.h"
 #include "camera_3d.h"
 #include "shader.h"
-#include "resource_manager.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
