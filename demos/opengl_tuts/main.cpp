@@ -96,6 +96,19 @@ int main() {
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
     };
 
+    glm::vec3 cubePositions[] = {
+    glm::vec3( 0.0f,  0.0f,  0.0f),
+    glm::vec3( 2.0f,  5.0f, -15.0f),
+    glm::vec3(-1.5f, -2.2f, -2.5f),
+    glm::vec3(-3.8f, -2.0f, -12.3f),
+    glm::vec3( 2.4f, -0.4f, -3.5f),
+    glm::vec3(-1.7f,  3.0f, -7.5f),
+    glm::vec3( 1.3f, -2.0f, -2.5f),
+    glm::vec3( 1.5f,  2.0f, -2.5f),
+    glm::vec3( 1.5f,  0.2f, -1.5f),
+    glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+
     // First, set the container's VAO (and VBO)
     GLuint VBO, containerVAO;
     glGenVertexArrays(1, &containerVAO);
@@ -205,9 +218,9 @@ int main() {
         // Use cooresponding shader when setting uniforms/drawing objects
         lighting_shader.Use();
 	// Light position and view position for lighting calculations
-	GLint lightPosLoc = glGetUniformLocation(lighting_shader.Program, "light.position");
+	GLint lightDirPos = glGetUniformLocation(lighting_shader.Program, "light.direction");
 	GLint viewPosLoc = glGetUniformLocation(lighting_shader.Program, "viewPos");
-	glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);  
+	glUniform3f(lightDirPos, -0.2f, -1.0f, -0.3f);  	
 	glUniform3f(viewPosLoc, camera.Position.x, camera.Position.y, camera.Position.z);
 
 	// Set lights properties
@@ -235,12 +248,18 @@ int main() {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, specularMap);
 
-	
+	glm::mat4 model;
         // Draw the container (using container's vertex attributes)
         glBindVertexArray(containerVAO);
-        glm::mat4 model;
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+	for(GLuint i = 0; i < 10; i++) {
+	    model = glm::mat4();
+	    model = glm::translate(model, cubePositions[i]);
+	    GLfloat angle = 20.0f * i; 
+	    model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+	    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+	    glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
         glBindVertexArray(0);
 
         // Also draw the lamp object, again binding the appropriate shader
