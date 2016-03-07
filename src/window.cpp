@@ -16,7 +16,7 @@ Window::Window(const char* title, int width, int height) {
     }
 
     window = SDL_CreateWindow(title,
-			      100, 100,
+			      400, 300,
 			      width, height,
 			      SDL_WINDOW_OPENGL);
     // Error checking
