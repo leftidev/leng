@@ -2,7 +2,7 @@
 
 namespace leng {
 
-Sprite::Sprite(float x, float y, float _width, float _height, const char* path) : texture(path) {
+    Sprite::Sprite(float x, float y, float _width, float _height, std::string path) {
     pos.x = x;
     pos.y = y;
     width = _width;

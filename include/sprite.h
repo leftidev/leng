@@ -1,7 +1,9 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-#include "texture.h"
+#include <string>
+
+#include "leng.h"
 #include "vertex.h"
 #include "leng.h"
 
@@ -9,7 +11,7 @@ namespace leng {
 
 class Sprite {
 public:
-    Sprite(float x, float y, float _width, float _height, const char* path);
+    Sprite(float x, float y, float _width, float _height, std::string path);
     ~Sprite();
 
     Texture texture;

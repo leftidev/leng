@@ -1,8 +1,16 @@
 #ifndef LENG_H
 #define LENG_H
 
+#include <GL/glew.h>
+
 namespace leng {
-    
+
+struct Texture {
+	GLuint id;
+	int width;
+	int height;
+};
+
 struct Position {
 	float x;
 	float y;

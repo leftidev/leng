@@ -1,9 +1,17 @@
-#ifndef RESOURCE_MANAGER_H
-#define RESOURCE_MANAGER_H
+#pragma once
 
+#include <string>
+
+#include "texture_cache.h"
+
+
+namespace leng {
+// This is a way to access all resources, such as models or textures
 class ResourceManager {
 public:
-    ResourceManager();
-};
+	static Texture getTexture(std::string texturePath);
 
-#endif
+private:
+	static TextureCache _textureCache;
+};
+}
