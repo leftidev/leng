@@ -7,31 +7,31 @@ GameStateManager::GameStateManager() : running(false) {}
     
 GameStateManager::~GameStateManager() {}
 
-void GameStateManager::change_game_state(GameState* state) {
+void GameStateManager::changeGameState(GameState* state) {
     if(!running) {
 	running = true;
     }
 
     // cleanup the current state
-    if(!game_states.empty()) {
-	game_states.pop_back();
+    if(!gameStates.empty()) {
+	gameStates.pop_back();
     }
 
     // store and init the new game state
-    game_states.push_back(state);
-    game_states.back()->init();
+    gameStates.push_back(state);
+    gameStates.back()->init();
 }
 
-void GameStateManager::update(float delta_time) {
-    game_states.back()->update(delta_time);
+void GameStateManager::update(float deltaTime) {
+    gameStates.back()->update(deltaTime);
 }
 
-void GameStateManager::handle_events(InputManager& input_manager) {
-    game_states.back()->handle_events(input_manager);
+void GameStateManager::handleEvents(InputManager& inputManager) {
+    gameStates.back()->handleEvents(inputManager);
 }
 
 void GameStateManager::draw() {
-    game_states.back()->draw();
+    gameStates.back()->draw();
 }
 
 } // namespace leng

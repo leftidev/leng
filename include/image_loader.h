@@ -5,12 +5,11 @@
 
 #include "leng.h"
 
-
 namespace leng {
-// Loads images into GLTextures
+    
 class ImageLoader {
 public:
-    static Texture loadImage(std::string path);
+    static Texture loadImage(const std::string& path);
 };
 
 } // namespace leng

@@ -1,27 +1,27 @@
-#include "input_manager.h"
-
 #include <iostream>
+
+#include "input_manager.h"
 
 namespace leng {
     
-void InputManager::handle_keyboard_event(SDL_Event event) {
-    key_state[event.key.keysym.sym] = event.key.state;
+void InputManager::handleKeyboardEvent(SDL_Event event) {
+    keyState[event.key.keysym.sym] = event.key.state;
 }
 
-void InputManager::handle_mouse_event(SDL_Event event) {
-    key_state[event.button.button] = event.button.state;
+void InputManager::handleMouseEvent(SDL_Event event) {
+    keyState[event.button.button] = event.button.state;
 }
 
-bool InputManager::is_pressed(unsigned int key_code) {
-    return (key_state[key_code] == SDL_PRESSED);
+bool InputManager::isPressed(unsigned int key_code) {
+    return (keyState[key_code] == SDL_PRESSED);
 }
-bool InputManager::is_released(unsigned int key_code) {
-    return (key_state[key_code] == SDL_RELEASED);
+bool InputManager::isReleased(unsigned int key_code) {
+    return (keyState[key_code] == SDL_RELEASED);
 }
 
-void InputManager::set_mouse_coords(float x, float y) {
-    mouse_coords.x = x;
-    mouse_coords.y = y;
+void InputManager::setMouseCoords(float x, float y) {
+    mouseCoords.x = x;
+    mouseCoords.y = y;
 }
 
 } // namespace leng

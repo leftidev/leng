@@ -1,10 +1,10 @@
-#include "image_loader.h"
-
 #include <SOIL/SOIL.h>
+
+#include "image_loader.h"
 
 namespace leng {
     
-Texture ImageLoader::loadImage(std::string path) {
+Texture ImageLoader::loadImage(const std::string& path) {
     Texture texture = {};
     // Generate and bind texture
     glGenTextures(1, &texture.id);
@@ -20,8 +20,7 @@ Texture ImageLoader::loadImage(std::string path) {
 
     int width, height;
     // Load, and generate mipmaps
-    const char* c = path.c_str();
-    unsigned char* image = SOIL_load_image(c, &width, &height, 0, SOIL_LOAD_RGBA);
+    unsigned char* image = SOIL_load_image(path.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
 
     // Create texture
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);

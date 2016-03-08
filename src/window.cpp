@@ -1,34 +1,30 @@
 #include <iostream>
-#include <string>
+
 
 #include "window.h"
 
-void error(std::string message, std::string error) {
-    std::cout << message + error  << std::endl;
-}
-
 namespace leng {
     
-Window::Window(const char* title, int width, int height) {
+Window::Window(std::string title, int width, int height) {
     // Initialize SDL
     if(SDL_Init(SDL_INIT_VIDEO) != 0) {
-	error("Could not initialize SDL: ", SDL_GetError());
+	std::cout << "Could not initialize SDL: " << SDL_GetError() << std::endl;
     }
-
-    window = SDL_CreateWindow(title,
+    const char* Title = title.c_str();
+    window = SDL_CreateWindow(Title,
 			      400, 300,
 			      width, height,
 			      SDL_WINDOW_OPENGL);
     // Error checking
     if(window == nullptr) {
-	error("Could not create window: ", SDL_GetError());
+	std::cout << "Could not create window: " << SDL_GetError() << std::endl;
     }
 
     context = SDL_GL_CreateContext(window);
 
     // Error checking
     if(context == nullptr) {
-	error("Could not create GL context: ", SDL_GetError());
+	std::cout << "Could not create GL context: " << SDL_GetError() << std::endl;
     }
 
     GLenum err = glewInit();
@@ -48,15 +44,15 @@ Window::~Window() {
     SDL_Quit();
 }    
 
-void Window::enable_depth_test() {
+void Window::enableDepthTest() {
     glEnable(GL_DEPTH_TEST);
 }
     
-void Window::swap_window() {
+void Window::swapWindow() {
     SDL_GL_SwapWindow(window);
 }
 
-void Window::set_vsync(bool flag) {
+void Window::setVsync(bool flag) {
     SDL_GL_SetSwapInterval(flag);
 }
     

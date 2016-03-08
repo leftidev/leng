@@ -17,26 +17,26 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {
     }
 
     // Store all the text in the file
-    std::string vertex_file_contents = "";
-    std::string fragment_file_contents = "";
+    std::string vertexFileContents = "";
+    std::string fragmentFileContents = "";
 
     // Grab each line of the file
-    std::string vertex_line;
-    std::string fragment_line;
+    std::string vertexLine;
+    std::string fragmentLine;
 
     // Get all lines in the file and add it to file_contents
-    while(std::getline(vertexFile, vertex_line)) {
-	vertex_file_contents += vertex_line + "\n";
+    while(std::getline(vertexFile, vertexLine)) {
+	vertexFileContents += vertexLine + "\n";
     }
-    while(std::getline(fragmentFile, fragment_line)) {
-	fragment_file_contents += fragment_line + "\n";
+    while(std::getline(fragmentFile, fragmentLine)) {
+	fragmentFileContents += fragmentLine + "\n";
     }
 
     vertexFile.close();
     fragmentFile.close();
 
-    const char* vShaderCode = vertex_file_contents.c_str();
-    const char * fShaderCode = fragment_file_contents.c_str();
+    const char* vShaderCode = vertexFileContents.c_str();
+    const char * fShaderCode = fragmentFileContents.c_str();
     // 2. Compile shaders
     GLuint vertex, fragment;
     GLint success;
@@ -82,21 +82,21 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {
 }
     
 // Uses the current shader
-void Shader::Use() { 
+void Shader::use() { 
     glUseProgram(this->Program); 
 }
     
-void Shader::enable_attribute(const std::string& attr_name, int count, int stride, void* ptr) {
-    GLint attr = glGetAttribLocation(this->Program, attr_name.c_str());
+void Shader::enableAttribute(const std::string& attrName, int count, int stride, void* ptr) {
+    GLint attr = glGetAttribLocation(this->Program, attrName.c_str());
     if (attr == -1) {
-	std::cout << "Shader has no attribute called " + attr_name << std::endl;
+	std::cout << "Shader has no attribute called " + attrName << std::endl;
     } else {
 	glEnableVertexAttribArray(attr);
 	glVertexAttribPointer(attr, count, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * stride, ptr);
     }   
 }
 
-GLuint Shader::get_uniform_location(const std::string& uniformName) {
+GLuint Shader::getUniformLocation(const std::string& uniformName) {
     GLuint uniform = glGetUniformLocation(this->Program, uniformName.c_str());
     if (uniform == GL_INVALID_INDEX) {
 	std::cout << "Uniform " + uniformName + " not found in shader!" << std::endl;

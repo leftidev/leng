@@ -9,25 +9,25 @@ Camera2D::Camera2D()  {
 Camera2D::~Camera2D() {
 }
 
-void Camera2D::init(int _screen_width, int _screen_height) {
-	screen_width = _screen_width;
-	screen_height = _screen_height;
-	ortho_matrix = glm::ortho(0.0f, (float)screen_width, 0.0f, (float)screen_height);
+void Camera2D::init(int ScreenWidth, int ScreenHeight) {
+	screenWidth = ScreenWidth;
+	screenHeight = ScreenHeight;
+	orthoMatrix = glm::ortho(0.0f, (float)screenWidth, 0.0f, (float)screenHeight);
 }
 
 // Updates the camera matrix if needed
 void Camera2D::update() {
     // Only update if our position or scale have changed
-    if (needs_matrix_update) {
+    if (needsMatrixUpdate) {
 	// Camera Translation
-	glm::vec3 translate(-position.x + screen_width / 2, -position.y + screen_height / 2, 0.0f);
-	camera_matrix = glm::translate(ortho_matrix, translate);
+	glm::vec3 translate(-position.x + screenWidth / 2, -position.y + screenHeight / 2, 0.0f);
+	cameraMatrix = glm::translate(orthoMatrix, translate);
 
 	// Camera Scale
-	glm::vec3 c_scale(scale, scale, 0.0f);
-	camera_matrix = glm::scale(glm::mat4(1.0f), c_scale) * camera_matrix;
+	glm::vec3 Scale(scale, scale, 0.0f);
+	cameraMatrix = glm::scale(glm::mat4(1.0f), Scale) * cameraMatrix;
 
-	needs_matrix_update = false;
+	needsMatrixUpdate = false;
     }
 }
     

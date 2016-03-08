@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-#include "SDL2/SDL.h"
+#include <SDL2/SDL.h>
 
 #include "leng.h"
 
@@ -11,16 +11,17 @@ namespace leng {
     
 class InputManager {
 public:
-    void handle_keyboard_event(SDL_Event event);
-    void handle_mouse_event(SDL_Event event);
-    bool is_pressed(unsigned int key_code);
-    bool is_released(unsigned int key_code);
-    void set_mouse_coords(float x, float y);
+    void handleKeyboardEvent(SDL_Event event);
+    void handleMouseEvent(SDL_Event event);
+    bool isPressed(unsigned int key_code);
+    bool isReleased(unsigned int key_code);
+    void setMouseCoords(float x, float y);
 
-    Position mouse_coords;
+    Position mouseCoords;
 private:
-    std::unordered_map<unsigned int, bool> key_state;
+    std::unordered_map<unsigned int, bool> keyState;
 };
 
 } // namespace leng
+
 #endif // INPUT_MANAGER_H

@@ -5,31 +5,32 @@
 
 namespace leng {
 
-    class SoundEffect {
-    public:
-	SoundEffect(const char* path);
-	~SoundEffect();
+class SoundEffect {
+public:
+    SoundEffect(const char* path);
+    ~SoundEffect();
 
-	void play(int loops = 0);
+    void play(int loops = 0);
 
-    private:
-	Mix_Chunk* chunk;
-    };
+private:
+    Mix_Chunk* chunk;
+};
     
-    class Music {
-    public:
-	Music(const char* path);
-	~Music();
-	void play(int loops = -1);
-	void pause();
-	void resume();
-	void stop();
+class Music {
+public:
+    Music(const char* path);
+    ~Music();
+    void play(int loops = -1);
+    void pause();
+    void resume();
+    void stop();
 	
-    private:
-	Mix_Music* music;	
-    };
+private:
+    Mix_Music* music;	
+};
     
-    void sound_init();
+static void soundInit();
+
 } // namespace leng
 
 #endif // SOUND_H

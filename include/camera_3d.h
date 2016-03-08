@@ -6,7 +6,6 @@
 #include <GL/glew.h>
 
 #define GLM_FORCE_RADIANS
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -40,12 +39,12 @@ public:
     GLfloat Yaw;
     GLfloat Pitch;
     // Camera options
-    GLfloat movement_speed;
-    GLfloat mouse_sensitivity;
+    GLfloat movementSpeed;
+    GLfloat mouseSensitivity;
     GLfloat Zoom;
 
     // Constructor with vectors
-Camera3D(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = YAW, GLfloat pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), movement_speed(SPEED), mouse_sensitivity(SENSITIVITY), Zoom(ZOOM) {
+Camera3D(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = YAW, GLfloat pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), Zoom(ZOOM) {
         this->Position = position;
         this->WorldUp = up;
         this->Yaw = yaw;
@@ -53,7 +52,7 @@ Camera3D(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::v
         this->update_camera_vectors();
     }
     // Constructor with scalar values
-Camera3D(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), movement_speed(SPEED), mouse_sensitivity(SENSITIVITY), Zoom(ZOOM) {
+Camera3D(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), Zoom(ZOOM) {
         this->Position = glm::vec3(posX, posY, posZ);
         this->WorldUp = glm::vec3(upX, upY, upZ);
         this->Yaw = yaw;
@@ -67,8 +66,8 @@ Camera3D(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLf
     }
 
     // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-    void handle_keyboard(camera_movement direction, GLfloat deltaTime) {
-        GLfloat velocity = this->movement_speed * deltaTime;
+    void handleKeyboard(camera_movement direction, GLfloat deltaTime) {
+        GLfloat velocity = this->movementSpeed * deltaTime;
         if (direction == FORWARD)
             this->Position += this->Front * velocity;
         if (direction == BACKWARD)
@@ -80,9 +79,9 @@ Camera3D(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLf
     }
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-    void handle_mouse_movement(GLfloat xoffset, GLfloat yoffset, GLboolean constrain_pitch = true) {
-        xoffset *= -this->mouse_sensitivity;
-        yoffset *= this->mouse_sensitivity;
+    void handleMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constrain_pitch = true) {
+        xoffset *= -this->mouseSensitivity;
+        yoffset *= this->mouseSensitivity;
 
         this->Yaw   += xoffset;
         this->Pitch += yoffset;

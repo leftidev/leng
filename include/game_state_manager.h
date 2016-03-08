@@ -2,6 +2,7 @@
 #define GAME_STATE_MANAGER_H
 
 #include <vector>
+
 #include "game_state.h"
 
 namespace leng {
@@ -13,13 +14,13 @@ public:
     GameStateManager();
     ~GameStateManager();
 
-    void change_game_state(GameState* state);
-    void update(float delta_time);
-    void handle_events(InputManager& input_manager);
+    void changeGameState(GameState* state);
+    void update(float deltaTime);
+    void handleEvents(InputManager& inputManager);
     void draw();
     void quit() { running = false; }
 
-    std::vector<GameState*> game_states;
+    std::vector<GameState*> gameStates;
     bool running;
 };
 

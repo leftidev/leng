@@ -22,7 +22,7 @@ void SoundEffect::play(int loops /* = 0 */) {
     }
 }
 
-void sound_init() {
+void soundInit() {
     // MIX_INIT_FAC, MIX_INIT_MOD, MIX_INIT_MP3, MIX_INIT_OGG
     if (Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG) == -1) {
 	std::cout << "Mix_Init error: " << Mix_GetError() << std::endl;

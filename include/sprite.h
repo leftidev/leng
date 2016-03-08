@@ -11,13 +11,13 @@ namespace leng {
 
 class Sprite {
 public:
-    Sprite(float x, float y, float _width, float _height, std::string path);
+    Sprite(float x, float y, float Width, float Height, const std::string& path);
     ~Sprite();
 
     Texture texture;
     Position pos;
     float width, height;
-    Vertex vertex_data[4];
+    Vertex vertexData[4];
 };
 
 } // namespace leng

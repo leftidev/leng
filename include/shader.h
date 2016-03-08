@@ -12,9 +12,9 @@ namespace leng {
 class Shader {
 public:
     Shader(const std::string& vertexPath, const std::string& fragmentPath);    
-    void Use();
-    void enable_attribute(const std::string& attr_name, int count, int stride, void* ptr);
-    GLuint get_uniform_location(const std::string& uniformName);
+    void use();
+    void enableAttribute(const std::string& attrName, int count, int stride, void* ptr);
+    GLuint getUniformLocation(const std::string& uniformName);
 
     GLuint Program;
 };

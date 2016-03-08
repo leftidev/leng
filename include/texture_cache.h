@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TEXTURE_CACHE_H
+#define TEXTURE_CACHE_H
 
 #include <map>
 
@@ -11,9 +12,12 @@ public:
 	TextureCache();
 	~TextureCache();
 
-	Texture getTexture(std::string texturePath);
+	Texture getTexture(const std::string& texturePath);
 
 private:
-	std::map<std::string, Texture> _textureMap;
+	std::map<std::string, Texture> textureMap;
 };
-}
+
+} // namespace leng
+
+#endif // TEXTURE_CACHE_H
