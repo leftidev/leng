@@ -29,7 +29,7 @@ private:
     Mix_Music* music;	
 };
     
-static void soundInit();
+void soundInit();
 
 } // namespace leng
 

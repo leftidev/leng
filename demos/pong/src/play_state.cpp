@@ -1,24 +1,16 @@
 #include "play_state.h"
 
-PlayState::PlayState(leng::GameStateManager& state_manager, leng::Window& window) : GameState(state_manager, window) { }
+PlayState::PlayState(leng::GameStateManager& stateManager, leng::Window& window) : GameState(stateManager, window) { }
 
 PlayState::~PlayState() { }
 
-void PlayState::load_shaders() {
-    // Create and compile the shaders
-    shaders.push_back(leng::Shader("assets/shaders/pong.vert", GL_VERTEX_SHADER));
-    shaders.push_back(leng::Shader("assets/shaders/pong.frag", GL_FRAGMENT_SHADER));
-    // Link the shaders
-    shader_program.link_shaders(shaders);    
-}
-
 void PlayState::init() {
-    load_shaders();
+    leng::Shader shader("assets/shaders/pong.vert", "assets/shaders/pong.frag");
 
-    renderer.init_vao(shader_program);
+    renderer.initVAO(shader);
 
     camera.init(800, 600);
-    camera.set_scale(1.0f);
+    camera.setScale(1.0f);
     camera.update();
     
     ball.vel.x = 0.5f;
@@ -26,23 +18,23 @@ void PlayState::init() {
     ball.moving = true;    
 }
 
-void PlayState::handle_events(leng::InputManager& input_manager) {
-    if(input_manager.is_pressed(SDLK_UP))
-	player.up_held = true;
-    if(input_manager.is_pressed(SDLK_DOWN))
-	player.down_held = true;
-    if(input_manager.is_released(SDLK_UP))
-	player.up_held = false;
-    if(input_manager.is_released(SDLK_DOWN))
-	player.down_held = false;
+void PlayState::handleEvents(leng::InputManager& inputManager) {
+    if(inputManager.isPressed(SDLK_UP))
+	player.upHeld = true;
+    if(inputManager.isPressed(SDLK_DOWN))
+	player.downHeld = true;
+    if(inputManager.isReleased(SDLK_UP))
+	player.upHeld = false;
+    if(inputManager.isReleased(SDLK_DOWN))
+	player.downHeld = false;
 }
 
-void PlayState::update(float delta_time) {
-    do_collisions();
+void PlayState::update(float deltaTime) {
+    doCollisions();
     camera.update();
-    player.update(delta_time);
-    enemy.update(ball, delta_time);
-    ball.update(delta_time);
+    player.update(deltaTime);
+    enemy.update(ball, deltaTime);
+    ball.update(deltaTime);
 }
 
 void PlayState::draw() {
@@ -52,38 +44,36 @@ void PlayState::draw() {
 
     // Bind Textures using texture units
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(glGetUniformLocation(shader_program.program_id, "my_texture"), 0);
+    glUniform1i(glGetUniformLocation(shader.Program, "my_texture"), 0);
 	
-    shader_program.enable();
+    shader.use();
 
     // Grab the camera matrix
-    glm::mat4 proj_mat = camera.get_camera_matrix();
-    GLuint camera_loc = shader_program.get_uniform_location("transform");
-    glUniformMatrix4fv(camera_loc, 1, GL_FALSE, glm::value_ptr(proj_mat));
+    glm::mat4 projectionMatrix = camera.getCameraMatrix();
+    GLuint cameraLoc = shader.getUniformLocation("transform");
+    glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-    renderer.draw(mid_line);
+    renderer.draw(midLine);
     renderer.draw(player.sprite);
     renderer.draw(enemy.sprite);
     renderer.draw(ball.sprite);
-
-    shader_program.disable();
 	
     // Swap buffers
-    window.swap_window();
+    window.swapWindow();
 }
 
-void PlayState::do_collisions() {
-    if(do_boxes_intersect(player.aabb, ball.aabb)) {
-	ball_hits_player.play();
+void PlayState::doCollisions() {
+    if(doBoxesIntersect(player.aabb, ball.aabb)) {
+	ballHitsPlayer.play();
 	ball.vel.x *= -1;
     }
-    if(do_boxes_intersect(enemy.aabb, ball.aabb)) {
-	ball_hits_enemy.play();
+    if(doBoxesIntersect(enemy.aabb, ball.aabb)) {
+	ballHitsEnemy.play();
 	ball.vel.x *= -1;
     }
     // Ball hits goal
     if(ball.pos.x < -SCREEN_WIDTH / 2 || ball.pos.x > SCREEN_WIDTH / 2 - 24) {
-	scoring_point.play();
+	scoringPoint.play();
 	ball.pos.x = 0;
 	ball.pos.y = 0;
     }

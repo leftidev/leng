@@ -2,23 +2,23 @@
 
 namespace leng {
 
-Player::Player(float x, float y, float width, float height, const char* path) : Entity(x, y, width, height, path) {
-    up_held = false;
-    down_held = false;
+Player::Player(float x, float y, float width, float height, const std::string& path) : Entity(x, y, width, height, path) {
+    upHeld = false;
+    downHeld = false;
 
     vel.y = 0.5f;
 }
 
 Player::~Player() { }
     
-void Player::update(float delta_time) {
-    Entity::update(delta_time);
+void Player::update(float deltaTime) {
+    Entity::update(deltaTime);
 
-    if(up_held) {
-	pos.y += vel.y * delta_time;
+    if(upHeld) {
+	pos.y += vel.y * deltaTime;
     }
-    if(down_held) {
-	pos.y -= vel.y * delta_time;
+    if(downHeld) {
+	pos.y -= vel.y * deltaTime;
     }
 }
 

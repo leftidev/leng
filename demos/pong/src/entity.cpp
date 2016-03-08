@@ -2,7 +2,7 @@
 
 namespace leng {
 
-Entity::Entity(float x, float y, float _width, float _height, const char* path) : sprite(x, y, _width, _height, path) {
+Entity::Entity(float x, float y, float _width, float _height, const std::string& path) : sprite(x, y, _width, _height, path) {
     pos.x = x;
     pos.y = y;
     width = _width;
@@ -32,10 +32,10 @@ void Entity::update(float delta_time) {
     aabb.x = pos.x + (width / 2);
     aabb.y = pos.y + (height / 2);	
     // Update sprite
-    sprite.vertex_data[0].set_position(pos.x + width, pos.y + height);
-    sprite.vertex_data[1].set_position(pos.x + width, pos.y);
-    sprite.vertex_data[2].set_position(pos.x, pos.y);
-    sprite.vertex_data[3].set_position(pos.x, pos.y + height);
+    sprite.vertexData[0].setPosition(pos.x + width, pos.y + height);
+    sprite.vertexData[1].setPosition(pos.x + width, pos.y);
+    sprite.vertexData[2].setPosition(pos.x, pos.y);
+    sprite.vertexData[3].setPosition(pos.x, pos.y + height);
 }
 
 } // namespace leng

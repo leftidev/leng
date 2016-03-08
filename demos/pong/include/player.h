@@ -7,12 +7,12 @@ namespace leng {
 
 class Player : public Entity {
 public:
-    Player(float x, float y, float width, float height, const char* path);
+    Player(float x, float y, float width, float height, const std::string& path);
     ~Player();
-    void update(float delta_time);
+    void update(float deltaTime);
 
-    bool up_held;
-    bool down_held;
+    bool upHeld;
+    bool downHeld;
 };
 
     

@@ -3,9 +3,12 @@
 
 #include <string>
 
+#include <GL/glew.h>
+
 #include "leng.h"
 #include "vertex.h"
 #include "leng.h"
+#include "resource_manager.h"
 
 namespace leng {
 
@@ -14,7 +17,7 @@ public:
     Sprite(float x, float y, float Width, float Height, const std::string& path);
     ~Sprite();
 
-    Texture texture;
+    GLuint textureID;
     Position pos;
     float width, height;
     Vertex vertexData[4];

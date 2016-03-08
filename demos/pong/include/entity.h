@@ -7,9 +7,9 @@
 namespace leng {
     class Entity {
     public:
-	Entity(float x, float y, float _width, float _height, const char* path);
+	Entity(float x, float y, float _width, float _height, const std::string& path);
 	~Entity();
-	void update(float delta_time);
+	void update(float deltaTime);
 	
 	Position pos;
 	float width, height;
