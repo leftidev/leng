@@ -7,6 +7,7 @@
 #include "shader.h"
 #include "resource_manager.h"
 #include "renderer_3d.h"
+#include "chunk.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -45,11 +46,12 @@ int main() {
     //SDL_SetRelativeMouseMode(SDL_TRUE);
     SDL_ShowCursor(SDL_DISABLE);
 
-    glm::vec3 cubePositions[NUM_BLOCKS][NUM_BLOCKS][NUM_BLOCKS];
+    leng::Renderer3D* renderer = new leng::Renderer3D;
     
-    leng::Renderer3D renderer;
+    leng::Chunk* chunk = new leng::Chunk;    
 
     GLuint sand_floor = leng::ResourceManager::getTexture("assets/textures/container.jpg").id;    
+
     leng::InputManager inputManager;
 
     float xOffset, yOffset;
@@ -93,7 +95,7 @@ int main() {
 	handleEvents(inputManager);
 
 	SDL_WarpMouseInWindow(window.window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-	/*
+	
 	// Rendering
         glClearColor(0.5f, 0.8f, 1.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -101,26 +103,8 @@ int main() {
 	// Bind Textures using texture units
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, sand_floor);
-        glUniform1i(glGetUniformLocation(voxelShader.Program, "ourTexture"), 0);
-        // Use cooresponding shader when setting uniforms/drawing objects
-	voxelShader.use();
 
-        // Create camera transformations
-        glm::mat4 view;
-        view = camera.GetViewMatrix();
-        glm::mat4 projection = glm::perspective(45.0f, 1024.0f / 768.0f, 0.1f, 1000.0f);
-        // Get the uniform locations
-        GLint modelLoc = glGetUniformLocation(voxelShader.Program, "model");
-        GLint viewLoc  = glGetUniformLocation(voxelShader.Program,  "view");
-        GLint projLoc  = glGetUniformLocation(voxelShader.Program,  "projection");
-        // Pass the matrices to the shader
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
- 	renderBlock(cubePositions, renderer.VAO, modelLoc);
-	*/
-	renderer.draw(cubePositions, sand_floor, camera);
-	//renderer.draw(2, 2, 3, sand_floor, camera);
+	chunk->render(renderer, camera);
 
 	// Swap buffers
 	window.swapWindow();

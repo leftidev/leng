@@ -5,6 +5,7 @@
 
 #include "shader.h"
 #include "camera_3d.h"
+#include "block.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -13,14 +14,12 @@
 
 namespace leng {
 
-    const int NUM_BLOCKS = 10;
-
 class Renderer3D {
 public:
     Renderer3D();
     ~Renderer3D();
     void initVAO();
-    void draw(glm::vec3 cubePositions[NUM_BLOCKS][NUM_BLOCKS][NUM_BLOCKS], GLuint textureID, leng::Camera3D& camera);
+    void draw(leng::Block*** blocks, leng::Camera3D& camera);
     GLuint VBO;
     GLuint VAO;
     GLint modelLoc;
