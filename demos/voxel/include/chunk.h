@@ -23,8 +23,8 @@ public:
 
     // The blocks data
     Block*** blocks;
-private:
 
+private:
     //leng::Mesh meshID;
     GLuint numVertices;
 };

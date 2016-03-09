@@ -51,7 +51,7 @@ int main() {
     chunk->createMesh(renderer);
 
     
-    GLuint sand_floor = leng::ResourceManager::getTexture("assets/textures/container.jpg").id;    
+    GLuint sand_floor = leng::ResourceManager::getTexture("assets/textures/awesomeface.png").id;    
 
     leng::InputManager inputManager;
 
