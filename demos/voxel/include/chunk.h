@@ -19,11 +19,14 @@ public:
     void update(float deltaTime);
     void render(leng::RendererVoxel* renderer, leng::Camera3D& camera);
     void createMesh(leng::RendererVoxel* renderer);
-    void createCube(leng::RendererVoxel* renderer);
-private:
+    void createCube(leng::RendererVoxel* renderer, int x, int y, int z);
+
     // The blocks data
     Block*** blocks;
+private:
+
     //leng::Mesh meshID;
+    GLuint numVertices;
 };
 
 } // namespace leng

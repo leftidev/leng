@@ -46,8 +46,11 @@ int main() {
 
     leng::RendererVoxel* renderer = new leng::RendererVoxel;
     
-    leng::Chunk* chunk = new leng::Chunk;    
+    leng::Chunk* chunk = new leng::Chunk;
+    chunk->blocks[0][0][0].setActive(false);
+    chunk->createMesh(renderer);
 
+    
     GLuint sand_floor = leng::ResourceManager::getTexture("assets/textures/container.jpg").id;    
 
     leng::InputManager inputManager;

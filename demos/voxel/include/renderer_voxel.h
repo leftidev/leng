@@ -16,20 +16,19 @@
 
 namespace leng {
 
-    struct Mesh {
-	std::vector<Vertex2> vertexData; 
-	//int meshID;
-    };
+struct Mesh {
+    std::vector<Vertex2> vertexData; 
+};
     
 class RendererVoxel {
 public:
     RendererVoxel();
     ~RendererVoxel();
-    void initVAO();
-    void draw(leng::Block*** blocks, leng::Camera3D& camera);
+
     void createMesh();
-    void finishMesh();
     void addVertexToMesh(int meshID, Vertex2 vert);
+    void finishMesh();
+    void renderMesh(leng::Camera3D& camera, int numVertices);
 
     GLuint VBO;
     GLuint VAO;
@@ -41,7 +40,6 @@ public:
     glm::mat4 model;
     leng::Shader voxelShader {"assets/shaders/voxel.vert", "assets/shaders/voxel.frag"};
 
-    //Mesh mesh;
     std::vector<Mesh> meshes;
 };
 
