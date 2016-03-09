@@ -18,8 +18,8 @@ public:
 
     void update(float deltaTime);
     void render(leng::RendererVoxel* renderer, leng::Camera3D& camera);
-    //void createMesh(leng::RendererVoxel* renderer);
-    //void createCube();
+    void createMesh(leng::RendererVoxel* renderer);
+    void createCube(leng::RendererVoxel* renderer);
 private:
     // The blocks data
     Block*** blocks;

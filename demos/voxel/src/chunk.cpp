@@ -34,48 +34,115 @@ void Chunk::update(float deltaTime) {
 void Chunk::render(leng::RendererVoxel* renderer, leng::Camera3D& camera) {
     renderer->draw(blocks, camera);
 }
-    /*
+    
     void Chunk::createMesh(leng::RendererVoxel* renderer) {
-	//renderer->createMesh(&m_meshID);
+	renderer->createMesh();
 
 	for (int x = 0; x < CHUNK_SIZE; x++) {
 	    for (int y = 0; y < CHUNK_SIZE; y++) {
 		for (int z = 0; z < CHUNK_SIZE; z++) {
-		    if(blocks[x][y][z].IsActive() == false) {
+		    //if(blocks[x][y][z].IsActive() == false) {
 			// Don't create triangle data for inactive blocks
-			continue;
-		    }
-		    createCube();
+		    //	continue;
+		    //}
+		    createCube(renderer, x, y, z);
 		}
 	    }
 	}
-	//renderer->finishMesh(m_meshID);
+	renderer->finishMesh();
     }
+    
+    void Chunk::createCube(leng::RendererVoxel* renderer, int x, int y, int z) {
+    float width = 1.0f * leng::BLOCK_RENDER_SIZE / 2;
+    float height = 1.0f * leng::BLOCK_RENDER_SIZE / 2;
+    float length = 1.0f * leng::BLOCK_RENDER_SIZE / 2;
+    /*
+    float width = leng::BLOCK_RENDER_SIZE;
+    float height = leng::BLOCK_RENDER_SIZE;
+    float length = leng::BLOCK_RENDER_SIZE;
 
-void Chunk::createCube() {
-    // Front bottom left
-    glm::vec3 p1(x-Block::BLOCK_RENDER_SIZE, y-Block::BLOCK_RENDER_SIZE, z+Block::BLOCK_RENDER_SIZE);
-    // Front bottom right
-    glm::vec3 p2(x+Block::BLOCK_RENDER_SIZE, y-Block::BLOCK_RENDER_SIZE, z+Block::BLOCK_RENDER_SIZE);
-    // Front top right
-    glm::vec3 p3(x+Block::BLOCK_RENDER_SIZE, y+Block::BLOCK_RENDER_SIZE, z+Block::BLOCK_RENDER_SIZE);
-    // Front top left
-    glm::vec3 p4(x-Block::BLOCK_RENDER_SIZE, y+Block::BLOCK_RENDER_SIZE, z+Block::BLOCK_RENDER_SIZE);
-    // Back bottom right
-    glm::vec3 p5(x+Block::BLOCK_RENDER_SIZE, y-Block::BLOCK_RENDER_SIZE, z-Block::BLOCK_RENDER_SIZE);
-    // Back bottom left
-    glm::vec3 p6(x-Block::BLOCK_RENDER_SIZE, y-Block::BLOCK_RENDER_SIZE, z-Block::BLOCK_RENDER_SIZE);
-    // Back top left
-    glm::vec3 p7(x-Block::BLOCK_RENDER_SIZE, y+Block::BLOCK_RENDER_SIZE, z-Block::BLOCK_RENDER_SIZE);
-    // Back top right
-    glm::vec3 p8(x+Block::BLOCK_RENDER_SIZE, y+Block::BLOCK_RENDER_SIZE, z-Block::BLOCK_RENDER_SIZE);
-
-    unsigned int v1; unsigned int v2; unsigned int v3; unsigned int v4; unsigned int v5; unsigned int v6; unsigned int v7; unsigned int v8;
-
-    float r = 1.0f;
-    float g = 1.0f;
-    float b = 1.0f;
-    float a = 1.0f;
-}
+    Vertex2 front_bl(x * width,         y * height,          z * length,  0.0f, 0.0f);
+    Vertex2 front_br(x * width + width, y * height,          z * length,  1.0f, 0.0f);
+    Vertex2 front_tr(x * width + width, y * height + height, z * length,  1.0f, 1.0f);
+    Vertex2 front_tl(x * width,         y * height + height, z * length,  0.0f, 1.0f);
     */
+    Vertex2 front_bl(-width, -height,  length,  0.0f, 0.0f);
+    Vertex2 front_br(width, -height,  length,  1.0f, 0.0f);
+    Vertex2 front_tr(width,  height,  length,  1.0f, 1.0f);
+    Vertex2 front_tl(-width,  height,  length,  0.0f, 1.0f);
+
+    Vertex2 back_bl(-width, -height, -length,  0.0f, 0.0f);
+    Vertex2 back_br(width, -height, -length,  1.0f, 0.0f);
+    Vertex2 back_tr(width,  height, -length,  1.0f, 1.0f);
+    Vertex2 back_tl(-width,  height, -length,  0.0f, 1.0f);
+
+    Vertex2 left_tr(-width,  height,  length,  1.0f, 0.0f);
+    Vertex2 left_tl(-width,  height, -length,  1.0f, 1.0f);
+    Vertex2 left_bl(-width, -height, -length,  0.0f, 1.0f);
+    Vertex2 left_br(-width, -height,  length,  0.0f, 0.0f);
+
+    Vertex2 right_tl(width,  height,  length,  1.0f, 0.0f);
+    Vertex2 right_tr(width,  height, -length,  1.0f, 1.0f);
+    Vertex2 right_br(width, -height, -length,  0.0f, 1.0f);
+    Vertex2 right_bl(width, -height,  length,  0.0f, 0.0f);
+
+    Vertex2 top_tl(-width,  height, -length,  0.0f, 1.0f);
+    Vertex2 top_tr(width,  height, -length,  1.0f, 1.0f);
+    Vertex2 top_br(width,  height,  length,  1.0f, 0.0f);
+    Vertex2 top_bl(-width,  height,  length,  0.0f, 0.0f);
+
+    Vertex2 bottom_bl(-width, -height, -length,  0.0f, 1.0f);
+    Vertex2 bottom_br(width, -height, -length,  1.0f, 1.0f);
+    Vertex2 bottom_tr(width, -height,  length,  1.0f, 0.0f);
+    Vertex2 bottom_tl(-width, -height,  length,  0.0f, 0.0f);
+
+    renderer->addVertexToMesh(0, front_bl);
+    renderer->addVertexToMesh(0, front_br);
+    renderer->addVertexToMesh(0, front_tr);
+
+    renderer->addVertexToMesh(0, front_tr);
+    renderer->addVertexToMesh(0, front_tl);
+    renderer->addVertexToMesh(0, front_bl);
+
+    renderer->addVertexToMesh(0, back_bl);
+    renderer->addVertexToMesh(0, back_br);
+    renderer->addVertexToMesh(0, back_tr);
+
+    renderer->addVertexToMesh(0, back_tr);
+    renderer->addVertexToMesh(0, back_tl);
+    renderer->addVertexToMesh(0, back_bl);
+
+    renderer->addVertexToMesh(0, left_tr);
+    renderer->addVertexToMesh(0, left_tl);
+    renderer->addVertexToMesh(0, left_bl);
+
+    renderer->addVertexToMesh(0, left_bl);
+    renderer->addVertexToMesh(0, left_br);
+    renderer->addVertexToMesh(0, left_tr);
+
+    renderer->addVertexToMesh(0, right_tl);
+    renderer->addVertexToMesh(0, right_tr);
+    renderer->addVertexToMesh(0, right_br);
+
+    renderer->addVertexToMesh(0, right_br);
+    renderer->addVertexToMesh(0, right_bl);
+    renderer->addVertexToMesh(0, right_tl);
+
+    renderer->addVertexToMesh(0, top_tl);
+    renderer->addVertexToMesh(0, top_tr);
+    renderer->addVertexToMesh(0, top_br);
+
+    renderer->addVertexToMesh(0, top_br);
+    renderer->addVertexToMesh(0, top_bl);
+    renderer->addVertexToMesh(0, top_tl);
+
+    renderer->addVertexToMesh(0, bottom_bl);
+    renderer->addVertexToMesh(0, bottom_br);
+    renderer->addVertexToMesh(0, bottom_tr);
+
+    renderer->addVertexToMesh(0, bottom_tr);
+    renderer->addVertexToMesh(0, bottom_tl);
+    renderer->addVertexToMesh(0, bottom_bl);
+}
+       
 } // namespace leng
