@@ -33,58 +33,83 @@ void RendererVoxel::initVAO() {
     std::vector<Vertex2> vertexPositions2;
     // Triangle 1
     Vertex2 front_bl(-width, -height,  length,  0.0f, 0.0f);
+    vertexPositions2.push_back(front_bl);
     Vertex2 front_br(width, -height,  length,  1.0f, 0.0f);
+    vertexPositions2.push_back(front_br);
     Vertex2 front_tr(width,  height,  length,  1.0f, 1.0f);
-
+    vertexPositions2.push_back(front_tr);
+    
     // Triangle 2
-    Vertex2 front_tr2(width,  height,  length,  1.0f, 1.0f);
+    vertexPositions2.push_back(front_tr);
     Vertex2 front_tl(-width,  height,  length,  0.0f, 1.0f);
-    Vertex2 front_bl2(-width, -height,  length,  0.0f, 0.0f);
+    vertexPositions2.push_back(front_tl);
+    vertexPositions2.push_back(front_bl);
     
     // Triangle 1
     Vertex2 back_bl(-width, -height, -length,  0.0f, 0.0f);
+    vertexPositions2.push_back(back_bl);
     Vertex2 back_br(width, -height, -length,  1.0f, 0.0f);
+    vertexPositions2.push_back(back_br);
     Vertex2 back_tr(width,  height, -length,  1.0f, 1.0f);
+    vertexPositions2.push_back(back_tr);
+    
     // Triangle 2
-    Vertex2 back_tr2(width,  height, -length,  1.0f, 1.0f);
+    vertexPositions2.push_back(back_tr);
     Vertex2 back_tl(-width,  height, -length,  0.0f, 1.0f);
-    Vertex2 back_bl2(-width, -height, -length,  0.0f, 0.0f);
-
+    vertexPositions2.push_back(back_tl);
+    vertexPositions2.push_back(back_bl);
+    
     // Triangle 1
     Vertex2 left_tr(-width,  height,  length,  1.0f, 0.0f);
+    vertexPositions2.push_back(left_tr);
     Vertex2 left_tl(-width,  height, -length,  1.0f, 1.0f);
+    vertexPositions2.push_back(left_tl);
     Vertex2 left_bl(-width, -height, -length,  0.0f, 1.0f);
+    vertexPositions2.push_back(left_bl);
     // Triangle 2
-    Vertex2 left_bl2(-width, -height, -length,  0.0f, 1.0f);
+    vertexPositions2.push_back(left_bl);
     Vertex2 left_br(-width, -height,  length,  0.0f, 0.0f);
-    Vertex2 left_tr2(-width,  height,  length,  1.0f, 0.0f);
+    vertexPositions2.push_back(left_br);
+    vertexPositions2.push_back(left_tr);
 
     // Triangle 1
-    Vertex2 right_tr( width,  height,  length,  1.0f, 0.0f);
-    Vertex2 right_tl(width,  height, -length,  1.0f, 1.0f);
+    Vertex2 right_tl(width,  height,  length,  1.0f, 0.0f);
+    vertexPositions2.push_back(right_tl);
+    Vertex2 right_tr(width,  height, -length,  1.0f, 1.0f);
+    vertexPositions2.push_back(right_tr);
     Vertex2 right_br(width, -height, -length,  0.0f, 1.0f);
+    vertexPositions2.push_back(right_br);
     // Triangle 2
-    Vertex2 right_br2(width, -height, -length,  0.0f, 1.0f);
+    vertexPositions2.push_back(right_br);
     Vertex2 right_bl(width, -height,  length,  0.0f, 0.0f);
-    Vertex2 right_tl2(width,  height,  length,  1.0f, 0.0f);
+    vertexPositions2.push_back(right_bl);
+    vertexPositions2.push_back(right_tl);
 
     // Triangle 1
     Vertex2 top_tl(-width,  height, -length,  0.0f, 1.0f);
+    vertexPositions2.push_back(top_tl);
     Vertex2 top_tr(width,  height, -length,  1.0f, 1.0f);
+    vertexPositions2.push_back(top_tr);
     Vertex2 top_br(width,  height,  length,  1.0f, 0.0f);
+    vertexPositions2.push_back(top_br);
     // Triangle 2
-    Vertex2 top_br2(width,  height,  length,  1.0f, 0.0f);
+    vertexPositions2.push_back(top_br);
     Vertex2 top_bl(-width,  height,  length,  0.0f, 0.0f);
-    Vertex2 top_tl2(-width,  height, -length,  0.0f, 1.0f);
+    vertexPositions2.push_back(top_bl);
+    vertexPositions2.push_back(top_tl);
 
     // Triangle 1
     Vertex2 bottom_bl(-width, -height, -length,  0.0f, 1.0f);
+    vertexPositions2.push_back(bottom_bl);
     Vertex2 bottom_br(width, -height, -length,  1.0f, 1.0f);
+    vertexPositions2.push_back(bottom_br);
     Vertex2 bottom_tr(width, -height,  length,  1.0f, 0.0f);
+    vertexPositions2.push_back(bottom_tr);
     // Triangle 2
-    Vertex2 bottom_tr2(width, -height,  length,  1.0f, 0.0f);
+    vertexPositions2.push_back(bottom_tr);
     Vertex2 bottom_tl(-width, -height,  length,  0.0f, 0.0f);
-    Vertex2 bottom_bl2(-width, -height, -length,  0.0f, 1.0f);
+    vertexPositions2.push_back(bottom_tl);
+    vertexPositions2.push_back(bottom_bl);
     
     // This will store all the vertices that we need to upload
     std::vector<GLfloat> vertexPositions {
@@ -113,8 +138,8 @@ void RendererVoxel::initVAO() {
         -width, -height,  length,  0.0f, 0.0f, // Bottom-right
         -width,  height,  length,  1.0f, 0.0f, // Top-right
 	 // Right
-	 width,  height,  length,  1.0f, 0.0f, // Top-right
-	 width,  height, -length,  1.0f, 1.0f, // Top-left
+	 width,  height,  length,  1.0f, 0.0f, // Top-left
+	 width,  height, -length,  1.0f, 1.0f, // Top-right
 	 width, -height, -length,  0.0f, 1.0f, // Bottom-right
 	
 	 width, -height, -length,  0.0f, 1.0f, // Bottom-right
@@ -142,7 +167,8 @@ void RendererVoxel::initVAO() {
     
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glBufferData(GL_ARRAY_BUFFER, vertexPositions.size() * sizeof(GLfloat), &vertexPositions[0], GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER, vertexPositions.size() * sizeof(GLfloat), &vertexPositions[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertexPositions.size() * sizeof(Vertex2), &vertexPositions2[0], GL_STATIC_DRAW);
     // Enable shader attributes
     voxelShader.enableAttribute("position", 3, 5, (GLvoid*)0);
     //shader_program.enable_attribute("color", 3, 8, (GLvoid*)(3 * sizeof(GLfloat)));

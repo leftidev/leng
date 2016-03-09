@@ -56,7 +56,7 @@ int main() {
     
     SDL_WarpMouseInWindow(window.window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
-    camera.movementSpeed = 2.0f;
+    camera.movementSpeed = 0.5f;
     
     bool running = true;
     SDL_Event event;
