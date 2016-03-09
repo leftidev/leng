@@ -6,30 +6,34 @@
 namespace leng {
 
 struct Texture {
-	GLuint id;
-	int width;
-	int height;
+    GLuint id;
+    int width;
+    int height;
 };
 
 struct Position {
-	float x;
-	float y;
+    float x;
+    float y;
 };
-
+struct Position3D {
+    float x;
+    float y;
+    float z;
+};
 struct ColorRGBA8 {
-	ColorRGBA8() : r(0), g(0), b(0), a(0) { }
-	ColorRGBA8(float R, float G, float B, float A) :
-		r(R), g(G), b(B), a(A) { }
+ColorRGBA8() : r(0), g(0), b(0), a(0) { }
+ColorRGBA8(float R, float G, float B, float A) :
+    r(R), g(G), b(B), a(A) { }
 
-	float r;
-	float g;
-	float b;
-	float a;
+    float r;
+    float g;
+    float b;
+    float a;
 };
 
 struct UV {
-	float u;
-	float v;
+    float u;
+    float v;
 };
 
 struct Velocity {

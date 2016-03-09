@@ -6,7 +6,7 @@
 #include "camera_3d.h"
 #include "shader.h"
 #include "resource_manager.h"
-#include "renderer_3d.h"
+#include "renderer_voxel.h"
 #include "chunk.h"
 
 #define GLM_FORCE_RADIANS
@@ -17,13 +17,11 @@
 float SCREEN_WIDTH = 1024.0f;
 float SCREEN_HEIGHT = 768.0f;
 
-const int NUM_BLOCKS = 10;
-
 // Deltatime
 float deltaTime = 0.0f;	 // Time between current frame and last frame
 float lastFrame = 0.0f;  // Time of last frame
 
-leng::Camera3D camera(glm::vec3(0.0f, 0.0f, -5.0f));
+leng::Camera3D camera(glm::vec3(0.0f, 0.0f, 15*leng::BLOCK_RENDER_SIZE));
 
 void handleEvents(leng::InputManager& inputManager) {
 	if(inputManager.isPressed(SDLK_w))
@@ -46,7 +44,7 @@ int main() {
     //SDL_SetRelativeMouseMode(SDL_TRUE);
     SDL_ShowCursor(SDL_DISABLE);
 
-    leng::Renderer3D* renderer = new leng::Renderer3D;
+    leng::RendererVoxel* renderer = new leng::RendererVoxel;
     
     leng::Chunk* chunk = new leng::Chunk;    
 
@@ -55,8 +53,10 @@ int main() {
     leng::InputManager inputManager;
 
     float xOffset, yOffset;
-
+    
     SDL_WarpMouseInWindow(window.window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+
+    camera.movementSpeed = 2.0f;
     
     bool running = true;
     SDL_Event event;
@@ -109,6 +109,8 @@ int main() {
 	// Swap buffers
 	window.swapWindow();
     }
+    delete chunk;
+    delete renderer;
     
     return 0;
 }

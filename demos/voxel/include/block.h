@@ -2,6 +2,8 @@
 #define BLOCK_H
 
 namespace leng {
+
+static const int BLOCK_RENDER_SIZE = 32;
     
 enum BlockType {
     BlockType_Default = 0,
