@@ -56,9 +56,20 @@ int main() {
 	chunk->blocks[0][i][2].setActive(false);
     }
     chunk->createMesh(renderer, voxelShader);
+    chunk->position = glm::vec3(0, 0, 0);
 
     leng::Chunk* chunk2 = new leng::Chunk(1);
     chunk2->createMesh(renderer, voxelShader);
+    chunk2->position = glm::vec3(500, 0, 0);
+    leng::Chunk* chunk3 = new leng::Chunk(2);
+    chunk3->createMesh(renderer, voxelShader);
+    chunk3->position = glm::vec3(500, 0, 500);
+    leng::Chunk* chunk4 = new leng::Chunk(3);
+    chunk4->createMesh(renderer, voxelShader);
+    chunk4->position = glm::vec3(1000, 0, 1000);
+    leng::Chunk* chunk5 = new leng::Chunk(4);
+    chunk5->createMesh(renderer, voxelShader);
+    chunk5->position = glm::vec3(500, 0, 1000);
 
     
     GLuint sand_floor = leng::ResourceManager::getTexture("assets/textures/container2.png").id;    
@@ -132,9 +143,12 @@ int main() {
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
     
-	chunk->render(renderer, voxelShader, glm::vec3(0, 0, 0));
-	chunk2->render(renderer, voxelShader, glm::vec3(500, 500, 500));
-	
+	chunk->render(renderer, voxelShader);
+	chunk2->render(renderer, voxelShader);
+	chunk3->render(renderer, voxelShader);
+	chunk4->render(renderer, voxelShader);
+	chunk5->render(renderer, voxelShader);
+		
 	// Swap buffers
 	window.swapWindow();
     }

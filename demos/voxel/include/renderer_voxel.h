@@ -29,7 +29,7 @@ public:
     void createMesh();
     void addVertexToMesh(int meshID, Vertex2 vert);
     void finishMesh(int meshID, leng::Shader& voxelShader);
-    void renderMesh(int numVertices, leng::Shader& shader, const glm::vec3& pos);
+    void renderMesh(int numVertices, leng::Shader& shader, const glm::vec3& position);
 
     GLuint VAO;
     GLint modelLoc;

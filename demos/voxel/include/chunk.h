@@ -18,16 +18,17 @@ public:
     ~Chunk();
 
     void update(float deltaTime);
-    void render(leng::RendererVoxel* renderer, leng::Shader& shader, const glm::vec3& pos);
+    void render(leng::RendererVoxel* renderer, leng::Shader& shader);
     void createMesh(leng::RendererVoxel* renderer, leng::Shader& voxelShader);
     void createCube(leng::RendererVoxel* renderer, int x, int y, int z);
 
     // The blocks data
     Block*** blocks;
-
+    glm::vec3 position;
 private:
     int meshID;
     GLuint numVertices;
+
 };
 
 } // namespace leng

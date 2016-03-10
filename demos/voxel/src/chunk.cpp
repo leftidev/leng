@@ -28,13 +28,13 @@ Chunk::~Chunk() {
 
 void Chunk::update(float deltaTime) { }
 
-    void Chunk::render(leng::RendererVoxel* renderer, leng::Shader& shader, const glm::vec3& pos) {
+    void Chunk::render(leng::RendererVoxel* renderer, leng::Shader& shader) {
     //float x = m_position.x;
     //float y = m_position.y;
     //float z = m_position.z;
     //pRenderer->TranslateWorldMatrix(x, y, z);
 
-	renderer->renderMesh(numVertices, shader, pos);
+	renderer->renderMesh(numVertices, shader, position);
 }
     
 void Chunk::createMesh(leng::RendererVoxel* renderer, leng::Shader& voxelShader) {

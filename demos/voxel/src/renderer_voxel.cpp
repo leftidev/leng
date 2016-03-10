@@ -41,13 +41,13 @@ void RendererVoxel::finishMesh(int meshID, leng::Shader& voxelShader) {
     glBindVertexArray(0);
 }
 
-    void RendererVoxel::renderMesh(int numVertices, leng::Shader& shader, const glm::vec3& pos) {
+    void RendererVoxel::renderMesh(int numVertices, leng::Shader& shader, const glm::vec3& position) {
     modelLoc = glGetUniformLocation(shader.Program, "model");
     // Render chunk
     glBindVertexArray(VAO);
     
     model = glm::mat4();
-    model = glm::translate(model, pos);
+    model = glm::translate(model, position);
     //GLfloat angle = 20.0f * 3.5f; 
     //model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
