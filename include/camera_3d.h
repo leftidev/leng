@@ -14,13 +14,15 @@ enum camera_movement {
     FORWARD,
     BACKWARD,
     LEFT,
-    RIGHT
+    RIGHT,
+    UP,
+    DOWN
 };
 
 namespace leng {
 
 // Default camera values
-const GLfloat YAW        = -90.0f;
+const GLfloat YAW        = 90.0f;
 const GLfloat PITCH      =  0.0f;
 const GLfloat SPEED      =  0.005f;
 const GLfloat SENSITIVITY =  0.15f;
@@ -49,7 +51,7 @@ Camera3D(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::v
         this->WorldUp = up;
         this->Yaw = yaw;
         this->Pitch = pitch;
-        this->update_camera_vectors();
+        this->updateCameraVectors();
     }
     // Constructor with scalar values
 Camera3D(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(SPEED), mouseSensitivity(SENSITIVITY), Zoom(ZOOM) {
@@ -57,7 +59,7 @@ Camera3D(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLf
         this->WorldUp = glm::vec3(upX, upY, upZ);
         this->Yaw = yaw;
         this->Pitch = pitch;
-        this->update_camera_vectors();
+        this->updateCameraVectors();
     }
 
     // Returns the view matrix calculated using Eular Angles and the LookAt Matrix
@@ -76,6 +78,10 @@ Camera3D(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLf
             this->Position -= this->Right * velocity;
         if (direction == RIGHT)
             this->Position += this->Right * velocity;
+        if (direction == UP)
+            this->Position += this->Up * velocity;
+        if (direction == DOWN)
+            this->Position -= this->Up * velocity;
     }
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
@@ -96,7 +102,7 @@ Camera3D(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLf
         }
 
         // Update Front, Right and Up Vectors using the updated Eular angles
-        this->update_camera_vectors();
+        this->updateCameraVectors();
     }
 
     // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
@@ -109,9 +115,8 @@ Camera3D(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLf
             this->Zoom = 45.0f;
     }
 
-private:
     // Calculates the front vector from the Camera's (updated) Eular Angles
-    void update_camera_vectors() {
+    void updateCameraVectors() {
         // Calculate the new Front vector
         glm::vec3 front;
         front.x = cos(glm::radians(this->Yaw)) * cos(glm::radians(this->Pitch));
