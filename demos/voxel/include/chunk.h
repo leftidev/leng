@@ -6,6 +6,7 @@
 #include "block.h"
 #include "renderer_voxel.h"
 #include "camera_3d.h"
+#include "shader.h"
 
 namespace leng {
 
@@ -13,19 +14,19 @@ static const int CHUNK_SIZE = 16;
 
 class Chunk {
 public:
-    Chunk();
+    Chunk(int MeshID);
     ~Chunk();
 
     void update(float deltaTime);
-    void render(leng::RendererVoxel* renderer, leng::Camera3D& camera);
-    void createMesh(leng::RendererVoxel* renderer);
+    void render(leng::RendererVoxel* renderer, leng::Shader& shader, const glm::vec3& pos);
+    void createMesh(leng::RendererVoxel* renderer, leng::Shader& voxelShader);
     void createCube(leng::RendererVoxel* renderer, int x, int y, int z);
 
     // The blocks data
     Block*** blocks;
 
 private:
-    //leng::Mesh meshID;
+    int meshID;
     GLuint numVertices;
 };
 

@@ -2,7 +2,7 @@
 
 namespace leng {
     
-Chunk::Chunk() {
+Chunk::Chunk(int MeshID) : meshID(MeshID) {
     numVertices = 0;
     // Create the blocks
     blocks = new Block**[CHUNK_SIZE];
@@ -28,16 +28,16 @@ Chunk::~Chunk() {
 
 void Chunk::update(float deltaTime) { }
 
-void Chunk::render(leng::RendererVoxel* renderer, leng::Camera3D& camera) {
+    void Chunk::render(leng::RendererVoxel* renderer, leng::Shader& shader, const glm::vec3& pos) {
     //float x = m_position.x;
     //float y = m_position.y;
     //float z = m_position.z;
     //pRenderer->TranslateWorldMatrix(x, y, z);
 
-    renderer->renderMesh(camera, numVertices);
+	renderer->renderMesh(numVertices, shader, pos);
 }
     
-void Chunk::createMesh(leng::RendererVoxel* renderer) {
+void Chunk::createMesh(leng::RendererVoxel* renderer, leng::Shader& voxelShader) {
     renderer->createMesh();
 
     for (int x = 0; x < CHUNK_SIZE; x++) {
@@ -51,7 +51,7 @@ void Chunk::createMesh(leng::RendererVoxel* renderer) {
 	    }
 	}
     }
-    renderer->finishMesh();
+    renderer->finishMesh(meshID, voxelShader);
 }
     
 void Chunk::createCube(leng::RendererVoxel* renderer, int x, int y, int z) {    
@@ -89,53 +89,53 @@ void Chunk::createCube(leng::RendererVoxel* renderer, int x, int y, int z) {
     Vertex2 bottom_tr(x * width + width, y * height, z * length + length, 1.0f, 0.0f);
     Vertex2 bottom_tl(x * width,         y * height, z * length + length, 0.0f, 0.0f);
     // Triangle 1
-    renderer->addVertexToMesh(0, front_bl);
-    renderer->addVertexToMesh(0, front_br);
-    renderer->addVertexToMesh(0, front_tr);
+    renderer->addVertexToMesh(meshID, front_bl);
+    renderer->addVertexToMesh(meshID, front_br);
+    renderer->addVertexToMesh(meshID, front_tr);
     // Triangle 2
-    renderer->addVertexToMesh(0, front_tr);
-    renderer->addVertexToMesh(0, front_tl);
-    renderer->addVertexToMesh(0, front_bl);
+    renderer->addVertexToMesh(meshID, front_tr);
+    renderer->addVertexToMesh(meshID, front_tl);
+    renderer->addVertexToMesh(meshID, front_bl);
     // Triangle 1
-    renderer->addVertexToMesh(0, back_bl);
-    renderer->addVertexToMesh(0, back_br);
-    renderer->addVertexToMesh(0, back_tr);
+    renderer->addVertexToMesh(meshID, back_bl);
+    renderer->addVertexToMesh(meshID, back_br);
+    renderer->addVertexToMesh(meshID, back_tr);
     // Triangle 2
-    renderer->addVertexToMesh(0, back_tr);
-    renderer->addVertexToMesh(0, back_tl);
-    renderer->addVertexToMesh(0, back_bl);
+    renderer->addVertexToMesh(meshID, back_tr);
+    renderer->addVertexToMesh(meshID, back_tl);
+    renderer->addVertexToMesh(meshID, back_bl);
     // Triangle 1
-    renderer->addVertexToMesh(0, left_tr);
-    renderer->addVertexToMesh(0, left_tl);
-    renderer->addVertexToMesh(0, left_bl);
+    renderer->addVertexToMesh(meshID, left_tr);
+    renderer->addVertexToMesh(meshID, left_tl);
+    renderer->addVertexToMesh(meshID, left_bl);
     // Triangle 2
-    renderer->addVertexToMesh(0, left_bl);
-    renderer->addVertexToMesh(0, left_br);
-    renderer->addVertexToMesh(0, left_tr);
+    renderer->addVertexToMesh(meshID, left_bl);
+    renderer->addVertexToMesh(meshID, left_br);
+    renderer->addVertexToMesh(meshID, left_tr);
     // Triangle 1
-    renderer->addVertexToMesh(0, right_tl);
-    renderer->addVertexToMesh(0, right_tr);
-    renderer->addVertexToMesh(0, right_br);
+    renderer->addVertexToMesh(meshID, right_tl);
+    renderer->addVertexToMesh(meshID, right_tr);
+    renderer->addVertexToMesh(meshID, right_br);
     // Triangle 2
-    renderer->addVertexToMesh(0, right_br);
-    renderer->addVertexToMesh(0, right_bl);
-    renderer->addVertexToMesh(0, right_tl);
+    renderer->addVertexToMesh(meshID, right_br);
+    renderer->addVertexToMesh(meshID, right_bl);
+    renderer->addVertexToMesh(meshID, right_tl);
     // Triangle 1 
-    renderer->addVertexToMesh(0, top_tl);
-    renderer->addVertexToMesh(0, top_tr);
-    renderer->addVertexToMesh(0, top_br);
+    renderer->addVertexToMesh(meshID, top_tl);
+    renderer->addVertexToMesh(meshID, top_tr);
+    renderer->addVertexToMesh(meshID, top_br);
     // Triangle 2
-    renderer->addVertexToMesh(0, top_br);
-    renderer->addVertexToMesh(0, top_bl);
-    renderer->addVertexToMesh(0, top_tl);
+    renderer->addVertexToMesh(meshID, top_br);
+    renderer->addVertexToMesh(meshID, top_bl);
+    renderer->addVertexToMesh(meshID, top_tl);
     // Triangle 1
-    renderer->addVertexToMesh(0, bottom_bl);
-    renderer->addVertexToMesh(0, bottom_br);
-    renderer->addVertexToMesh(0, bottom_tr);
+    renderer->addVertexToMesh(meshID, bottom_bl);
+    renderer->addVertexToMesh(meshID, bottom_br);
+    renderer->addVertexToMesh(meshID, bottom_tr);
     // Triangle 2
-    renderer->addVertexToMesh(0, bottom_tr);
-    renderer->addVertexToMesh(0, bottom_tl);
-    renderer->addVertexToMesh(0, bottom_bl);
+    renderer->addVertexToMesh(meshID, bottom_tr);
+    renderer->addVertexToMesh(meshID, bottom_tl);
+    renderer->addVertexToMesh(meshID, bottom_bl);
 
     numVertices += 36;
 }

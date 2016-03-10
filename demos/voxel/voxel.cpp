@@ -45,13 +45,23 @@ int main() {
     SDL_ShowCursor(SDL_DISABLE);
 
     leng::RendererVoxel* renderer = new leng::RendererVoxel;
+
+    leng::Shader voxelShader {"assets/shaders/voxel.vert", "assets/shaders/voxel.frag"};
     
-    leng::Chunk* chunk = new leng::Chunk;
-    chunk->blocks[0][0][0].setActive(false);
-    chunk->createMesh(renderer);
+    leng::Chunk* chunk = new leng::Chunk(0);
+    for(int i = 0; i < 16; i++) {
+	chunk->blocks[0][i][0].setActive(false);
+	chunk->blocks[15][i][0].setActive(false);
+	chunk->blocks[0][i][1].setActive(false);
+	chunk->blocks[0][i][2].setActive(false);
+    }
+    chunk->createMesh(renderer, voxelShader);
+
+    leng::Chunk* chunk2 = new leng::Chunk(1);
+    chunk2->createMesh(renderer, voxelShader);
 
     
-    GLuint sand_floor = leng::ResourceManager::getTexture("assets/textures/awesomeface.png").id;    
+    GLuint sand_floor = leng::ResourceManager::getTexture("assets/textures/container2.png").id;    
 
     leng::InputManager inputManager;
 
@@ -107,8 +117,24 @@ int main() {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, sand_floor);
 
-	chunk->render(renderer, camera);
+	glUniform1i(glGetUniformLocation(voxelShader.Program, "ourTexture"), 0);
+	// Use cooresponding shader when setting uniforms/drawing objects
+	voxelShader.use();
 
+	// Create camera transformations
+	glm::mat4 view = camera.GetViewMatrix();
+	glm::mat4 projection = glm::perspective(45.0f, 1024.0f / 768.0f, 0.1f, 100000.0f);
+	// Get the uniform locations
+
+	GLint viewLoc  = glGetUniformLocation(voxelShader.Program,  "view");
+	GLint projLoc  = glGetUniformLocation(voxelShader.Program,  "projection");
+	// Pass the matrices to the shader
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    
+	chunk->render(renderer, voxelShader, glm::vec3(0, 0, 0));
+	chunk2->render(renderer, voxelShader, glm::vec3(500, 500, 500));
+	
 	// Swap buffers
 	window.swapWindow();
     }
