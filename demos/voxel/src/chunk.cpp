@@ -40,6 +40,8 @@ void Chunk::update(float deltaTime) { }
 void Chunk::createMesh(leng::RendererVoxel* renderer, leng::Shader& voxelShader) {
     renderer->createMesh();
 
+    bool lDefault = true;
+    
     for (int x = 0; x < CHUNK_SIZE; x++) {
 	for (int y = 0; y < CHUNK_SIZE; y++) {
 	    for (int z = 0; z < CHUNK_SIZE; z++) {
@@ -47,6 +49,7 @@ void Chunk::createMesh(leng::RendererVoxel* renderer, leng::Shader& voxelShader)
 		    // Don't create triangle data for inactive blocks
 		    continue;
 		}
+		// Block is active
 		createCube(renderer, x, y, z);
 	    }
 	}

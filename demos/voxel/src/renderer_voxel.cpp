@@ -25,14 +25,18 @@ void RendererVoxel::createMesh() {
 }
     
 void RendererVoxel::addVertexToMesh(int meshID, Vertex2 vert) {	
-    meshes.at(meshID).vertexData.push_back(vert);
+    meshes.at(meshID).vertexData.emplace_back(vert);
 }
 
 void RendererVoxel::finishMesh(int meshID, leng::Shader& voxelShader) {
     glBindVertexArray(VAO);
     
     glBindBuffer(GL_ARRAY_BUFFER, meshes.at(meshID).VBO);
-    glBufferData(GL_ARRAY_BUFFER, meshes.at(meshID).vertexData.size() * sizeof(Vertex2), &meshes.at(meshID).vertexData[0], GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER, meshes.at(meshID).vertexData.size() * sizeof(Vertex2), &meshes.at(meshID).vertexData[0], GL_STATIC_DRAW);
+
+    glBufferData(GL_ARRAY_BUFFER, meshes.at(meshID).vertexData.size() * sizeof(Vertex2), nullptr, GL_DYNAMIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, meshes.at(meshID).vertexData.size() * sizeof(Vertex2), meshes.at(meshID).vertexData.data());
+
     // Enable shader attributes
     voxelShader.enableAttribute("position", 3, 5, (GLvoid*)0);
     //shader_program.enable_attribute("color", 3, 8, (GLvoid*)(3 * sizeof(GLfloat)));
