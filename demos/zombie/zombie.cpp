@@ -7,6 +7,9 @@
 #include "input_manager.h"
 #include "camera_3d.h"
 #include "shader.h"
+#include "sprite2.h"
+#include "renderer.h"
+#include "player.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -20,30 +23,57 @@ float SCREEN_HEIGHT = 768.0f;
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f;  	// Time of last frame
 
-leng::Camera3D camera(glm::vec3(0.0f, 0.0f, -10.0f));
+leng::Camera3D camera(glm::vec3(0.0f, 0.0f, -500.0f));
 
 // Light attributes
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
-void handleEvents(leng::InputManager& inputManager) {
-	if(inputManager.isPressed(SDLK_i))
-	    camera.handleKeyboard(FORWARD, deltaTime);
-	if(inputManager.isPressed(SDLK_k))
-	    camera.handleKeyboard(BACKWARD, deltaTime);
-	if(inputManager.isPressed(SDLK_LEFT))
-	    camera.handleKeyboard(LEFT, deltaTime);
-	if(inputManager.isPressed(SDLK_RIGHT))
-	    camera.handleKeyboard(RIGHT, deltaTime);
-	if(inputManager.isPressed(SDLK_UP))
-	    camera.handleKeyboard(UP, deltaTime);
-	if(inputManager.isPressed(SDLK_DOWN))
-	    camera.handleKeyboard(DOWN, deltaTime);
+
+void handleEvents(leng::Player& player, leng::InputManager& inputManager) {
+    // Camera input
+    if(inputManager.isPressed(SDLK_i))
+	camera.handleKeyboard(FORWARD, deltaTime);
+    if(inputManager.isPressed(SDLK_k))
+	camera.handleKeyboard(BACKWARD, deltaTime);
+    if(inputManager.isPressed(SDLK_LEFT))
+	camera.handleKeyboard(LEFT, deltaTime);
+    if(inputManager.isPressed(SDLK_RIGHT))
+	camera.handleKeyboard(RIGHT, deltaTime);
+    if(inputManager.isPressed(SDLK_UP))
+	camera.handleKeyboard(UP, deltaTime);
+    if(inputManager.isPressed(SDLK_DOWN))
+	camera.handleKeyboard(DOWN, deltaTime);
+    
+    // Player input
+    if(inputManager.isPressed(SDLK_w))
+	player.upHeld = true;
+    if(inputManager.isPressed(SDLK_s))
+	player.downHeld = true;
+    if(inputManager.isPressed(SDLK_d))
+	player.rightHeld = true;
+    if(inputManager.isPressed(SDLK_a))
+	player.leftHeld = true;
+    
+    if(inputManager.isReleased(SDLK_w))
+	player.upHeld = false;
+    if(inputManager.isReleased(SDLK_s))
+	player.downHeld = false;
+    if(inputManager.isReleased(SDLK_d))
+	player.rightHeld = false;
+    if(inputManager.isReleased(SDLK_a))
+	player.leftHeld = false;
+}
+
+void update(leng::Player& player, float deltaTime) {
+    player.update(deltaTime);
 }
 
 int main() {
     leng::Window window("OpenGL Tuts", SCREEN_WIDTH, SCREEN_HEIGHT);
     window.setVsync(true);
-    window.enableDepthTest();
+    //window.enableDepthTest();
+
+    camera.movementSpeed = 0.15f;
 
     //SDL_SetWindowFullscreen(window.window, SDL_WINDOW_FULLSCREEN);
 
@@ -58,31 +88,6 @@ int main() {
     leng::Shader lightingShader("assets/shaders/lighting.vert", "assets/shaders/lighting.frag");
     leng::Shader lampShader("assets/shaders/lamp.vert", "assets/shaders/lamp.frag");
 
-    
-    // Set up vertex data (and buffer(s)) and attribute pointers
-    GLfloat vertices[] = {
-    // Positions  // Normals           // Texture Coords
-    -0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-     0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
-     0.5f,  0.5f, 0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-     0.5f,  0.5f, 0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-    -0.5f,  0.5f, 0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
-    -0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-    };
-
-    glm::vec3 cubePositions[] = {
-    glm::vec3( 0.0f,  0.0f, 0.0f),
-    glm::vec3( 2.0f,  5.0f, 0.0f),
-    glm::vec3(-1.5f, -2.2f, 0.0f),
-    glm::vec3(-3.8f, -2.0f, 0.0f),
-    glm::vec3( 2.4f, -0.4f, 0.0f),
-    glm::vec3(-1.7f,  3.0f, 0.0f),
-    glm::vec3( 1.3f, -2.0f, 0.0f),
-    glm::vec3( 1.5f,  2.0f, 0.0f),
-    glm::vec3( 1.5f,  0.2f, 0.0f),
-    glm::vec3(-1.3f,  1.0f, 0.0f)
-    };
-
     glm::vec3 pointLightPositions[] = {
 	glm::vec3( 0.7f,  0.2f,  -5.0f),
 	glm::vec3( 2.3f, -3.3f, -8.0f),
@@ -90,69 +95,20 @@ int main() {
 	glm::vec3( 0.0f,  0.0f, -1.0f)
 };
     
-    // First, set the container's VAO (and VBO)
-    GLuint VBO, containerVAO;
-    glGenVertexArrays(1, &containerVAO);
-    glGenBuffers(1, &VBO);
+    leng::Renderer renderer;
+    renderer.initVAO(lightingShader);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindVertexArray(containerVAO);
-    // Position attribute
-    lightingShader.enableAttribute("position", 2, 7, (GLvoid*)0);
-    lightingShader.enableAttribute("normal", 3, 7, (GLvoid*)(2 * sizeof(GLfloat)));
-    lightingShader.enableAttribute("texCoords", 2, 7, (GLvoid*)(5 * sizeof(GLfloat)));
-    glBindVertexArray(0);
-
-    // Then, we set the light's VAO (VBO stays the same. After all, the vertices are the same for the light object (also a 3D cube))
-    GLuint lightVAO;
-    glGenVertexArrays(1, &lightVAO);
-    glBindVertexArray(lightVAO);
-    // We only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need.
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // Set the vertex attributes (only position data for the lamp))
-    lampShader.enableAttribute("position", 2, 7, (GLvoid*)0);
-    glBindVertexArray(0);
-
-    // Load textures
-    GLuint diffuseMap, specularMap;
-    glGenTextures(1, &diffuseMap);
-    glGenTextures(1, &specularMap);
-    int width, height;
-    unsigned char* image;
-    // Diffuse map
-    image = SOIL_load_image("assets/textures/container2.png", &width, &height, 0, SOIL_LOAD_RGB);
-    glBindTexture(GL_TEXTURE_2D, diffuseMap);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    SOIL_free_image_data(image);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-    // Specular map
-    image = SOIL_load_image("assets/textures/container2_specular.png", &width, &height, 0, SOIL_LOAD_RGB);
-    glBindTexture(GL_TEXTURE_2D, specularMap);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    SOIL_free_image_data(image);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
+    leng::Sprite2 sprite(0, 0, 64, 64, "assets/textures/dungeon_floor.png");
+    leng::Player player(64, 64, 64, 64, "assets/textures/zombie.png");
     // Set texture units
     lightingShader.use();
     glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
-    glUniform1i(glGetUniformLocation(lightingShader.Program, "material.specular"), 1);
         
     leng::InputManager inputManager;
 
     float xOffset, yOffset;
 
-    SDL_WarpMouseInWindow(window.window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+    //SDL_WarpMouseInWindow(window.window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
     
     bool running = true;
     SDL_Event event;
@@ -188,13 +144,13 @@ int main() {
 		break;
 	    }
 	}
-	handleEvents(inputManager);
-
+	handleEvents(player, inputManager);
+	update(player, deltaTime);
 	//SDL_WarpMouseInWindow(window.window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
 	// Rendering
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 	
         // Use cooresponding shader when setting uniforms/drawing objects
         lightingShader.use();
@@ -213,9 +169,9 @@ int main() {
         // Directional light
 	
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), 0.0f, 0.0f, 1.0f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 1.00f, 1.00f, 1.00f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 1.0f, 1.0f, 1.0f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 1.0f, 1.0f, 1.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 0.5f, 0.5f, 0.5f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.5f, 0.5f, 0.5f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
 	
 	/*
         // Point light 1
@@ -278,10 +234,7 @@ int main() {
 
 	// Bind diffuse map
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, diffuseMap);
-	// Bind specular map
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, specularMap);
+        glBindTexture(GL_TEXTURE_2D, sprite.textureID);
 
 	// Draw the container (using container's vertex attributes)
         /*glBindVertexArray(containerVAO);
@@ -290,50 +243,12 @@ int main() {
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);*/
 
-	// Draw 10 containers with the same VAO and VBO information; only their world space coordinates differ
-	glm::mat4 model;
-        glBindVertexArray(containerVAO);
-	for(GLuint i = 0; i < 10; i++) {
-	    model = glm::mat4();
-	    model = glm::translate(model, cubePositions[i]);
-	    //GLfloat angle = 20.0f * i; 
-	    //model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
-	    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	renderer.draw(sprite, lightingShader);
+	renderer.draw(player.sprite, lightingShader);
 
-	    glDrawArrays(GL_TRIANGLES, 0, 36);
-	}
-        glBindVertexArray(0);
-
-        // Also draw the lamp object, again binding the appropriate shader
-        lampShader.use();
-        // Get location objects for the matrices on the lamp shader (these could be different on a different shader)
-        modelLoc = glGetUniformLocation(lampShader.Program, "model");
-        viewLoc  = glGetUniformLocation(lampShader.Program, "view");
-        projLoc  = glGetUniformLocation(lampShader.Program, "projection");
-        // Set matrices
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-        model = glm::mat4();
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        // Draw the light object (using light's vertex attributes)
-        glBindVertexArray(lightVAO);
-         for (GLuint i = 0; i < 4; i++)
-        {
-            model = glm::mat4();
-            model = glm::translate(model, pointLightPositions[i]);
-            model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
-        glBindVertexArray(0);
 	// Swap buffers
 	window.swapWindow();
     }
-    glDeleteVertexArrays(1, &containerVAO);
-    glDeleteVertexArrays(1, &lightVAO);
-    glDeleteBuffers(1, &VBO);
     
     return 0;
 }

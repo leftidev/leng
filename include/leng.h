@@ -5,6 +5,12 @@
 
 namespace leng {
 
+struct Normal {
+    float x;
+    float y;
+    float z;
+};
+
 struct Texture {
     GLuint id;
     int width;
