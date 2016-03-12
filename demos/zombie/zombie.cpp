@@ -101,7 +101,7 @@ int main() {
     renderer.initVAO2(blendShader);
 
     leng::Sprite2 sprite(0, 0, 64, 64, "assets/textures/dungeon_floor.png");
-    leng::Player player(64, 64, 64, 64, "assets/textures/zombie.png");
+    leng::Player player(64, 64, 64, 64, "assets/textures/soldier.png");
         
     leng::InputManager inputManager;
 
@@ -168,7 +168,7 @@ int main() {
         // Directional light
 	
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), 0.0f, 0.0f, 1.0f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 0.05f, 0.05f, 0.05f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 1.05f, 1.05f, 1.05f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.05f, 0.05f, 0.05f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
 	
@@ -240,7 +240,7 @@ int main() {
         glBindVertexArray(0);*/
 
 	renderer.draw(sprite, lightingShader);
-	//renderer.draw(player.sprite, lightingShader);
+	renderer.draw(player.sprite, lightingShader);
 
 	blendShader.use();
 	glUniform1i(glGetUniformLocation(blendShader.Program, "texture1"), 0);
@@ -256,7 +256,7 @@ int main() {
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	
 	// Bind diffuse map
-	renderer.draw2(player.sprite, blendShader);
+	//renderer.draw2(player.sprite, blendShader);
 	
 	// Swap buffers
 	window.swapWindow();
