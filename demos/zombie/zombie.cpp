@@ -83,7 +83,16 @@ int main() {
     // Hide cursor and trap mouse to window
     //SDL_SetRelativeMouseMode(SDL_TRUE);
     //SDL_ShowCursor(SDL_DISABLE);
+    const int SIZE = 40;
 
+    std::vector<leng::Sprite> sprites;
+    
+    for(int x = 0; x < SIZE; x++) {
+	for(int y = 0; y < SIZE; y++) {
+	    leng::Sprite sprite(x * 64, y * 64, 64, 64, "assets/textures/dungeon_floor.png");
+	    sprites.push_back(sprite);
+	}
+    }
         // Build and compile our shader program
     leng::Shader lightingShader("assets/shaders/lighting.vert", "assets/shaders/lighting.frag");
     leng::Shader lampShader("assets/shaders/lamp.vert", "assets/shaders/lamp.frag");
@@ -100,6 +109,8 @@ int main() {
     renderer.initLampVAO(lampShader);
 
     leng::Sprite sprite(0, 0, 64, 64, "assets/textures/dungeon_floor.png");
+    
+
     leng::Player player(64, 64, 64, 64, "assets/textures/soldier.png");
         
     leng::InputManager inputManager;
@@ -145,7 +156,7 @@ int main() {
 	handleEvents(player, inputManager);
 	update(player, deltaTime);
 	//SDL_WarpMouseInWindow(window.window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-
+	//camera.Position = glm::vec3(player.pos.x, player.pos.y, camera.Position.z);
 	// Rendering
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -165,12 +176,12 @@ int main() {
         // == ==========================
 	
         // Directional light
-	/*
+	
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), 0.0f, 0.0f, 1.0f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 1.05f, 1.05f, 1.05f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 0.05f, 0.05f, 0.05f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.05f, 0.05f, 0.05f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
-	*/
+	
 	
         // Point light 1
         glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
@@ -231,9 +242,14 @@ int main() {
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
+	for(unsigned int i = 0; i < sprites.size(); i++) {
+	    renderer.draw(sprites[i], lightingShader);
+	}
 	renderer.draw(sprite, lightingShader);
 	renderer.draw(player.sprite, lightingShader);
 
+	pointLightPositions[0] = glm::vec3(player.pos.x + 32, player.pos.y + 32, -8.0f);
+	
 	lampShader.use();
 	// Create camera transformations
         view = camera.GetViewMatrix();
