@@ -1,0 +1,116 @@
+#include "renderer.h"
+
+namespace leng {
+    
+Renderer::Renderer() {
+    glGenVertexArrays(1, &lightingVAO);
+    glGenVertexArrays(1, &lampVAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &lampVBO);
+    glGenBuffers(1, &EBO);
+    
+    // EBO indices for a quad
+    indices[0] = 0;
+    indices[1] = 1;
+    indices[2] = 3;
+    indices[3] = 1;
+    indices[4] = 2;
+    indices[5] = 3;
+}
+
+Renderer::~Renderer() {
+    glDeleteVertexArrays(1, &lightingVAO);
+    glDeleteVertexArrays(1, &lampVAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+}
+    
+void Renderer::initLightVAO(leng::Shader& shader) {
+    glBindVertexArray(lightingVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+    // Enable shader attributes
+    shader.enableAttribute("position", 2, 7, (GLvoid*)0);
+    shader.enableAttribute("normal", 3, 7, (GLvoid*)(2 * sizeof(GLfloat)));
+    shader.enableAttribute("texCoords", 2, 7, (GLvoid*)(5 * sizeof(GLfloat)));
+    
+    glBindVertexArray(0);
+}
+
+void Renderer::initLampVAO(leng::Shader& shader) {
+    GLfloat vertices[] = {
+        // Positions
+	-0.5f, -0.5f, -0.5f,
+	0.5f, -0.5f, -0.5f,
+	0.5f,  0.5f, -0.5f,
+	0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f
+    };
+
+    glBindVertexArray(lampVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, lampVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // Enable shader attributes
+    shader.enableAttribute("position", 3, 3, (GLvoid*)0);
+    
+    glBindVertexArray(0);
+}
+    
+void Renderer::updateVertices(leng::Sprite& sprite) {
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(sprite.vertexData), sprite.vertexData, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void Renderer::draw(leng::Sprite& sprite, leng::Shader& shader) {
+    updateVertices(sprite);
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, sprite.textureID);
+    modelLoc = glGetUniformLocation(shader.Program, "model");
+    // Render chunk
+    glBindVertexArray(lightingVAO);
+    
+    model = glm::mat4();
+    //model = glm::translate(model, position);
+    //GLfloat angle = 20.0f * 3.5f; 
+    //model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    
+    glBindVertexArray(0);
+
+    // Number of vertices rendered
+    //std::cout << numVertices << std::endl;
+}
+
+void Renderer::drawLamp(glm::vec3 position, leng::Shader& shader) {
+    //updateVertices(sprite);
+    
+    modelLoc = glGetUniformLocation(shader.Program, "model");
+    // Render chunk
+    glBindVertexArray(lampVAO);
+    
+    model = glm::mat4();
+    model = glm::translate(model, position);
+    model = glm::scale(model, glm::vec3(10.0f)); // Make it a bigger cube
+    //GLfloat angle = 20.0f * 3.5f; 
+    //model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    
+    glBindVertexArray(0);
+
+    // Number of vertices rendered
+    //std::cout << numVertices << std::endl;
+}
+    
+} // namespace leng

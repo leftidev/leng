@@ -7,7 +7,7 @@
 #include "input_manager.h"
 #include "camera_3d.h"
 #include "shader.h"
-#include "sprite2.h"
+#include "sprite.h"
 #include "renderer.h"
 #include "player.h"
 
@@ -73,7 +73,7 @@ int main() {
     window.setVsync(true);
     //window.enableDepthTest();
 
-    camera.movementSpeed = 0.15f;
+    camera.movementSpeed = 0.5f;
 
     //SDL_SetWindowFullscreen(window.window, SDL_WINDOW_FULLSCREEN);
 
@@ -87,7 +87,6 @@ int main() {
         // Build and compile our shader program
     leng::Shader lightingShader("assets/shaders/lighting.vert", "assets/shaders/lighting.frag");
     leng::Shader lampShader("assets/shaders/lamp.vert", "assets/shaders/lamp.frag");
-    leng::Shader blendShader("assets/shaders/blend.vert", "assets/shaders/blend.frag");
 
     glm::vec3 pointLightPositions[] = {
 	glm::vec3( 0.7f,  0.2f,  -5.0f),
@@ -97,10 +96,10 @@ int main() {
 };
     
     leng::Renderer renderer;
-    renderer.initVAO(lightingShader);
-    renderer.initVAO2(blendShader);
+    renderer.initLightVAO(lightingShader);
+    renderer.initLampVAO(lampShader);
 
-    leng::Sprite2 sprite(0, 0, 64, 64, "assets/textures/dungeon_floor.png");
+    leng::Sprite sprite(0, 0, 64, 64, "assets/textures/dungeon_floor.png");
     leng::Player player(64, 64, 64, 64, "assets/textures/soldier.png");
         
     leng::InputManager inputManager;
@@ -166,21 +165,22 @@ int main() {
         // == ==========================
 	
         // Directional light
-	
+	/*
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), 0.0f, 0.0f, 1.0f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 1.05f, 1.05f, 1.05f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.05f, 0.05f, 0.05f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
+	*/
 	
-	/*
         // Point light 1
         glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), 0.05f, 0.05f, 0.05f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), 1.05f, 1.05f, 1.05f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), 0.8f, 0.8f, 0.8f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 1.0f, 1.0f, 1.0f);
         glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
-        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.09);
-        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.032);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.014);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.000007);
+	/*
         // Point light 2
         glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].position"), pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].ambient"), 0.05f, 0.05f, 0.05f);
@@ -222,7 +222,7 @@ int main() {
         // Create camera transformations
         glm::mat4 view;
         view = camera.GetViewMatrix();
-        glm::mat4 projection = glm::perspective(45.0f, 1024.0f / 768.0f, 0.1f, 1000.0f);
+        glm::mat4 projection = glm::perspective(45.0f, 1024.0f / 768.0f, 0.1f, 10000.0f);
         // Get the uniform locations
         GLint modelLoc = glGetUniformLocation(lightingShader.Program, "model");
         GLint viewLoc  = glGetUniformLocation(lightingShader.Program,  "view");
@@ -231,32 +231,23 @@ int main() {
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-
-	// Draw the container (using container's vertex attributes)
-        /*glBindVertexArray(containerVAO);
-        glm::mat4 model;
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);*/
-
 	renderer.draw(sprite, lightingShader);
 	renderer.draw(player.sprite, lightingShader);
 
-	blendShader.use();
-	glUniform1i(glGetUniformLocation(blendShader.Program, "texture1"), 0);
+	lampShader.use();
 	// Create camera transformations
         view = camera.GetViewMatrix();
-	projection = glm::perspective(45.0f, 1024.0f / 768.0f, 0.1f, 1000.0f);
+	projection = glm::perspective(45.0f, 1024.0f / 768.0f, 0.1f, 10000.0f);
         // Get the uniform locations
-	modelLoc = glGetUniformLocation(blendShader.Program, "model");
-	viewLoc  = glGetUniformLocation(blendShader.Program,  "view");
-	projLoc  = glGetUniformLocation(blendShader.Program,  "projection");
+	modelLoc = glGetUniformLocation(lampShader.Program, "model");
+	viewLoc  = glGetUniformLocation(lampShader.Program,  "view");
+	projLoc  = glGetUniformLocation(lampShader.Program,  "projection");
         // Pass the matrices to the shader
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	
-	// Bind diffuse map
-	//renderer.draw2(player.sprite, blendShader);
+	// Render lamp
+	renderer.drawLamp(pointLightPositions[0], lampShader);
 	
 	// Swap buffers
 	window.swapWindow();

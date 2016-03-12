@@ -1,0 +1,40 @@
+#ifndef RENDERER_H
+#define RENDERER_H
+
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <GL/glew.h>
+
+#include "shader.h"
+#include "sprite2.h"
+
+namespace leng {
+
+class Renderer {
+public:
+    Renderer();
+    ~Renderer();
+    void initVAO(leng::Shader& shader);
+    void initVAO2(leng::Shader& shader);
+    void initVAO3(leng::Shader& shader);
+    void updateVertices(leng::Sprite2& sprite);
+    void draw(leng::Sprite2& sprite, leng::Shader& shader);
+    void draw2(leng::Sprite2& sprite, leng::Shader& shader);
+    void draw3(leng::Sprite2& sprite, leng::Shader& shader);
+    
+private:
+    GLuint VBO;
+    GLuint lightingVAO;
+    GLuint blendVAO;
+    GLuint defaultVAO;
+    GLuint EBO;
+    GLuint indices[6];
+    glm::mat4 model;
+    GLint modelLoc;
+};
+
+}
+
+#endif // RENDERER_H
