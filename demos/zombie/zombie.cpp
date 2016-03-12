@@ -87,6 +87,7 @@ int main() {
         // Build and compile our shader program
     leng::Shader lightingShader("assets/shaders/lighting.vert", "assets/shaders/lighting.frag");
     leng::Shader lampShader("assets/shaders/lamp.vert", "assets/shaders/lamp.frag");
+    leng::Shader blendShader("assets/shaders/blend.vert", "assets/shaders/blend.frag");
 
     glm::vec3 pointLightPositions[] = {
 	glm::vec3( 0.7f,  0.2f,  -5.0f),
@@ -97,12 +98,10 @@ int main() {
     
     leng::Renderer renderer;
     renderer.initVAO(lightingShader);
+    renderer.initVAO2(blendShader);
 
     leng::Sprite2 sprite(0, 0, 64, 64, "assets/textures/dungeon_floor.png");
     leng::Player player(64, 64, 64, 64, "assets/textures/zombie.png");
-    // Set texture units
-    lightingShader.use();
-    glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
         
     leng::InputManager inputManager;
 
@@ -154,7 +153,7 @@ int main() {
 	
         // Use cooresponding shader when setting uniforms/drawing objects
         lightingShader.use();
-
+	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
         GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
         glUniform3f(viewPosLoc, camera.Position.x, camera.Position.y, camera.Position.z);
         // Set material properties
@@ -169,8 +168,8 @@ int main() {
         // Directional light
 	
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), 0.0f, 0.0f, 1.0f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 0.5f, 0.5f, 0.5f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.5f, 0.5f, 0.5f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 0.05f, 0.05f, 0.05f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.05f, 0.05f, 0.05f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
 	
 	/*
@@ -232,9 +231,6 @@ int main() {
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-	// Bind diffuse map
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, sprite.textureID);
 
 	// Draw the container (using container's vertex attributes)
         /*glBindVertexArray(containerVAO);
@@ -244,8 +240,24 @@ int main() {
         glBindVertexArray(0);*/
 
 	renderer.draw(sprite, lightingShader);
-	renderer.draw(player.sprite, lightingShader);
+	//renderer.draw(player.sprite, lightingShader);
 
+	blendShader.use();
+	glUniform1i(glGetUniformLocation(blendShader.Program, "texture1"), 0);
+	// Create camera transformations
+        view = camera.GetViewMatrix();
+	projection = glm::perspective(45.0f, 1024.0f / 768.0f, 0.1f, 1000.0f);
+        // Get the uniform locations
+	modelLoc = glGetUniformLocation(blendShader.Program, "model");
+	viewLoc  = glGetUniformLocation(blendShader.Program,  "view");
+	projLoc  = glGetUniformLocation(blendShader.Program,  "projection");
+        // Pass the matrices to the shader
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	
+	// Bind diffuse map
+	renderer.draw2(player.sprite, blendShader);
+	
 	// Swap buffers
 	window.swapWindow();
     }
