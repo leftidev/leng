@@ -10,22 +10,22 @@ Camera2D::~Camera2D() {
 }
 
 void Camera2D::init(int ScreenWidth, int ScreenHeight) {
-	screenWidth = ScreenWidth;
-	screenHeight = ScreenHeight;
-	orthoMatrix = glm::ortho(0.0f, (float)screenWidth, 0.0f, (float)screenHeight);
+    screenWidth = ScreenWidth;
+    screenHeight = ScreenHeight;
+    orthoMatrix = glm::ortho(0.0f, (float)screenWidth, 0.0f, (float)screenHeight);
 }
 
 glm::vec2 Camera2D::convertScreenToWorld(glm::vec2 screenCoords) {
-	// Invert Y Direction
-	screenCoords.y = screenHeight - screenCoords.y;
-	// Make it so that 0 is the center
-	screenCoords -= glm::vec2(screenWidth / 2, screenHeight / 2);
-	// Scale the coordinates
-	screenCoords /= scale;
-	// Translate with the camera position
-	screenCoords += position;
+    // Invert Y Direction
+    screenCoords.y = screenHeight - screenCoords.y;
+    // Make it so that 0 is the center
+    screenCoords -= glm::vec2(screenWidth / 2, screenHeight / 2);
+    // Scale the coordinates
+    screenCoords /= scale;
+    // Translate with the camera position
+    screenCoords += position;
 
-	return screenCoords;
+    return screenCoords;
 }
     
 // Updates the camera matrix if needed

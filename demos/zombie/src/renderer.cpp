@@ -159,7 +159,7 @@ void Renderer::finishMesh(int meshID, leng::Shader& shader) {
     glBindVertexArray(0);
 
     // Number of vertices rendered
-    std::cout << numVertices << std::endl;
+    //std::cout << numVertices << std::endl;
 }
 
     

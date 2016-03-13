@@ -31,13 +31,15 @@ public:
     float get_scale() { return scale; }
     glm::mat4 getCameraMatrix() { return cameraMatrix; }
 
-private:
+//private:
     int screenWidth, screenHeight;
     bool needsMatrixUpdate {true};
     float scale {1.0f};
     glm::vec2 position;
     glm::mat4 cameraMatrix;
     glm::mat4 orthoMatrix;
+
+    float movementSpeed {0.5f};
 };
 
 } // namespace leng
