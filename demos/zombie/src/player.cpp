@@ -24,10 +24,10 @@ void Player::update(float deltaTime) {
 	pos.y -= vel.y * deltaTime;
     }
     if(rightHeld) {
-	pos.x -= vel.x * deltaTime;
+	pos.x += vel.x * deltaTime;
     }
     if(leftHeld) {
-	pos.x += vel.x * deltaTime;
+	pos.x -= vel.x * deltaTime;
     }
 
 }

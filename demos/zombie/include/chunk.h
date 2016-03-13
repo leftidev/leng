@@ -10,7 +10,7 @@
 
 namespace leng {
 
-static const int CHUNK_SIZE = 20;
+static const int CHUNK_SIZE = 100;
 
 class Chunk {
 public:

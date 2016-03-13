@@ -23,6 +23,16 @@ public:
     void updateLight4(leng::Shader& shader);
 };
 
+class DirectionalLight {
+public:
+    glm::vec3 direction;
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+
+    void update(leng::Shader& shader);
+};
+
 } // namespace leng
 
 #endif // LIGHT_H

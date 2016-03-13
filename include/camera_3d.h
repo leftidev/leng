@@ -22,7 +22,7 @@ enum camera_movement {
 namespace leng {
 
 // Default camera values
-const GLfloat YAW        = 90.0f;
+const GLfloat YAW        = -90.0f;
 const GLfloat PITCH      =  0.0f;
 const GLfloat SPEED      =  0.005f;
 const GLfloat SENSITIVITY =  0.15f;

@@ -46,4 +46,12 @@ void PointLight::updateLight2(leng::Shader& shader) {
     glUniform1f(glGetUniformLocation(shader.Program, "pointLights[3].quadratic"), quadratic);
 }
 
+void DirectionalLight::update(leng::Shader& shader) {
+    // Directional light
+    glUniform3f(glGetUniformLocation(shader.Program, "dirLight.direction"), direction.x, direction.y, direction.z);
+    glUniform3f(glGetUniformLocation(shader.Program, "dirLight.ambient"), ambient.x, ambient.y, ambient.z);
+    glUniform3f(glGetUniformLocation(shader.Program, "dirLight.diffuse"), diffuse.x, diffuse.y, diffuse.z);
+    glUniform3f(glGetUniformLocation(shader.Program, "dirLight.specular"), specular.x, specular.y, specular.z);
+}
+    
 } // namespace leng

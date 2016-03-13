@@ -19,6 +19,8 @@ public:
 
     // Updates the camera matrix if needed
     void update();
+    glm::vec2 convertScreenToWorld(glm::vec2 screenCoords);
+    bool isBoxInView(const glm::vec2& position, const glm::vec2& dimensions);
 
     // Setters
     void setPosition(const glm::vec2& newPosition) { position = newPosition; needsMatrixUpdate = true; }
