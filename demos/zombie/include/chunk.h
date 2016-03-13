@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "block.h"
-#include "renderer_voxel.h"
+#include "renderer.h"
 #include "camera_3d.h"
 #include "shader.h"
 
@@ -18,9 +18,9 @@ public:
     ~Chunk();
 
     void update(float deltaTime);
-    void render(leng::RendererVoxel* renderer, leng::Shader& shader);
-    void createMesh(leng::RendererVoxel* renderer, leng::Shader& voxelShader);
-    void createCube(leng::RendererVoxel* renderer, int x, int y, int z);
+    void render(leng::Renderer* renderer, leng::Shader& shader);
+    void createMesh(leng::Renderer* renderer, leng::Shader& voxelShader);
+    void createCube(leng::Renderer* renderer, int x, int y);
 
     // The blocks data
     Block** blocks;

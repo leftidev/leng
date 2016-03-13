@@ -10,6 +10,8 @@
 #include "sprite.h"
 #include "renderer.h"
 #include "player.h"
+#include "light.h"
+#include "chunk.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -97,6 +99,8 @@ int main() {
     leng::Shader lightingShader("assets/shaders/lighting.vert", "assets/shaders/lighting.frag");
     leng::Shader lampShader("assets/shaders/lamp.vert", "assets/shaders/lamp.frag");
 
+
+    
     glm::vec3 pointLightPositions[] = {
 	glm::vec3( 0.7f,  0.2f,  -5.0f),
 	glm::vec3( 2.3f, -3.3f, -8.0f),
@@ -112,7 +116,23 @@ int main() {
     
 
     leng::Player player(64, 64, 64, 64, "assets/textures/soldier.png");
-        
+
+    leng::PointLight pointLight1;
+    pointLight1.position = glm::vec3(player.pos.x + 32, player.pos.y + 32, pointLightPositions[0].z);
+    pointLight1.ambient = glm::vec3(1.05f, 1.05f, 1.05f);
+    pointLight1.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
+    pointLight1.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+    pointLight1.constant = 1.0f;
+    pointLight1.linear = 0.0005f;
+    pointLight1.quadratic = 0.00002f;
+
+    leng::Renderer* renderer2 = new leng::Renderer;
+    leng::Chunk* chunk = new leng::Chunk(0);
+    chunk->createMesh(renderer2, lightingShader);
+    chunk->position = glm::vec3(0, 0, 0);
+
+        GLuint sand_floor = leng::ResourceManager::getTexture("assets/textures/dungeon_floor.png").id;    
+	
     leng::InputManager inputManager;
 
     float xOffset, yOffset;
@@ -156,7 +176,7 @@ int main() {
 	handleEvents(player, inputManager);
 	update(player, deltaTime);
 	//SDL_WarpMouseInWindow(window.window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-	//camera.Position = glm::vec3(player.pos.x, player.pos.y, camera.Position.z);
+	camera.Position = glm::vec3(player.pos.x, player.pos.y, camera.Position.z);
 	// Rendering
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -176,21 +196,23 @@ int main() {
         // == ==========================
 	
         // Directional light
-	
+	/*
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), 0.0f, 0.0f, 1.0f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 0.05f, 0.05f, 0.05f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.05f, 0.05f, 0.05f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
-	
-	
-        // Point light 1
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
+	*/
+	pointLight1.position = glm::vec3(player.pos.x + 32, player.pos.y + 32, pointLightPositions[0].z);
+	pointLight1.updateLight1(lightingShader);
+	/*        // Point light 1
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), player.pos.x + 32, player.pos.y + 32, pointLightPositions[0].z);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), 1.05f, 1.05f, 1.05f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), 0.8f, 0.8f, 0.8f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 1.0f, 1.0f, 1.0f);
         glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
-        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.014);
-        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.000007);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.014f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.000007f);
+	*/
 	/*
         // Point light 2
         glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].position"), pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
@@ -243,12 +265,16 @@ int main() {
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 	for(unsigned int i = 0; i < sprites.size(); i++) {
-	    renderer.draw(sprites[i], lightingShader);
+	    //renderer.draw(sprites[i], lightingShader);
 	}
 	renderer.draw(sprite, lightingShader);
 	renderer.draw(player.sprite, lightingShader);
 
-	pointLightPositions[0] = glm::vec3(player.pos.x + 32, player.pos.y + 32, -8.0f);
+	// Bind Textures using texture units
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, sand_floor);
+	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
+	chunk->render(renderer2, lightingShader);
 	
 	lampShader.use();
 	// Create camera transformations
@@ -264,6 +290,8 @@ int main() {
 	
 	// Render lamp
 	renderer.drawLamp(pointLightPositions[0], lampShader);
+
+
 	
 	// Swap buffers
 	window.swapWindow();

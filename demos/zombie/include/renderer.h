@@ -9,8 +9,16 @@
 
 #include "shader.h"
 #include "sprite.h"
+#include "vertex.h"
+
+#include <vector>
 
 namespace leng {
+
+struct Mesh {
+    std::vector<Vertex2> vertexData;
+    GLuint VBO;
+};
 
 class Renderer {
 public:
@@ -21,15 +29,23 @@ public:
     void updateVertices(leng::Sprite& sprite);
     void draw(leng::Sprite& sprite, leng::Shader& shader);
     void drawLamp(glm::vec3 position, leng::Shader& shader);
-    
+    void createMesh();
+    void addVertexToMesh(int meshID, Vertex2 vert);
+    void finishMesh(int meshID, leng::Shader& shader);
+    void renderMesh(int numVertices, leng::Shader& shader, const glm::vec3& position);
+
 private:
     GLuint VBO, lampVBO;
     GLuint lightingVAO;
     GLuint lampVAO;
+    GLuint tilesVAO;
     GLuint EBO;
     GLuint indices[6];
     glm::mat4 model;
     GLint modelLoc;
+
+    std::vector<Mesh> meshes;
+       	
 };
 
 }

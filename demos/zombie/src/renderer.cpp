@@ -5,6 +5,8 @@ namespace leng {
 Renderer::Renderer() {
     glGenVertexArrays(1, &lightingVAO);
     glGenVertexArrays(1, &lampVAO);
+    glGenVertexArrays(1, &tilesVAO);
+    
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &lampVBO);
     glGenBuffers(1, &EBO);
@@ -112,5 +114,53 @@ void Renderer::drawLamp(glm::vec3 position, leng::Shader& shader) {
     // Number of vertices rendered
     //std::cout << numVertices << std::endl;
 }
+
+void Renderer::createMesh() {
+    // TODO: Create VBO per mesh
+    Mesh mesh;
+    glGenBuffers(1, &mesh.VBO);
+    meshes.push_back(mesh);
+}
+    
+void Renderer::addVertexToMesh(int meshID, Vertex2 vert) {	
+    meshes.at(meshID).vertexData.emplace_back(vert);
+}
+
+void Renderer::finishMesh(int meshID, leng::Shader& shader) {
+    glBindVertexArray(tilesVAO);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, meshes.at(meshID).VBO);
+    //glBufferData(GL_ARRAY_BUFFER, meshes.at(meshID).vertexData.size() * sizeof(Vertex2), &meshes.at(meshID).vertexData[0], GL_STATIC_DRAW);
+
+    glBufferData(GL_ARRAY_BUFFER, meshes.at(meshID).vertexData.size() * sizeof(Vertex2), nullptr, GL_DYNAMIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, meshes.at(meshID).vertexData.size() * sizeof(Vertex2), meshes.at(meshID).vertexData.data());
+
+    // Enable shader attributes
+    shader.enableAttribute("position", 2, 7, (GLvoid*)0);
+    shader.enableAttribute("normal", 3, 7, (GLvoid*)(2 * sizeof(GLfloat)));
+    shader.enableAttribute("texCoords", 2, 7, (GLvoid*)(5 * sizeof(GLfloat)));
+    
+    glBindVertexArray(0);
+}
+
+    void Renderer::renderMesh(int numVertices, leng::Shader& shader, const glm::vec3& position) {
+    modelLoc = glGetUniformLocation(shader.Program, "model");
+    // Render chunk
+    glBindVertexArray(tilesVAO);
+    
+    model = glm::mat4();
+    model = glm::translate(model, position);
+    //GLfloat angle = 20.0f * 3.5f; 
+    //model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+    glDrawArrays(GL_TRIANGLES, 0, numVertices);
+    
+    glBindVertexArray(0);
+
+    // Number of vertices rendered
+    std::cout << numVertices << std::endl;
+}
+
     
 } // namespace leng
