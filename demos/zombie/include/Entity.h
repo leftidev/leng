@@ -2,8 +2,8 @@
 
 #include <glm/glm.hpp>
 
-#include <cpp-GEngine/SpriteBatch.h>
-#include <cpp-GEngine/ResourceManager.h>
+#include <SpriteBatch.h>
+#include <resource_manager.h>
 
 
 class Entity
