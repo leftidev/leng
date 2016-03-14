@@ -80,7 +80,21 @@ void handleEvents(leng::Camera2D* camera, leng::Player& player, leng::InputManag
 	player.leftHeld = false;
 }
 
-void update(leng::Player& player, float deltaTime) {
+void update(leng::Camera2D* camera, leng::InputManager* inputManager, leng::Player& player, float deltaTime) {
+    // Calculate direction between center of screen and mouse cursor
+    glm::vec2 mouseCoords = inputManager->getMouseCoords();
+    mouseCoords = camera->convertScreenToWorld(mouseCoords);
+    glm::vec2 centerPosition = player.pos + glm::vec2(player.width / 2, player.height / 2);
+    glm::vec2 direction = glm::normalize(mouseCoords - centerPosition);
+
+    float x = direction.x;
+    float y = direction.y;
+    float angleInRadians = std::atan2(y, x);
+    float angleInDegrees = (angleInRadians / M_PI) * 180.0f;
+    player.sprite.setAngle(glm::radians(angleInDegrees));
+    
+    camera->update();
+
     player.update(deltaTime);
 }
 
@@ -128,8 +142,8 @@ int main() {
     
     leng::DirectionalLight* directionalLight = new leng::DirectionalLight;
     directionalLight->direction = glm::vec3(0.0f, 0.0f, 1.0f);
-    directionalLight->ambient = glm::vec3(0.05f, 0.05f, 0.05f);
-    directionalLight->diffuse = glm::vec3(0.05f, 0.05f, 0.05f);
+    directionalLight->ambient = glm::vec3(0.10f, 0.10f, 0.10f);
+    directionalLight->diffuse = glm::vec3(0.10f, 0.10f, 0.10f);
     directionalLight->specular = glm::vec3(0.5f, 0.5f, 0.5f);
 	
     leng::PointLight* pointLight1 = new leng::PointLight;
@@ -206,32 +220,11 @@ int main() {
 	    }
 	}
 	handleEvents(camera, player, inputManager);
-	update(player, deltaTime);
+	update(camera, inputManager, player, deltaTime);
 	if(!freecam) {
 	    camera->setPosition(glm::vec2(player.pos.x + player.width / 2, player.pos.y + player.height / 2));
 	}
-	// Calculate direction between center of screen and mouse cursor
-	glm::vec2 mouseCoords = inputManager->getMouseCoords();
-	mouseCoords = camera->convertScreenToWorld(mouseCoords);
-	//std::cout << mouseCoords.x << std::endl;
-	glm::vec2 centerPosition = player.pos + glm::vec2(player.width / 2, player.height / 2);
-	glm::vec2 direction = glm::normalize(mouseCoords - centerPosition);
-	//std::cout << direction.x << " " << direction.y << std::endl;
 
-	double x = direction.x;
-	double y = direction.y;
-	double angleInRadians = std::atan2(y, x);
-	double angleInDegrees = (angleInRadians / M_PI) * 180.0f;
-	std::cout << angleInDegrees << std::endl;
-	
-	camera->update();
-	/*
-	if(freecam) {
-	    SDL_WarpMouseInWindow(window.window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-	} else {
-	    camera->Position = glm::vec3(player.pos.x, player.pos.y, camera->Position.z);
-	}
-	*/  	
 	// Rendering
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -243,9 +236,8 @@ int main() {
         glUniform3f(viewPosLoc, camera->position.x, camera->position.y, 700.0f);
         // Set material properties
         glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
-	// Lights
+	// Update lights
 	directionalLight->update(lightingShader);
-	
 	//pointLight1.position = glm::vec3(player.pos.x + 32, player.pos.y + 32, pointLightPositions[0].z);
 	pointLight1->updateLight1(lightingShader);
 	pointLight2->updateLight2(lightingShader);
@@ -280,11 +272,8 @@ int main() {
 	
 	// Draw sprites
 	renderer->draw(sprite, lightingShader);
-
-	player.sprite.setAngle(glm::radians(angleInDegrees));
 	renderer->draw(player.sprite, lightingShader);
 
-	
 	lampShader.use();
 
 	// Create camera transformations
@@ -298,6 +287,16 @@ int main() {
 	// Swap buffers
 	window.swapWindow();
     }
+
+    delete camera;
+    delete renderer;
+    delete chunk;
+    delete directionalLight;
+    delete pointLight1;
+    delete pointLight2;
+    delete pointLight3;
+    delete pointLight4;
+    delete inputManager;
     
     return 0;
 }
