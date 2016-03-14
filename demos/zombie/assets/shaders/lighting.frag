@@ -2,6 +2,7 @@
 struct Material {
     sampler2D diffuse;
     sampler2D specular;
+    sampler2D normalMap;
     float shininess;
 }; 
 
@@ -46,13 +47,14 @@ in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
 
-out vec4 color;
+out vec4 FragColor;
 
 uniform vec3 viewPos;
 uniform DirLight dirLight;
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform SpotLight spotLight;
 uniform Material material;
+uniform bool normalMapping;
 
 // Function prototypes
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
@@ -62,9 +64,16 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 void main()
 {
     // Properties
-    vec3 norm = normalize(Normal);
+    //vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
-    
+    vec3 norm = normalize(Normal);
+    if(normalMapping)
+    {
+        // Obtain normal from normal map in range [0,1]
+        norm = texture(material.normalMap, TexCoords).rgb;
+        // Transform normal vector to range [-1,1]
+        norm = normalize(norm * 2.0 - 1.0); 
+    }
     // == ======================================
     // Our lighting is set up in 3 phases: directional, point lights and an optional flashlight
     // For each phase, a calculate function is defined that calculates the corresponding color
@@ -81,7 +90,7 @@ void main()
     
     vec4 surfaceColor = texture(material.diffuse, TexCoords);
     
-    color = vec4(result * surfaceColor.rgb, surfaceColor.a);
+    FragColor = vec4(result * surfaceColor.rgb, surfaceColor.a);
 }
 
 // Calculates the color when using a directional light.

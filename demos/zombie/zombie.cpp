@@ -30,6 +30,7 @@ float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
 bool freecam = false;
+bool normalMapping = true;
 
 void handleEvents(leng::Camera2D* camera, leng::Player& player, leng::InputManager* inputManager, float deltaTime) {
     if(inputManager->isPressed(SDLK_i)) {
@@ -42,11 +43,13 @@ void handleEvents(leng::Camera2D* camera, leng::Player& player, leng::InputManag
     }
     if(inputManager->isPressed(SDLK_LEFT)) {
 	camera->position.x -= camera->movementSpeed * 5 * deltaTime;
-        camera->needsMatrixUpdate = true;	
+        camera->needsMatrixUpdate = true;
+	normalMapping = false;
     }
     if(inputManager->isPressed(SDLK_RIGHT)) {
 	camera->position.x += camera->movementSpeed * 5 * deltaTime;
-        camera->needsMatrixUpdate = true;	
+        camera->needsMatrixUpdate = true;
+	normalMapping = true;
     }
     if(inputManager->isPressed(SDLK_UP)) {
 	camera->position.y += camera->movementSpeed * 5 * deltaTime;
@@ -228,7 +231,7 @@ int main() {
         // Use cooresponding shader when setting uniforms/drawing objects
         lightingShader.use();
 	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
-	glUniform1i(glGetUniformLocation(lightingShader.Program, "normalMap"), 1);
+	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.normalMap"), 1);
         GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
         glUniform3f(viewPosLoc, camera->position.x, camera->position.y, 700.0f);
         // Set material properties
@@ -258,7 +261,7 @@ int main() {
 	glm::mat4 projectionMatrix = camera->getCameraMatrix();
 	GLuint cameraLoc = glGetUniformLocation(lightingShader.Program, "transform");
 	glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-
+	glUniform1i(glGetUniformLocation(lightingShader.Program, "normalMapping"), normalMapping);
 	// Bind diffuse map
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, dungeon_floor);
@@ -266,7 +269,7 @@ int main() {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, dungeon_floor_n);
 	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
-	glUniform1i(glGetUniformLocation(lightingShader.Program, "normalMap"), 1);
+	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.normalMap"), 1);
 
 	// Draw tilemap
 	chunk->render(renderer, lightingShader);
