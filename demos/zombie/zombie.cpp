@@ -6,7 +6,6 @@
 
 #include "window.h"
 #include "input_manager.h"
-#include "camera_3d.h"
 #include "camera_2d.h"
 #include "shader.h"
 #include "sprite.h"
@@ -28,7 +27,7 @@ float SCREEN_HEIGHT = 768.0f;
 
 // Deltatime
 float deltaTime = 0.0f;	// Time between current frame and last frame
-float lastFrame = 0.0f;  	// Time of last frame
+float lastFrame = 0.0f; // Time of last frame
 
 bool freecam = false;
 
@@ -106,7 +105,7 @@ void update(leng::Camera2D* camera, leng::InputManager* inputManager, leng::Play
     angleInDegrees = (angleInRadians / M_PI) * 180.0f;
     enemy.sprite.setAngle(glm::radians(angleInDegrees));
 
-    // Enemy movement towards rotation
+    // Enemy movement towards rotation (player)
     glm::vec2 enemySpeed = glm::vec2(0.05f, 0.05f);
     enemy.pos += enemyDirection * enemySpeed * deltaTime;
 }
@@ -126,7 +125,7 @@ int main() {
     leng::Shader lampShader("assets/shaders/lamp.vert", "assets/shaders/lamp.frag");
 
     glm::vec3 pointLightPositions[] = {
-	glm::vec3( 0.7f,  0.2f,  -5.0f),
+	glm::vec3( 0.7f,  0.2f, -5.0f),
 	glm::vec3( 2.3f, -3.3f, -5.0f), // red
 	glm::vec3(-4.0f,  2.0f, -5.0f), // blue
 	glm::vec3( 0.0f,  0.0f, -5.0f) // green
@@ -140,7 +139,8 @@ int main() {
     chunk->createMesh(renderer, lightingShader);
     chunk->position = glm::vec3(0, 0, 0);
     GLuint dungeon_floor = leng::ResourceManager::getTexture("assets/textures/dungeon_floor.png").id;    
-
+    GLuint dungeon_floor_n = leng::ResourceManager::getTexture("assets/textures/dungeon_floor_n.png").id;
+    
     leng::Player player(0, 0, 64, 64, "assets/textures/soldier.png");
     leng::Entity enemy(200, 200, 64, 64, "assets/textures/zombie.png");
     
@@ -151,40 +151,40 @@ int main() {
     directionalLight->specular = glm::vec3(0.5f, 0.5f, 0.5f);
 	
     leng::PointLight* pointLight1 = new leng::PointLight;
-    pointLight1->position = glm::vec3(player.pos.x + 32, player.pos.y + 32, pointLightPositions[0].z);
-    pointLight1->ambient = glm::vec3(1.0f, 1.0f, 1.0f);
+    pointLight1->position = glm::vec3(500, 500, pointLightPositions[0].z);
+    pointLight1->ambient = glm::vec3(0.5f, 0.5f, 0.5f);
     pointLight1->diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
     pointLight1->specular = glm::vec3(1.0f, 1.0f, 1.0f);
-    pointLight1->constant = 1.0f;
+    pointLight1->constant = 0.7f;
     pointLight1->linear = 0.0014f;
-    pointLight1->quadratic = 0.0007f;
+    pointLight1->quadratic = 0.000007f;
 
     leng::PointLight* pointLight2 = new leng::PointLight;
     pointLight2->position = glm::vec3(200, 200, pointLightPositions[1].z);
-    pointLight2->ambient = glm::vec3(1.0f, 0.0f, 0.0f);
+    pointLight2->ambient = glm::vec3(0.10f, 0.0f, 0.0f);
     pointLight2->diffuse = glm::vec3(0.8f, 0.0f, 0.0f);
     pointLight2->specular = glm::vec3(1.0f, 0.0f, 0.0f);
-    pointLight2->constant = 0.8f;
+    pointLight2->constant = 1.0f;
     pointLight2->linear = 0.0014f;
-    pointLight2->quadratic = 0.0007f;
+    pointLight2->quadratic = 0.000007f;
 
     leng::PointLight* pointLight3 = new leng::PointLight;
     pointLight3->position = glm::vec3(400, 200, pointLightPositions[2].z);
-    pointLight3->ambient = glm::vec3(0.0f, 0.0f, 1.0f);
+    pointLight3->ambient = glm::vec3(0.0f, 0.0f, 0.10f);
     pointLight3->diffuse = glm::vec3(0.0f, 0.0f, 0.8f);
     pointLight3->specular = glm::vec3(0.0f, 0.0f, 1.0f);
-    pointLight3->constant = 0.3f;
-    pointLight3->linear = 0.0014f;
-    pointLight3->quadratic = 0.0007f;
+    pointLight3->constant = 1.0f;
+    pointLight3->linear = 0.007f;
+    pointLight3->quadratic = 0.0002f;
 
     leng::PointLight* pointLight4 = new leng::PointLight;
     pointLight4->position = glm::vec3(200, 400, pointLightPositions[3].z);
-    pointLight4->ambient = glm::vec3(0.0f, 1.0f, 0.0f);
+    pointLight4->ambient = glm::vec3(0.0f, 0.10f, 0.0f);
     pointLight4->diffuse = glm::vec3(0.0f, 0.8f, 0.0f);
     pointLight4->specular = glm::vec3(0.0f, 1.0f, 0.0f);
-    pointLight4->constant = 0.6f;
-    pointLight4->linear = 0.0014f;
-    pointLight4->quadratic = 0.0007f;
+    pointLight4->constant = 1.0f;
+    pointLight4->linear = 0.007f;
+    pointLight4->quadratic = 0.0002f;
 
     leng::InputManager* inputManager = new leng::InputManager;
 
@@ -228,6 +228,7 @@ int main() {
         // Use cooresponding shader when setting uniforms/drawing objects
         lightingShader.use();
 	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
+	glUniform1i(glGetUniformLocation(lightingShader.Program, "normalMap"), 1);
         GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
         glUniform3f(viewPosLoc, camera->position.x, camera->position.y, 700.0f);
         // Set material properties
@@ -258,10 +259,14 @@ int main() {
 	GLuint cameraLoc = glGetUniformLocation(lightingShader.Program, "transform");
 	glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-	// Bind Textures using texture units
+	// Bind diffuse map
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, dungeon_floor);
+	// Bind specular map
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, dungeon_floor_n);
 	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
+	glUniform1i(glGetUniformLocation(lightingShader.Program, "normalMap"), 1);
 
 	// Draw tilemap
 	chunk->render(renderer, lightingShader);
