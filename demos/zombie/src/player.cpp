@@ -14,7 +14,7 @@ Player::Player(float x, float y, float width, float height, const std::string& p
 
 Player::~Player() { }
     
-void Player::update(float deltaTime) {
+    void Player::update(leng::InputManager* inputManager, leng::Camera2D* camera, float deltaTime) {
     Entity::update(deltaTime);
 
     if(upHeld) {
@@ -29,7 +29,14 @@ void Player::update(float deltaTime) {
     if(leftHeld) {
 	pos.x -= vel.x * deltaTime;
     }
-
+    
+    // Make player rotate towards cursor
+    mouseCoords = inputManager->getMouseCoords();
+    mouseCoords = camera->convertScreenToWorld(mouseCoords);
+    centerPosition = pos + glm::vec2(width / 2, height / 2);
+    direction = glm::normalize(mouseCoords - centerPosition);
+    angleInRadians = std::atan2(direction.y, direction.x);
+    sprite.setAngle(angleInRadians);
 }
 
 } // namespace leng

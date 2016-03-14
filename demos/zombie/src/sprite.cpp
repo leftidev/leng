@@ -5,7 +5,7 @@ namespace leng {
 
     Sprite::Sprite(float x, float y, float Width, float Height, const std::string& path, float angle) {
     textureID = leng::ResourceManager::getTexture(path).id;
-
+    
     pos.x = x;
     pos.y = y;
     width = Width;

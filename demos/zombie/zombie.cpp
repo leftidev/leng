@@ -13,6 +13,7 @@
 #include "player.h"
 #include "light.h"
 #include "chunk.h"
+#include "enemy.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -42,13 +43,13 @@ void handleEvents(leng::Camera2D* camera, leng::Player& player, leng::InputManag
         camera->needsMatrixUpdate = true;	
     }
     if(inputManager->isPressed(SDLK_LEFT)) {
-	camera->position.x -= camera->movementSpeed * 5 * deltaTime;
-        camera->needsMatrixUpdate = true;
+	//camera->position.x -= camera->movementSpeed * 5 * deltaTime;
+        //camera->needsMatrixUpdate = true;
 	normalMapping = false;
     }
     if(inputManager->isPressed(SDLK_RIGHT)) {
-	camera->position.x += camera->movementSpeed * 5 * deltaTime;
-        camera->needsMatrixUpdate = true;
+	//camera->position.x += camera->movementSpeed * 5 * deltaTime;
+        //camera->needsMatrixUpdate = true;
 	normalMapping = true;
     }
     if(inputManager->isPressed(SDLK_UP)) {
@@ -80,37 +81,19 @@ void handleEvents(leng::Camera2D* camera, leng::Player& player, leng::InputManag
 	player.leftHeld = false;
 }
 
-void update(leng::Camera2D* camera, leng::InputManager* inputManager, leng::Player& player, leng::Entity& enemy, float deltaTime) {
-    player.update(deltaTime);
-    enemy.update(deltaTime);
+void update(leng::Camera2D* camera, leng::InputManager* inputManager, leng::Player& player, std::vector<leng::Enemy>& enemies, float deltaTime) {
+    player.update(inputManager, camera, deltaTime);
+    for(unsigned int i = 0; i < enemies.size(); i++) {
+	enemies[i].update(player, deltaTime);	
+    }
+
     camera->update();
+    
     if(!freecam) {
 	camera->setPosition(glm::vec2(player.pos.x + player.width / 2, player.pos.y + player.height / 2));
     }
-    
-    // Make player rotate towards cursor
-    glm::vec2 mouseCoords = inputManager->getMouseCoords();
-    mouseCoords = camera->convertScreenToWorld(mouseCoords);
-    glm::vec2 centerPosition = player.pos + glm::vec2(player.width / 2, player.height / 2);
-    glm::vec2 playerDirection = glm::normalize(mouseCoords - centerPosition);
 
-    float x = playerDirection.x;
-    float y = playerDirection.y;
-    float angleInRadians = std::atan2(y, x);
-    float angleInDegrees = (angleInRadians / M_PI) * 180.0f;
-    player.sprite.setAngle(glm::radians(angleInDegrees));
 
-    // Make enemy rotate towards player
-    glm::vec2 enemyDirection = glm::normalize(player.pos - enemy.pos);
-    x = enemyDirection.x;
-    y = enemyDirection.y;
-    angleInRadians = std::atan2(y, x);
-    angleInDegrees = (angleInRadians / M_PI) * 180.0f;
-    enemy.sprite.setAngle(glm::radians(angleInDegrees));
-
-    // Enemy movement towards rotation (player)
-    glm::vec2 enemySpeed = glm::vec2(0.05f, 0.05f);
-    enemy.pos += enemyDirection * enemySpeed * deltaTime;
 }
 
 int main() {
@@ -120,19 +103,14 @@ int main() {
     leng::Camera2D* camera = new leng::Camera2D;
     camera->init(1024, 768);
     camera->setPosition(glm::vec2(0.0f, 0.0f));
-    camera->setScale(0.75f);
+    camera->setScale(0.80f);
     camera->update();
     
     // Build and compile our shader program
     leng::Shader lightingShader("assets/shaders/lighting.vert", "assets/shaders/lighting.frag");
     leng::Shader lampShader("assets/shaders/lamp.vert", "assets/shaders/lamp.frag");
 
-    glm::vec3 pointLightPositions[] = {
-	glm::vec3( 0.7f,  0.2f, -5.0f),
-	glm::vec3( 2.3f, -3.3f, -5.0f), // red
-	glm::vec3(-4.0f,  2.0f, -5.0f), // blue
-	glm::vec3( 0.0f,  0.0f, -5.0f) // green
-};
+
     
     leng::Renderer* renderer = new leng::Renderer;
     renderer->initLightVAO(lightingShader);
@@ -144,9 +122,22 @@ int main() {
     GLuint dungeon_floor = leng::ResourceManager::getTexture("assets/textures/dungeon_floor.png").id;    
     GLuint dungeon_floor_n = leng::ResourceManager::getTexture("assets/textures/dungeon_floor_n.png").id;
     
-    leng::Player player(0, 0, 64, 64, "assets/textures/soldier.png");
-    leng::Entity enemy(200, 200, 64, 64, "assets/textures/zombie.png");
-    
+    leng::Player player(1500, 1500, 64, 64, "assets/textures/soldier.png");
+    leng::Enemy enemy(1000, 1000, 64, 64, "assets/textures/zombie.png");
+
+    std::vector<leng::Enemy> enemies;
+    for(unsigned int i = 0; i < 100; i++) {
+	leng::Enemy enemy(500 + (i * 64), 1000, 64, 64, "assets/textures/zombie.png");
+	enemies.push_back(enemy);
+    }
+
+    glm::vec3 pointLightPositions[] = {
+	glm::vec3(1500, 1500, -5.0f), // white
+	glm::vec3(200, 200, -5.0f), // red
+	glm::vec3(300, 300, -5.0f), // blue
+	glm::vec3(700, 700, -5.0f) // green
+    };
+	
     leng::DirectionalLight* directionalLight = new leng::DirectionalLight;
     directionalLight->direction = glm::vec3(0.0f, 0.0f, 1.0f);
     directionalLight->ambient = glm::vec3(0.10f, 0.10f, 0.10f);
@@ -154,7 +145,7 @@ int main() {
     directionalLight->specular = glm::vec3(0.5f, 0.5f, 0.5f);
 	
     leng::PointLight* pointLight1 = new leng::PointLight;
-    pointLight1->position = glm::vec3(500, 500, pointLightPositions[0].z);
+    pointLight1->position = pointLightPositions[0];
     pointLight1->ambient = glm::vec3(0.5f, 0.5f, 0.5f);
     pointLight1->diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
     pointLight1->specular = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -163,7 +154,7 @@ int main() {
     pointLight1->quadratic = 0.000007f;
 
     leng::PointLight* pointLight2 = new leng::PointLight;
-    pointLight2->position = glm::vec3(200, 200, pointLightPositions[1].z);
+    pointLight2->position = pointLightPositions[1];
     pointLight2->ambient = glm::vec3(0.10f, 0.0f, 0.0f);
     pointLight2->diffuse = glm::vec3(0.8f, 0.0f, 0.0f);
     pointLight2->specular = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -172,7 +163,7 @@ int main() {
     pointLight2->quadratic = 0.000007f;
 
     leng::PointLight* pointLight3 = new leng::PointLight;
-    pointLight3->position = glm::vec3(400, 200, pointLightPositions[2].z);
+    pointLight3->position = pointLightPositions[2];
     pointLight3->ambient = glm::vec3(0.0f, 0.0f, 0.10f);
     pointLight3->diffuse = glm::vec3(0.0f, 0.0f, 0.8f);
     pointLight3->specular = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -181,7 +172,7 @@ int main() {
     pointLight3->quadratic = 0.0002f;
 
     leng::PointLight* pointLight4 = new leng::PointLight;
-    pointLight4->position = glm::vec3(200, 400, pointLightPositions[3].z);
+    pointLight4->position = pointLightPositions[3];
     pointLight4->ambient = glm::vec3(0.0f, 0.10f, 0.0f);
     pointLight4->diffuse = glm::vec3(0.0f, 0.8f, 0.0f);
     pointLight4->specular = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -222,7 +213,7 @@ int main() {
 	    }
 	}
 	handleEvents(camera, player, inputManager, deltaTime);
-	update(camera, inputManager, player, enemy, deltaTime);
+	update(camera, inputManager, player, enemies, deltaTime);
 
 	// Rendering
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -230,14 +221,12 @@ int main() {
 	
         // Use cooresponding shader when setting uniforms/drawing objects
         lightingShader.use();
-	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
-	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.normalMap"), 1);
         GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
         glUniform3f(viewPosLoc, camera->position.x, camera->position.y, 700.0f);
         // Set material properties
         glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
 	// Update lights
-	directionalLight->update(lightingShader);
+	//directionalLight->update(lightingShader);
 	//pointLight1.position = glm::vec3(player.pos.x + 32, player.pos.y + 32, pointLightPositions[0].z);
 	pointLight1->updateLight1(lightingShader);
 	pointLight2->updateLight2(lightingShader);
@@ -274,9 +263,15 @@ int main() {
 	// Draw tilemap
 	chunk->render(renderer, lightingShader);
 	
+	glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, 0);
 	// Draw sprites
 	renderer->draw(player.sprite, lightingShader);
 	renderer->draw(enemy.sprite, lightingShader);
+
+	for(unsigned int i = 0; i < enemies.size(); i++) {
+	renderer->draw(enemies[i].sprite, lightingShader);
+	}
 
 	lampShader.use();
 
@@ -286,8 +281,12 @@ int main() {
 	glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 	
 	// Render lamp
+	/*
 	renderer->drawLamp(pointLightPositions[0], lampShader);
-	
+	renderer->drawLamp(pointLightPositions[1], lampShader);
+	renderer->drawLamp(pointLightPositions[2], lampShader);
+	renderer->drawLamp(pointLightPositions[3], lampShader);
+	*/
 	// Swap buffers
 	window.swapWindow();
     }

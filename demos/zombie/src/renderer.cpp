@@ -79,6 +79,8 @@ void Renderer::draw(leng::Sprite& sprite, leng::Shader& shader, float angle) {
     
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, sprite.textureID);
+    glUniform1i(glGetUniformLocation(shader.Program, "material.diffuse"), 0);
+    
     modelLoc = glGetUniformLocation(shader.Program, "model");
     // Render chunk
     glBindVertexArray(lightingVAO);
