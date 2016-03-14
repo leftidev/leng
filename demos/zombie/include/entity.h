@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include "leng.h"
 
+
 namespace leng {
     class Entity {
     public:
@@ -11,7 +12,7 @@ namespace leng {
 	~Entity();
 	void update(float deltaTime);
 	
-	Position pos;
+	glm::vec2 pos;
 	float width, height;
 	Box aabb;
 	Sprite sprite;

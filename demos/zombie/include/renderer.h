@@ -27,7 +27,8 @@ public:
     void initLightVAO(leng::Shader& shader);
     void initLampVAO(leng::Shader& shader);
     void updateVertices(leng::Sprite& sprite);
-    void draw(leng::Sprite& sprite, leng::Shader& shader);
+    void setSpriteAngle(leng::Sprite& sprite, float angle);
+    void draw(leng::Sprite& sprite, leng::Shader& shader, float angle = 0.0f);
     void drawLamp(glm::vec3 position, leng::Shader& shader);
     void createMesh();
     void addVertexToMesh(int meshID, Vertex2 vert);

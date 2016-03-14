@@ -1,3 +1,4 @@
+#include <cmath>
 #include <string>
 #include <iostream>
 
@@ -13,8 +14,6 @@
 #include "player.h"
 #include "light.h"
 #include "chunk.h"
-#include "SpriteBatch.h"
-#include "Entity.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -81,7 +80,7 @@ void handleEvents(leng::Camera2D* camera, leng::Player& player, leng::InputManag
 	player.leftHeld = false;
 }
 
-wdvoid update(leng::Player& player, float deltaTime) {
+void update(leng::Player& player, float deltaTime) {
     player.update(deltaTime);
 }
 
@@ -91,9 +90,9 @@ int main() {
     //window.enableDepthTest();
     
     leng::Camera2D* camera = new leng::Camera2D;
-    camera->init(800, 600);
+    camera->init(1024, 768);
     camera->setPosition(glm::vec2(0.0f, 0.0f));
-    camera->setScale(0.5f);
+    camera->setScale(0.75f);
     camera->update();
 
     //SDL_SetWindowFullscreen(window.window, SDL_WINDOW_FULLSCREEN);
@@ -108,9 +107,9 @@ int main() {
 
     glm::vec3 pointLightPositions[] = {
 	glm::vec3( 0.7f,  0.2f,  -5.0f),
-	glm::vec3( 2.3f, -3.3f, -50.0f), // red
-	glm::vec3(-4.0f,  2.0f, -100.0f), // blue
-	glm::vec3( 0.0f,  0.0f, -200.0f) // green
+	glm::vec3( 2.3f, -3.3f, -5.0f), // red
+	glm::vec3(-4.0f,  2.0f, -5.0f), // blue
+	glm::vec3( 0.0f,  0.0f, -5.0f) // green
 };
     
     leng::Renderer* renderer = new leng::Renderer;
@@ -125,8 +124,8 @@ int main() {
     leng::Sprite sprite(0, 0, 64, 64, "assets/textures/dungeon_floor.png");
     
 
-    leng::Player player(64, 64, 64, 64, "assets/textures/soldier.png");
-
+    leng::Player player(0, 0, 64, 64, "assets/textures/soldier.png");
+    
     leng::DirectionalLight* directionalLight = new leng::DirectionalLight;
     directionalLight->direction = glm::vec3(0.0f, 0.0f, 1.0f);
     directionalLight->ambient = glm::vec3(0.05f, 0.05f, 0.05f);
@@ -209,8 +208,21 @@ int main() {
 	handleEvents(camera, player, inputManager);
 	update(player, deltaTime);
 	if(!freecam) {
-	    camera->setPosition(glm::vec2(player.pos.x, player.pos.y));
+	    camera->setPosition(glm::vec2(player.pos.x + player.width / 2, player.pos.y + player.height / 2));
 	}
+	// Calculate direction between center of screen and mouse cursor
+	glm::vec2 mouseCoords = inputManager->getMouseCoords();
+	mouseCoords = camera->convertScreenToWorld(mouseCoords);
+	//std::cout << mouseCoords.x << std::endl;
+	glm::vec2 centerPosition = player.pos + glm::vec2(player.width / 2, player.height / 2);
+	glm::vec2 direction = glm::normalize(mouseCoords - centerPosition);
+	//std::cout << direction.x << " " << direction.y << std::endl;
+
+	double x = direction.x;
+	double y = direction.y;
+	double angleInRadians = std::atan2(y, x);
+	double angleInDegrees = (angleInRadians / M_PI) * 180.0f;
+	std::cout << angleInDegrees << std::endl;
 	
 	camera->update();
 	/*
@@ -268,6 +280,8 @@ int main() {
 	
 	// Draw sprites
 	renderer->draw(sprite, lightingShader);
+
+	player.sprite.setAngle(glm::radians(angleInDegrees));
 	renderer->draw(player.sprite, lightingShader);
 
 	

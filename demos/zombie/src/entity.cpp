@@ -32,10 +32,7 @@ void Entity::update(float delta_time) {
     aabb.x = pos.x + (width / 2);
     aabb.y = pos.y + (height / 2);	
     // Update sprite
-    sprite.vertexData[0].setPosition(pos.x + width, pos.y + height);
-    sprite.vertexData[1].setPosition(pos.x + width, pos.y);
-    sprite.vertexData[2].setPosition(pos.x, pos.y);
-    sprite.vertexData[3].setPosition(pos.x, pos.y + height);
+    sprite.update(pos);
 }
 
 } // namespace leng

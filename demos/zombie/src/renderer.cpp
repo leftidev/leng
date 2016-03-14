@@ -70,7 +70,11 @@ void Renderer::updateVertices(leng::Sprite& sprite) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Renderer::draw(leng::Sprite& sprite, leng::Shader& shader) {
+void Renderer::setSpriteAngle(leng::Sprite& sprite, float angle) {
+    sprite.setAngle(angle);	
+}
+
+void Renderer::draw(leng::Sprite& sprite, leng::Shader& shader, float angle) {
     updateVertices(sprite);
     
     glActiveTexture(GL_TEXTURE0);
@@ -81,8 +85,8 @@ void Renderer::draw(leng::Sprite& sprite, leng::Shader& shader) {
     
     model = glm::mat4();
     //model = glm::translate(model, position);
-    //GLfloat angle = 20.0f * 3.5f; 
-    //model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+    //GLfloat Angle = -90.0f; 
+    //model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
