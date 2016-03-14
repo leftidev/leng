@@ -22,8 +22,6 @@
 
 /////////////////////////////////////////////
 //// TODO
-//// -Delete pointers at end of application
-//// -Make camera a pointer
 /////////////////////////////////////////////
 float SCREEN_WIDTH = 1024.0f;
 float SCREEN_HEIGHT = 768.0f;
@@ -80,7 +78,7 @@ void handleEvents(leng::Camera2D* camera, leng::Player& player, leng::InputManag
 	player.leftHeld = false;
 }
 
-void update(leng::Camera2D* camera, leng::InputManager* inputManager, leng::Player& player, float deltaTime) {
+void update(leng::Camera2D* camera, leng::InputManager* inputManager, leng::Player& player, leng::Entity& enemy, float deltaTime) {
     player.update(deltaTime);
     camera->update();
     if(!freecam) {
@@ -91,31 +89,31 @@ void update(leng::Camera2D* camera, leng::InputManager* inputManager, leng::Play
     glm::vec2 mouseCoords = inputManager->getMouseCoords();
     mouseCoords = camera->convertScreenToWorld(mouseCoords);
     glm::vec2 centerPosition = player.pos + glm::vec2(player.width / 2, player.height / 2);
-    glm::vec2 direction = glm::normalize(mouseCoords - centerPosition);
+    glm::vec2 playerDirection = glm::normalize(mouseCoords - centerPosition);
 
-    float x = direction.x;
-    float y = direction.y;
+    float x = playerDirection.x;
+    float y = playerDirection.y;
     float angleInRadians = std::atan2(y, x);
     float angleInDegrees = (angleInRadians / M_PI) * 180.0f;
     player.sprite.setAngle(glm::radians(angleInDegrees));
+
+    glm::vec2 enemyDirection = glm::normalize(player.pos - enemy.pos);
+    x = enemyDirection.x;
+    y = enemyDirection.y;
+    angleInRadians = std::atan2(y, x);
+    angleInDegrees = (angleInRadians / M_PI) * 180.0f;
+    enemy.sprite.setAngle(glm::radians(angleInDegrees));
 }
 
 int main() {
     leng::Window window("OpenGL Tuts", SCREEN_WIDTH, SCREEN_HEIGHT);
     window.setVsync(true);
-    //window.enableDepthTest();
     
     leng::Camera2D* camera = new leng::Camera2D;
     camera->init(1024, 768);
     camera->setPosition(glm::vec2(0.0f, 0.0f));
     camera->setScale(0.75f);
     camera->update();
-
-    //SDL_SetWindowFullscreen(window.window, SDL_WINDOW_FULLSCREEN);
-
-    // Hide cursor and trap mouse to window
-    //SDL_SetRelativeMouseMode(SDL_TRUE);
-    //SDL_ShowCursor(SDL_DISABLE);
     
     // Build and compile our shader program
     leng::Shader lightingShader("assets/shaders/lighting.vert", "assets/shaders/lighting.frag");
@@ -136,11 +134,9 @@ int main() {
     chunk->createMesh(renderer, lightingShader);
     chunk->position = glm::vec3(0, 0, 0);
     GLuint dungeon_floor = leng::ResourceManager::getTexture("assets/textures/dungeon_floor.png").id;    
-    
-    leng::Sprite sprite(0, 0, 64, 64, "assets/textures/dungeon_floor.png");
-    
 
     leng::Player player(0, 0, 64, 64, "assets/textures/soldier.png");
+    leng::Entity enemy(200, 200, 64, 64, "assets/textures/zombie.png");
     
     leng::DirectionalLight* directionalLight = new leng::DirectionalLight;
     directionalLight->direction = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -186,10 +182,6 @@ int main() {
 
     leng::InputManager* inputManager = new leng::InputManager;
 
-    float xOffset, yOffset;
-
-    //SDL_WarpMouseInWindow(window.window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-    
     bool running = true;
     SDL_Event event;
     while (running) {
@@ -204,7 +196,6 @@ int main() {
 		break;
 	    case SDL_MOUSEMOTION:
 		inputManager->setMouseCoords(float(event.motion.x), float(event.motion.y));
-		//std::cout << event.motion.x << std::endl;
 		break;
 	    case SDL_KEYUP:
 		if (event.key.keysym.sym == SDLK_ESCAPE) { running = false; }
@@ -222,8 +213,7 @@ int main() {
 	    }
 	}
 	handleEvents(camera, player, inputManager);
-	update(camera, inputManager, player, deltaTime);
-
+	update(camera, inputManager, player, enemy, deltaTime);
 
 	// Rendering
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -271,8 +261,8 @@ int main() {
 	chunk->render(renderer, lightingShader);
 	
 	// Draw sprites
-	renderer->draw(sprite, lightingShader);
 	renderer->draw(player.sprite, lightingShader);
+	renderer->draw(enemy.sprite, lightingShader);
 
 	lampShader.use();
 
