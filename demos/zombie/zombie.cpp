@@ -32,29 +32,29 @@ float lastFrame = 0.0f;  	// Time of last frame
 
 bool freecam = false;
 
-void handleEvents(leng::Camera2D* camera, leng::Player& player, leng::InputManager* inputManager) {
+void handleEvents(leng::Camera2D* camera, leng::Player& player, leng::InputManager* inputManager, float deltaTime) {
     if(inputManager->isPressed(SDLK_i)) {
-	camera->scale += camera->movementSpeed * 0.05f;
+	camera->scale += camera->movementSpeed * 0.05f * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
     if(inputManager->isPressed(SDLK_k)) {
-	camera->scale -= camera->movementSpeed * 0.05f;
+	camera->scale -= camera->movementSpeed * 0.05f * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
     if(inputManager->isPressed(SDLK_LEFT)) {
-	camera->position.x -= camera->movementSpeed * 5;
+	camera->position.x -= camera->movementSpeed * 5 * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
     if(inputManager->isPressed(SDLK_RIGHT)) {
-	camera->position.x += camera->movementSpeed * 5;
+	camera->position.x += camera->movementSpeed * 5 * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
     if(inputManager->isPressed(SDLK_UP)) {
-	camera->position.y += camera->movementSpeed * 5;
+	camera->position.y += camera->movementSpeed * 5 * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
     if(inputManager->isPressed(SDLK_DOWN)) {
-	camera->position.y -= camera->movementSpeed * 5;
+	camera->position.y -= camera->movementSpeed * 5 * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
     
@@ -80,6 +80,7 @@ void handleEvents(leng::Camera2D* camera, leng::Player& player, leng::InputManag
 
 void update(leng::Camera2D* camera, leng::InputManager* inputManager, leng::Player& player, leng::Entity& enemy, float deltaTime) {
     player.update(deltaTime);
+    enemy.update(deltaTime);
     camera->update();
     if(!freecam) {
 	camera->setPosition(glm::vec2(player.pos.x + player.width / 2, player.pos.y + player.height / 2));
@@ -97,12 +98,17 @@ void update(leng::Camera2D* camera, leng::InputManager* inputManager, leng::Play
     float angleInDegrees = (angleInRadians / M_PI) * 180.0f;
     player.sprite.setAngle(glm::radians(angleInDegrees));
 
+    // Make enemy rotate towards player
     glm::vec2 enemyDirection = glm::normalize(player.pos - enemy.pos);
     x = enemyDirection.x;
     y = enemyDirection.y;
     angleInRadians = std::atan2(y, x);
     angleInDegrees = (angleInRadians / M_PI) * 180.0f;
     enemy.sprite.setAngle(glm::radians(angleInDegrees));
+
+    // Enemy movement towards rotation
+    glm::vec2 enemySpeed = glm::vec2(0.05f, 0.05f);
+    enemy.pos += enemyDirection * enemySpeed * deltaTime;
 }
 
 int main() {
@@ -212,7 +218,7 @@ int main() {
 		break;
 	    }
 	}
-	handleEvents(camera, player, inputManager);
+	handleEvents(camera, player, inputManager, deltaTime);
 	update(camera, inputManager, player, enemy, deltaTime);
 
 	// Rendering
