@@ -81,7 +81,13 @@ void handleEvents(leng::Camera2D* camera, leng::Player& player, leng::InputManag
 }
 
 void update(leng::Camera2D* camera, leng::InputManager* inputManager, leng::Player& player, float deltaTime) {
-    // Calculate direction between center of screen and mouse cursor
+    player.update(deltaTime);
+    camera->update();
+    if(!freecam) {
+	camera->setPosition(glm::vec2(player.pos.x + player.width / 2, player.pos.y + player.height / 2));
+    }
+    
+    // Make player rotate towards cursor
     glm::vec2 mouseCoords = inputManager->getMouseCoords();
     mouseCoords = camera->convertScreenToWorld(mouseCoords);
     glm::vec2 centerPosition = player.pos + glm::vec2(player.width / 2, player.height / 2);
@@ -92,10 +98,6 @@ void update(leng::Camera2D* camera, leng::InputManager* inputManager, leng::Play
     float angleInRadians = std::atan2(y, x);
     float angleInDegrees = (angleInRadians / M_PI) * 180.0f;
     player.sprite.setAngle(glm::radians(angleInDegrees));
-    
-    camera->update();
-
-    player.update(deltaTime);
 }
 
 int main() {
@@ -221,9 +223,7 @@ int main() {
 	}
 	handleEvents(camera, player, inputManager);
 	update(camera, inputManager, player, deltaTime);
-	if(!freecam) {
-	    camera->setPosition(glm::vec2(player.pos.x + player.width / 2, player.pos.y + player.height / 2));
-	}
+
 
 	// Rendering
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
