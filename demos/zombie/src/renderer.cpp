@@ -125,6 +125,9 @@ void Renderer::createMesh() {
     // TODO: Create VBO per mesh
     Mesh mesh;
     glGenBuffers(1, &mesh.VBO);
+    mesh.textureID = leng::ResourceManager::getTexture("assets/textures/dungeon_floor.png").id;
+    std::cout << mesh.textureID << std::endl;
+    mesh.normalID = leng::ResourceManager::getTexture("assets/textures/dungeon_floor_n.png").id;
     meshes.push_back(mesh);
 }
     
@@ -135,11 +138,11 @@ void Renderer::addVertexToMesh(int meshID, Vertex2 vert) {
 void Renderer::finishMesh(int meshID, leng::Shader& shader) {
     glBindVertexArray(tilesVAO);
     
-    glBindBuffer(GL_ARRAY_BUFFER, meshes.at(meshID).VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, meshes[meshID].VBO);
     //glBufferData(GL_ARRAY_BUFFER, meshes.at(meshID).vertexData.size() * sizeof(Vertex2), &meshes.at(meshID).vertexData[0], GL_STATIC_DRAW);
 
-    glBufferData(GL_ARRAY_BUFFER, meshes.at(meshID).vertexData.size() * sizeof(Vertex2), nullptr, GL_DYNAMIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, meshes.at(meshID).vertexData.size() * sizeof(Vertex2), meshes.at(meshID).vertexData.data());
+    glBufferData(GL_ARRAY_BUFFER, meshes[meshID].vertexData.size() * sizeof(Vertex2), nullptr, GL_DYNAMIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, meshes[meshID].vertexData.size() * sizeof(Vertex2), meshes[meshID].vertexData.data());
 
     // Enable shader attributes
     shader.enableAttribute("position", 2, 7, (GLvoid*)0);
@@ -149,7 +152,16 @@ void Renderer::finishMesh(int meshID, leng::Shader& shader) {
     glBindVertexArray(0);
 }
 
-    void Renderer::renderMesh(int numVertices, leng::Shader& shader, const glm::vec3& position) {
+    void Renderer::renderMesh(int meshID, int numVertices, leng::Shader& shader, const glm::vec3& position) {
+    // Bind diffuse map
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, meshes[meshID].textureID);
+    // Bind specular map
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, meshes[meshID].normalID);
+    glUniform1i(glGetUniformLocation(shader.Program, "material.diffuse"), 0);
+    glUniform1i(glGetUniformLocation(shader.Program, "material.normalMap"), 1);
+
     modelLoc = glGetUniformLocation(shader.Program, "model");
     // Render chunk
     glBindVertexArray(tilesVAO);
@@ -161,8 +173,12 @@ void Renderer::finishMesh(int meshID, leng::Shader& shader) {
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
     glDrawArrays(GL_TRIANGLES, 0, numVertices);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, 0);
     
     glBindVertexArray(0);
+
 
     // Number of vertices rendered
     //std::cout << numVertices << std::endl;

@@ -7,6 +7,7 @@
 #include "renderer.h"
 #include "camera_3d.h"
 #include "shader.h"
+#include "resource_manager.h"
 
 namespace leng {
 
@@ -28,7 +29,6 @@ public:
 private:
     int meshID;
     GLuint numVertices;
-
 };
 
 } // namespace leng

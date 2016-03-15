@@ -10,6 +10,7 @@
 #include "shader.h"
 #include "sprite.h"
 #include "vertex.h"
+#include "resource_manager.h"
 
 #include <vector>
 
@@ -18,6 +19,8 @@ namespace leng {
 struct Mesh {
     std::vector<Vertex2> vertexData;
     GLuint VBO;
+    GLuint textureID;
+    GLuint normalID;
 };
 
 class Renderer {
@@ -33,7 +36,7 @@ public:
     void createMesh();
     void addVertexToMesh(int meshID, Vertex2 vert);
     void finishMesh(int meshID, leng::Shader& shader);
-    void renderMesh(int numVertices, leng::Shader& shader, const glm::vec3& position);
+    void renderMesh(int meshID, int numVertices, leng::Shader& shader, const glm::vec3& position);
 
 private:
     GLuint VBO, lampVBO;

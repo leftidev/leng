@@ -9,6 +9,7 @@ Chunk::Chunk(int MeshID) : meshID(MeshID) {
     for(int i = 0; i < CHUNK_SIZE; i++) {
         blocks[i] = new Block[CHUNK_SIZE];
     }
+
 }
 
 Chunk::~Chunk() {
@@ -21,8 +22,8 @@ Chunk::~Chunk() {
 
 void Chunk::update(float deltaTime) { }
 
-    void Chunk::render(leng::Renderer* renderer, leng::Shader& shader) {
-	renderer->renderMesh(numVertices, shader, position);
+void Chunk::render(leng::Renderer* renderer, leng::Shader& shader) {
+    renderer->renderMesh(meshID, numVertices, shader, position);
 }
     
 void Chunk::createMesh(leng::Renderer* renderer, leng::Shader& voxelShader) {

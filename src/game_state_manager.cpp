@@ -26,7 +26,7 @@ void GameStateManager::update(float deltaTime) {
     gameStates.back()->update(deltaTime);
 }
 
-void GameStateManager::handleEvents(InputManager* inputManager, float deltaTime) {
+void GameStateManager::handleEvents(InputManager& inputManager, float deltaTime) {
 	gameStates.back()->handleEvents(inputManager, deltaTime);
 }
 
