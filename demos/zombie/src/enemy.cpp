@@ -9,11 +9,11 @@ Enemy::Enemy(float x, float y, float width, float height, const std::string& pat
 
 Enemy::~Enemy() { }
     
-void Enemy::update(leng::Player& player, float deltaTime) {
+void Enemy::update(leng::Player* player, float deltaTime) {
     Entity::update(deltaTime);
     
     // Make enemy rotate towards player
-    direction = glm::normalize(player.pos - pos);
+    direction = glm::normalize(player->pos - pos);
     angleInRadians = std::atan2(direction.y, direction.x);
     sprite.setAngle(angleInRadians);
 

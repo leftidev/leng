@@ -14,7 +14,7 @@ namespace leng {
 	
 	glm::vec2 pos;
 	float width, height;
-	Box aabb;
+	Circle bb;
 	Sprite sprite;
 	Velocity vel;
 	bool moving;

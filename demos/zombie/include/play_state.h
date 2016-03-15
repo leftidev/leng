@@ -14,6 +14,7 @@
 #include "light.h"
 #include "chunk.h"
 #include "enemy.h"
+#include "collision.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -41,7 +42,7 @@ private:
     leng::Shader lampShader{"assets/shaders/lamp.vert", "assets/shaders/lamp.frag"};
 
     glm::vec3 pointLightPositions[4] = {
-	glm::vec3(1500, 1500, -5.0f), // white
+	glm::vec3(1500, 1500, -1.0f), // white
 	glm::vec3(200, 200, -5.0f), // red
 	glm::vec3(300, 300, -5.0f), // blue
 	glm::vec3(700, 700, -5.0f) // green
@@ -53,8 +54,8 @@ private:
     leng::PointLight* pointLight3 = new leng::PointLight;
     leng::PointLight* pointLight4 = new leng::PointLight;
 
-    leng::Player player{1500, 1500, 64, 64, "assets/textures/soldier.png"};
-    std::vector<leng::Enemy> enemies;
+    leng::Player* player = new leng::Player{1500, 1500, 64, 64, "assets/textures/soldier.png"};
+    std::vector<leng::Enemy*> enemies;
 
     bool freecam = false;
     bool normalMapping = true;

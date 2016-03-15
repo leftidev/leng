@@ -2,9 +2,20 @@
 
 PlayState::PlayState(leng::GameStateManager* stateManager, leng::Window* window, leng::InputManager* inputManager) : GameState(stateManager, window, inputManager) { }
 
-PlayState::~PlayState() { }
+PlayState::~PlayState() {
+    delete camera;
+    delete renderer;
+    delete chunk;
+    delete directionalLight;
+    delete pointLight1;
+    delete pointLight2;
+    delete pointLight3;
+    delete pointLight4;
 
-
+    for(unsigned int i = 0; i < enemies.size(); i++) {
+	delete enemies[i];
+    }
+}
 
 void PlayState::init() {
     renderer->initLightVAO(lightingShader);
@@ -19,7 +30,7 @@ void PlayState::init() {
     chunk->position = glm::vec3(0, 0, 0);
     
     for(unsigned int i = 0; i < 100; i++) {
-	leng::Enemy enemy(500 + (i * 64), 1000, 64, 64, "assets/textures/zombie.png");
+	leng::Enemy* enemy = new leng::Enemy(500 + (i * 64), 1000, 64, 64, "assets/textures/zombie.png");
 	enemies.push_back(enemy);
     }
 
@@ -93,22 +104,22 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
     
     // Player input
     if(inputManager->isPressed(SDLK_w))
-	player.upHeld = true;
+	player->upHeld = true;
     if(inputManager->isPressed(SDLK_s))
-	player.downHeld = true;
+	player->downHeld = true;
     if(inputManager->isPressed(SDLK_d))
-	player.rightHeld = true;
+	player->rightHeld = true;
     if(inputManager->isPressed(SDLK_a))
-	player.leftHeld = true;
+	player->leftHeld = true;
     
     if(inputManager->isReleased(SDLK_w))
-	player.upHeld = false;
+	player->upHeld = false;
     if(inputManager->isReleased(SDLK_s))
-	player.downHeld = false;
+	player->downHeld = false;
     if(inputManager->isReleased(SDLK_d))
-	player.rightHeld = false;
+	player->rightHeld = false;
     if(inputManager->isReleased(SDLK_a))
-	player.leftHeld = false;
+	player->leftHeld = false;
 }
 
 void PlayState::update(float deltaTime) {
@@ -116,13 +127,13 @@ void PlayState::update(float deltaTime) {
     camera->update();
 
     if(!freecam) {
-	camera->setPosition(glm::vec2(player.pos.x + player.width / 2, player.pos.y + player.height / 2));
+	camera->setPosition(glm::vec2(player->pos.x + player->width / 2, player->pos.y + player->height / 2));
     }
 	
-    player.update(inputManager, camera, deltaTime);
+    player->update(inputManager, camera, deltaTime);
     
     for(unsigned int i = 0; i < enemies.size(); i++) {
-	enemies[i].update(player, deltaTime);	
+	enemies[i]->update(player, deltaTime);	
     }
 }
 
@@ -139,7 +150,7 @@ void PlayState::draw() {
     glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
     // Update lights
     //directionalLight->update(lightingShader);
-    //pointLight1.position = glm::vec3(player.pos.x + 32, player.pos.y + 32, pointLightPositions[0].z);
+    //pointLight1.position = glm::vec3(player->pos.x + 32, player->pos.y + 32, pointLightPositions[0].z);
     pointLight1->updateLight1(lightingShader);
     pointLight2->updateLight2(lightingShader);
     pointLight3->updateLight3(lightingShader);
@@ -157,10 +168,10 @@ void PlayState::draw() {
     //glBindTexture(GL_TEXTURE_2D, 0);
     
     // Draw sprites
-    renderer->draw(player.sprite, lightingShader);
+    renderer->draw(player->sprite, lightingShader);
 
     for(unsigned int i = 0; i < enemies.size(); i++) {
-	renderer->draw(enemies[i].sprite, lightingShader);
+	renderer->draw(enemies[i]->sprite, lightingShader);
     }
 
     lampShader.use();
@@ -182,5 +193,15 @@ void PlayState::draw() {
 }
 
 void PlayState::doCollisions() {
-
+    // Update Zombie collisions
+    for (unsigned int i = 0; i < enemies.size(); i++) {
+	// Collide with other zombies
+	for (unsigned int j = i + 1; j < enemies.size(); j++) {
+	    collideWithCircle(enemies[i], enemies[j]);
+	}
+	// Collide with player
+	if (collideWithCircle(enemies[i], player)) {
+	    std::cout << "Enemy hits player!" << std::endl;
+	}
+    }
 }

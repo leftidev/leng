@@ -11,11 +11,11 @@ Entity::Entity(float x, float y, float _width, float _height, const std::string&
     moving = false;
     
     // AABB Origin at center
-    aabb.x = pos.x + (width / 2);
-    aabb.y = pos.y + (height / 2);
-    aabb.width = width;
-    aabb.height = height;
-
+    bb.position.x = pos.x;
+    bb.position.y = pos.y;
+    bb.radius.x = 16.0f;
+    bb.radius.y = 16.0f;
+    
     vel.x = 0.0f;
     vel.y = 0.0f;
 }
@@ -28,9 +28,9 @@ void Entity::update(float delta_time) {
 	pos.x += vel.x * delta_time;
 	pos.y += vel.y * delta_time;
     }
-    // Update aabb
-    aabb.x = pos.x + (width / 2);
-    aabb.y = pos.y + (height / 2);	
+    // Update bounding box
+    bb.position.x = pos.x;
+    bb.position.y = pos.y;
     // Update sprite
     sprite.update(pos);
 }

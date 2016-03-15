@@ -2,8 +2,17 @@
 #define LENG_H
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 namespace leng {
+
+const float AGENT_WIDTH = 32.0f;
+const float AGENT_RADIUS = AGENT_WIDTH / 2.0f;
+
+struct Circle {
+    glm::vec2 radius;
+    glm::vec2 position;
+};
 
 struct Normal {
     float x;
