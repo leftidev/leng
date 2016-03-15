@@ -3,14 +3,14 @@
 
 namespace leng {
     
-GameState::GameState(GameStateManager& StateManager, Window& Window) :
+GameState::GameState(GameStateManager* StateManager, Window* Window) :
     stateManager(StateManager),
     window(Window) { }
 
 GameState::~GameState() {}
 
-void GameState::changeGameState(GameStateManager& manager, GameState* state) {
-    manager.changeGameState(state);
+void GameState::changeGameState(GameStateManager* manager, GameState* state) {
+    manager->changeGameState(state);
 }
 
 } // namespace leng

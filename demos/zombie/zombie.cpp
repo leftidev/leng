@@ -270,7 +270,7 @@ int main() {
 	renderer->draw(enemy.sprite, lightingShader);
 
 	for(unsigned int i = 0; i < enemies.size(); i++) {
-	renderer->draw(enemies[i].sprite, lightingShader);
+	    renderer->draw(enemies[i].sprite, lightingShader);
 	}
 
 	lampShader.use();

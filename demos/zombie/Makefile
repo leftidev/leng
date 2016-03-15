@@ -16,7 +16,7 @@ CFLAGS_REL = -O3 -std=c++11 -Wall -Wextra -Werror -Wwrite-strings -pedantic-erro
 LFLAGS = -lSDL2 -lSDL2_mixer -lGL -lGLEW -lSOIL -lm
 
 # the build target executable:
-TARGET = zombie
+TARGET = main
 
 all: $(TARGET)
 
