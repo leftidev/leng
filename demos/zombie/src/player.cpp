@@ -1,4 +1,5 @@
 #include "player.h"
+#include <iostream>
 
 namespace leng {
 
@@ -33,6 +34,7 @@ void Player::update(leng::InputManager* inputManager, leng::Camera2D* camera, fl
     // Make player rotate towards cursor
     mouseCoords = inputManager->getMouseCoords();
     mouseCoords = camera->convertScreenToWorld(mouseCoords);
+    std::cout << mouseCoords.x << std::endl;
     centerPosition = pos + glm::vec2(width / 2, height / 2);
     direction = glm::normalize(mouseCoords - centerPosition);
     angleInRadians = std::atan2(direction.y, direction.x);

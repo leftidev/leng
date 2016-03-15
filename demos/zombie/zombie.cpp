@@ -24,15 +24,24 @@ int main() {
 
 	while(SDL_PollEvent(&event)) {
 	    switch(event.type){
+	    case SDL_QUIT:
+		stateManager->running = false;
+		break;
+	    case SDL_MOUSEMOTION:
+		inputManager->setMouseCoords(float(event.motion.x), float(event.motion.y));
+		break;
 	    case SDL_KEYUP:
-		if (event.key.keysym.sym == SDLK_ESCAPE) { stateManager->quit(); }
+		if (event.key.keysym.sym == SDLK_ESCAPE) { stateManager->running = false; }
 		inputManager->handleKeyboardEvent(event);
 		break;
 	    case SDL_KEYDOWN:
 		inputManager->handleKeyboardEvent(event);
 		break;
-	    case SDL_QUIT:
-		stateManager->quit();
+	    case SDL_MOUSEBUTTONUP:
+		inputManager->handleMouseEvent(event);
+		break;
+	    case SDL_MOUSEBUTTONDOWN:
+		inputManager->handleMouseEvent(event);
 		break;
 	    }
 	}
