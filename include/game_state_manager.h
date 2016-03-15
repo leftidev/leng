@@ -16,7 +16,7 @@ public:
 
     void changeGameState(GameState* state);
     void update(float deltaTime);
-    void handleEvents(InputManager* inputManager);
+    void handleEvents(InputManager* inputManager, float deltaTime);
     void draw();
     void quit() { running = false; }
 

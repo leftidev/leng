@@ -3,9 +3,10 @@
 
 namespace leng {
     
-GameState::GameState(GameStateManager* StateManager, Window* Window) :
+    GameState::GameState(GameStateManager* StateManager, Window* Window, InputManager* InputManager) :
     stateManager(StateManager),
-    window(Window) { }
+    window(Window),
+    inputManager(InputManager) { }
 
 GameState::~GameState() {}
 

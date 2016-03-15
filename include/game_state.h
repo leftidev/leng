@@ -12,17 +12,18 @@ class GameStateManager;
 
 class GameState {
 public:
-    GameState(GameStateManager* StateManager, Window* Window);
+    GameState(GameStateManager* StateManager, Window* Window, InputManager* InputManager);
     ~GameState();
 
     virtual void init() = 0;
-    virtual void handleEvents(InputManager* input_manager) = 0;
+    virtual void handleEvents(InputManager* input_manager, float deltaTime) = 0;
     virtual void update(float delta_time) = 0;
     virtual void draw() = 0;
     void changeGameState(GameStateManager* manager, GameState* state);
 
     GameStateManager* stateManager;
     Window* window;
+    InputManager* inputManager;
 };
 
 } // namespace leng
