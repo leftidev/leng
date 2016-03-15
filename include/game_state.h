@@ -12,7 +12,7 @@ class GameStateManager;
 
 class GameState {
 public:
-    GameState(GameStateManager* StateManager, Window& Window, InputManager* InputManager);
+    GameState(GameStateManager* StateManager, Window* Window, InputManager* InputManager);
     ~GameState();
 
     virtual void init() = 0;
@@ -22,7 +22,7 @@ public:
     void changeGameState(GameStateManager* manager, GameState* state);
 
     GameStateManager* stateManager;
-    Window& window;
+    Window* window;
     InputManager* inputManager;
 };
 

@@ -14,7 +14,7 @@ Player::Player(float x, float y, float width, float height, const std::string& p
 
 Player::~Player() { }
     
-    void Player::update(leng::InputManager* inputManager, leng::Camera2D* camera, float deltaTime) {
+void Player::update(leng::InputManager* inputManager, leng::Camera2D* camera, float deltaTime) {
     Entity::update(deltaTime);
 
     if(upHeld) {

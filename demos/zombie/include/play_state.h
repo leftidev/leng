@@ -23,7 +23,7 @@ const int SCREEN_HEIGHT = 768;
 
 class PlayState : public leng::GameState {
 public:
-    PlayState(leng::GameStateManager* stateManager, leng::Window& window, leng::InputManager* inputManager);
+    PlayState(leng::GameStateManager* stateManager, leng::Window* window, leng::InputManager* inputManager);
     ~PlayState();
 
     void init() override;

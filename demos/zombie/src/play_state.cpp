@@ -1,6 +1,6 @@
 #include "play_state.h"
 
-PlayState::PlayState(leng::GameStateManager* stateManager, leng::Window& window, leng::InputManager* inputManager) : GameState(stateManager, window, inputManager) { }
+PlayState::PlayState(leng::GameStateManager* stateManager, leng::Window* window, leng::InputManager* inputManager) : GameState(stateManager, window, inputManager) { }
 
 PlayState::~PlayState() { }
 
@@ -178,7 +178,7 @@ void PlayState::draw() {
       renderer->drawLamp(pointLightPositions[3], lampShader);
     */
     // Swap buffers
-    window.swapWindow();
+    window->swapWindow();
 }
 
 void PlayState::doCollisions() {

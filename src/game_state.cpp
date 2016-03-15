@@ -3,7 +3,7 @@
 
 namespace leng {
     
-    GameState::GameState(GameStateManager* StateManager, Window& Window, InputManager* InputManager) :
+    GameState::GameState(GameStateManager* StateManager, Window* Window, InputManager* InputManager) :
     stateManager(StateManager),
     window(Window),
     inputManager(InputManager) { }

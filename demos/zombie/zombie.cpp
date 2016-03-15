@@ -4,8 +4,8 @@
 #include "play_state.h"
 
 int main() {
-    leng::Window window("leng++ zomb", 1024, 768);
-    window.setVsync(true);    
+    leng::Window* window = new leng::Window("leng++ zomb", 1024, 768);
+    window->setVsync(true);    
     //leng::soundInit();
 
     leng::InputManager* inputManager = new leng::InputManager;
@@ -43,6 +43,9 @@ int main() {
 
 	stateManager->draw();
     }
+    delete window;
+    delete inputManager;
+    delete stateManager;
     
     return 0;
 }
