@@ -11,7 +11,7 @@ class Player : public Entity {
 public:
     Player(float x, float y, float width, float height, const std::string& path);
     ~Player();
-    void update(leng::InputManager& inputManager, leng::Camera2D* camera, float deltaTime);
+    void update(leng::InputManager* inputManager, leng::Camera2D* camera, float deltaTime);
 
     bool upHeld;
     bool downHeld;

@@ -14,7 +14,7 @@ Player::Player(float x, float y, float width, float height, const std::string& p
 
 Player::~Player() { }
     
-    void Player::update(leng::InputManager& inputManager, leng::Camera2D* camera, float deltaTime) {
+    void Player::update(leng::InputManager* inputManager, leng::Camera2D* camera, float deltaTime) {
     Entity::update(deltaTime);
 
     if(upHeld) {
@@ -31,7 +31,7 @@ Player::~Player() { }
     }
     
     // Make player rotate towards cursor
-    mouseCoords = inputManager.getMouseCoords();
+    mouseCoords = inputManager->getMouseCoords();
     mouseCoords = camera->convertScreenToWorld(mouseCoords);
     centerPosition = pos + glm::vec2(width / 2, height / 2);
     direction = glm::normalize(mouseCoords - centerPosition);
