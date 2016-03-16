@@ -39,27 +39,27 @@ void PlayState::init() {
     directionalLight->ambient = glm::vec3(0.10f, 0.10f, 0.10f);
     directionalLight->diffuse = glm::vec3(0.10f, 0.10f, 0.10f);
     directionalLight->specular = glm::vec3(0.5f, 0.5f, 0.5f);
-
+    // Center light
     pointLight1->position = pointLightPositions[0];
     pointLight1->ambient = glm::vec3(0.5f, 0.5f, 0.5f);
-    pointLight1->diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
-    pointLight1->specular = glm::vec3(1.0f, 1.0f, 1.0f);
+    pointLight1->diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+    pointLight1->specular = glm::vec3(0.0f, 0.0f, 0.0f);
     pointLight1->constant = 0.7f;
     pointLight1->linear = 0.0014f;
     pointLight1->quadratic = 0.000007f;
-
+    // Item light
     pointLight2->position = pointLightPositions[1];
-    pointLight2->ambient = glm::vec3(0.10f, 0.0f, 0.0f);
-    pointLight2->diffuse = glm::vec3(0.8f, 0.0f, 0.0f);
-    pointLight2->specular = glm::vec3(1.0f, 0.0f, 0.0f);
+    pointLight2->ambient = glm::vec3(0.5f, 0.5f, 0.0f);
+    pointLight2->diffuse = glm::vec3(1.0f, 0.843f, 0.0f);
+    pointLight2->specular = glm::vec3(0.0f, 0.0f, 0.0f);
     pointLight2->constant = 1.0f;
-    pointLight2->linear = 0.0014f;
-    pointLight2->quadratic = 0.000007f;
-
+    pointLight2->linear = 0.007f;
+    pointLight2->quadratic = 0.0002f;
+    // Player light
     pointLight3->position = pointLightPositions[2];
-    pointLight3->ambient = glm::vec3(0.0f, 0.0f, 0.10f);
-    pointLight3->diffuse = glm::vec3(0.0f, 0.0f, 0.8f);
-    pointLight3->specular = glm::vec3(0.0f, 0.0f, 1.0f);
+    pointLight3->ambient = glm::vec3(0.5f, 0.5f, 0.5f);
+    pointLight3->diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+    pointLight3->specular = glm::vec3(0.0f, 0.0f, 0.0f);
     pointLight3->constant = 1.0f;
     pointLight3->linear = 0.007f;
     pointLight3->quadratic = 0.0002f;
@@ -129,7 +129,7 @@ void PlayState::update(float deltaTime) {
     if(!freecam) {
 	camera->setPosition(glm::vec2(player->pos.x + player->width / 2, player->pos.y + player->height / 2));
     }
-	
+    pointLight3->position = glm::vec3(player->pos.x + 16, player->pos.y + 16, pointLightPositions[2].z);
     player->update(inputManager, camera, deltaTime);
     
     for(unsigned int i = 0; i < enemies.size(); i++) {
@@ -144,16 +144,21 @@ void PlayState::draw() {
 	
     // Use cooresponding shader when setting uniforms/drawing objects
     lightingShader.use();
+
     GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
     glUniform3f(viewPosLoc, camera->position.x, camera->position.y, 700.0f);
     // Set material properties
     glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
     // Update lights
     //directionalLight->update(lightingShader);
-    //pointLight1.position = glm::vec3(player->pos.x + 32, player->pos.y + 32, pointLightPositions[0].z);
     pointLight1->updateLight1(lightingShader);
+    
+    pointLight2->position = glm::vec3(item->pos.x, item->pos.y, pointLightPositions[1].z);
     pointLight2->updateLight2(lightingShader);
+
+
     pointLight3->updateLight3(lightingShader);
+
     pointLight4->updateLight4(lightingShader);
 
     // Create camera transformations
@@ -174,6 +179,7 @@ void PlayState::draw() {
 	renderer->draw(enemies[i]->sprite, lightingShader);
     }
 
+    renderer->draw(item->sprite, lightingShader);
     lampShader.use();
 
     // Create camera transformations
