@@ -15,6 +15,7 @@ PlayState::~PlayState() {
     for(unsigned int i = 0; i < enemies.size(); i++) {
 	delete enemies[i];
     }
+    delete item;
 }
 
 void PlayState::init() {
@@ -29,7 +30,7 @@ void PlayState::init() {
     chunk->createMesh(renderer, lightingShader);
     chunk->position = glm::vec3(0, 0, 0);
     
-    for(unsigned int i = 0; i < 100; i++) {
+    for(unsigned int i = 0; i < 2; i++) {
 	leng::Enemy* enemy = new leng::Enemy(500 + (i * 64), 1000, 64, 64, "assets/textures/zombie.png");
 	enemies.push_back(enemy);
     }
@@ -41,7 +42,7 @@ void PlayState::init() {
     directionalLight->specular = glm::vec3(0.5f, 0.5f, 0.5f);
     // Center light
     pointLight1->position = pointLightPositions[0];
-    pointLight1->ambient = glm::vec3(0.5f, 0.5f, 0.5f);
+    pointLight1->ambient = glm::vec3(0.3f, 0.3f, 0.3f);
     pointLight1->diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
     pointLight1->specular = glm::vec3(0.0f, 0.0f, 0.0f);
     pointLight1->constant = 0.7f;
@@ -49,7 +50,7 @@ void PlayState::init() {
     pointLight1->quadratic = 0.000007f;
     // Item light
     pointLight2->position = pointLightPositions[1];
-    pointLight2->ambient = glm::vec3(0.5f, 0.5f, 0.0f);
+    pointLight2->ambient = glm::vec3(0.3f, 0.3f, 0.0f);
     pointLight2->diffuse = glm::vec3(1.0f, 0.843f, 0.0f);
     pointLight2->specular = glm::vec3(0.0f, 0.0f, 0.0f);
     pointLight2->constant = 1.0f;
@@ -57,7 +58,7 @@ void PlayState::init() {
     pointLight2->quadratic = 0.0002f;
     // Player light
     pointLight3->position = pointLightPositions[2];
-    pointLight3->ambient = glm::vec3(0.5f, 0.5f, 0.5f);
+    pointLight3->ambient = glm::vec3(0.3f, 0.3f, 0.3f);
     pointLight3->diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
     pointLight3->specular = glm::vec3(0.0f, 0.0f, 0.0f);
     pointLight3->constant = 1.0f;
@@ -135,6 +136,7 @@ void PlayState::update(float deltaTime) {
     for(unsigned int i = 0; i < enemies.size(); i++) {
 	enemies[i]->update(player, deltaTime);	
     }
+    item->update(deltaTime);
 }
 
 void PlayState::draw() {
@@ -178,8 +180,10 @@ void PlayState::draw() {
     for(unsigned int i = 0; i < enemies.size(); i++) {
 	renderer->draw(enemies[i]->sprite, lightingShader);
     }
+    if(item->render) {
+	renderer->draw(item->sprite, lightingShader);	
+    }
 
-    renderer->draw(item->sprite, lightingShader);
     lampShader.use();
 
     // Create camera transformations
@@ -209,5 +213,11 @@ void PlayState::doCollisions() {
 	if (collideWithCircle(enemies[i], player)) {
 	    std::cout << "Enemy hits player!" << std::endl;
 	}
+    }
+    // Collide player with item
+    if (doCirclesIntersect(item, player)) {
+	player->pickupItem(item);
+	item->render = false;
+	item->pos = glm::vec2(100000, 100000);
     }
 }

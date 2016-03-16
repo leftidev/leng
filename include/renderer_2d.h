@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 
 #include "shader.h"
-#include "sprite.h"
+//#include "sprite.h"
 
 namespace leng {
 
@@ -13,8 +13,8 @@ public:
     Renderer2D();
     ~Renderer2D();
     void initVAO(leng::Shader& shader);
-    void updateVertices(leng::Sprite& sprite);
-    void draw(leng::Sprite& sprite);
+    //  void updateVertices(leng::Sprite& sprite);
+    //void draw(leng::Sprite& sprite);
     
 private:
     GLuint VBO;

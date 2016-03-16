@@ -125,9 +125,9 @@ void Renderer::createMesh() {
     // TODO: Create VBO per mesh
     Mesh mesh;
     glGenBuffers(1, &mesh.VBO);
-    mesh.textureID = leng::ResourceManager::getTexture("assets/textures/dungeon_floor.png").id;
+    mesh.textureID = leng::ResourceManager::getTexture("assets/textures/Dungeon_Floor_1.png").id;
     std::cout << mesh.textureID << std::endl;
-    mesh.normalID = leng::ResourceManager::getTexture("assets/textures/dungeon_floor_n.png").id;
+    mesh.normalID = leng::ResourceManager::getTexture("assets/textures/Dungeon_Floor_1_n.png").id;
     meshes.push_back(mesh);
 }
     

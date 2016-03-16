@@ -45,7 +45,7 @@ private:
     glm::vec3 pointLightPositions[4] = {
 	glm::vec3(1500, 1500, -1.0f), // white
 	glm::vec3(200, 200, -1.0f), // red
-	glm::vec3(300, 300, -5.0f), // blue
+	glm::vec3(300, 300, -1.0f), // blue
 	glm::vec3(700, 700, -5.0f) // green
     };
 
@@ -57,7 +57,7 @@ private:
 
     leng::Player* player = new leng::Player{1500, 1500, 64, 64, "assets/textures/soldier.png"};
     std::vector<leng::Enemy*> enemies;
-    leng::Item* item = new leng::Item{2500, 2500, 32, 32, "assets/textures/simple_axe.png"};
+    leng::Item* item = new leng::Item{1800, 1800, 32, 32, "assets/textures/simple_axe.png", "Hand Gun"};
     bool freecam = false;
     bool normalMapping = true;
 };

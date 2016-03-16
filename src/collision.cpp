@@ -8,6 +8,32 @@ bool doBoxesIntersect(Box a, Box b) {
 	(std::abs(a.y - b.y) * 2 <= (a.height + b.height));
 }
 
+    // Circular collision
+bool doCirclesIntersect(Entity* agent, Entity* agent2) {
+    // Minimum distance before there is a collision
+    const float MIN_DISTANCE = agent->bb.radius.x * 2.0f;
+
+    // Center position of this agent
+    glm::vec2 centerPosA = agent2->bb.position + glm::vec2(agent2->bb.radius * 2.0f);
+    // Center position of the parameter agent
+    glm::vec2 centerPosB = agent->bb.position + glm::vec2(agent->bb.radius * 2.0f);
+
+    // Distance vector between the two agents
+    glm::vec2 distVec = centerPosA - centerPosB;
+    
+    // Length of the distance vector
+    float distance = glm::length(distVec);
+
+    // Depth of the collision
+    float collisionDepth = MIN_DISTANCE - distance;
+
+    // If collision depth > 0 then we did collide
+    if (collisionDepth > 0) {
+        return true;
+    }
+    return false;
+}
+    
 // Circular collision
 bool collideWithCircle(Entity* agent, Entity* agent2) {
     // Minimum distance before there is a collision

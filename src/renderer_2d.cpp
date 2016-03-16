@@ -34,7 +34,7 @@ void Renderer2D::initVAO(leng::Shader& shader) {
     
     glBindVertexArray(0);
 }
-    
+    /*    
 void Renderer2D::updateVertices(leng::Sprite& sprite) {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(sprite.vertexData), sprite.vertexData, GL_STATIC_DRAW);
@@ -52,5 +52,5 @@ void Renderer2D::draw(leng::Sprite& sprite) {
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
-    
+    */
 } // namespace leng
