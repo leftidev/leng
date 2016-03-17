@@ -175,9 +175,6 @@ void Renderer::finishMesh(int meshID, leng::Shader& shader) {
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
     glDrawArrays(GL_TRIANGLES, 0, numVertices);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, 0);
     
     glBindVertexArray(0);
 

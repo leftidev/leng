@@ -4,7 +4,7 @@
 #include "play_state.h"
 
 int main() {
-    leng::Window* window = new leng::Window("leng++ zomb", 1024, 768);
+    leng::Window* window = new leng::Window("leng++ zomb", 1680, 1050);
     window->setVsync(true);    
     //leng::soundInit();
 

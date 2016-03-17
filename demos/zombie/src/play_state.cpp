@@ -22,9 +22,9 @@ void PlayState::init() {
     renderer->initLightVAO(lightingShader);
     renderer->initLampVAO(lampShader);
 
-    camera->init(1024, 768);
+    camera->init(1680, 1050);
     camera->setPosition(glm::vec2(0.0f, 0.0f));
-    camera->setScale(0.80f);
+    camera->setScale(1.2f);
     camera->update();
     
     chunk->createMesh(renderer, lightingShader);
@@ -39,13 +39,13 @@ void PlayState::init() {
     directionalLight->direction = glm::vec3(0.0f, 0.0f, 1.0f);
     directionalLight->ambient = glm::vec3(0.10f, 0.10f, 0.10f);
     directionalLight->diffuse = glm::vec3(0.10f, 0.10f, 0.10f);
-    directionalLight->specular = glm::vec3(0.5f, 0.5f, 0.5f);
+    directionalLight->specular = glm::vec3(0.0f, 0.0f, 0.0f);
     // Center light
     pointLight1->position = pointLightPositions[0];
     pointLight1->ambient = glm::vec3(0.6f, 0.6f, 0.6f);
     pointLight1->diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
     pointLight1->specular = glm::vec3(0.0f, 0.0f, 0.0f);
-    pointLight1->constant = 1.0f;
+    pointLight1->constant = 1.5f;
     pointLight1->linear = 0.004f;
     pointLight1->quadratic = 0.000014f;
     // Item light
@@ -194,11 +194,12 @@ void PlayState::draw() {
 	
     // Render lamp
     /*
-      renderer->drawLamp(pointLightPositions[0], lampShader);
-      renderer->drawLamp(pointLightPositions[1], lampShader);
-      renderer->drawLamp(pointLightPositions[2], lampShader);
-      renderer->drawLamp(pointLightPositions[3], lampShader);
-    */
+      renderer->drawLamp(pointLight1->position, lampShader);
+      renderer->drawLamp(pointLight2->position, lampShader);
+      renderer->drawLamp(pointLight3->position, lampShader);
+    */      
+    //renderer->drawLamp(pointLightPositions[3], lampShader);
+    
     // Swap buffers
     window->swapWindow();
 }
