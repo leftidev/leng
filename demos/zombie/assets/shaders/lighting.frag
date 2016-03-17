@@ -112,9 +112,9 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 // Calculates the color when using a point light.
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
-    vec3 lightDir = normalize(light.position - fragPos);
+    vec3 lightDir = normalize(vec3(light.position.x, light.position.z, 1.0f) - fragPos);
     // Diffuse shading
-    float diff = max(dot(normal, lightDir), 0.0);
+    float diff = max(dot(normal, lightDir), 0.0); // here is the problem?
     // Specular shading
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
@@ -123,7 +123,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     float attenuation = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
     // Combine results
     vec3 ambient = light.ambient;
-    vec3 diffuse = light.diffuse * diff;
+    vec3 diffuse = light.diffuse * (diff);
     vec3 specular = light.specular * spec;
     ambient *= attenuation;
     diffuse *= attenuation;
@@ -134,9 +134,11 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 // Calculates the color when using a spot light.
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
-    vec3 lightDir = normalize(light.position - fragPos);
+    vec2 Resolution = vec2(1024, 768);
+    vec3 lightDir = vec3(light.position.xy - (fragPos.xy - Resolution.xy), light.position.z);
+    vec3 L = normalize(lightDir);
     // Diffuse shading
-    float diff = max(dot(normal, lightDir), 0.0);
+    float diff = max(dot(normal, L), 0.0);
     // Specular shading
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);

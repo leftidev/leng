@@ -42,12 +42,12 @@ void PlayState::init() {
     directionalLight->specular = glm::vec3(0.5f, 0.5f, 0.5f);
     // Center light
     pointLight1->position = pointLightPositions[0];
-    pointLight1->ambient = glm::vec3(0.3f, 0.3f, 0.3f);
+    pointLight1->ambient = glm::vec3(0.6f, 0.6f, 0.6f);
     pointLight1->diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
     pointLight1->specular = glm::vec3(0.0f, 0.0f, 0.0f);
-    pointLight1->constant = 0.7f;
-    pointLight1->linear = 0.0014f;
-    pointLight1->quadratic = 0.000007f;
+    pointLight1->constant = 1.0f;
+    pointLight1->linear = 0.004f;
+    pointLight1->quadratic = 0.000014f;
     // Item light
     pointLight2->position = pointLightPositions[1];
     pointLight2->ambient = glm::vec3(0.3f, 0.3f, 0.0f);
@@ -130,12 +130,13 @@ void PlayState::update(float deltaTime) {
     if(!freecam) {
 	camera->setPosition(glm::vec2(player->pos.x + player->width / 2, player->pos.y + player->height / 2));
     }
-    pointLight3->position = glm::vec3(player->pos.x + 16, player->pos.y + 16, pointLightPositions[2].z);
+    pointLight3->position = glm::vec3(player->pos.x +  player->width / 2, player->pos.y +  player->height / 2, pointLightPositions[2].z);
     player->update(inputManager, camera, deltaTime);
     
     for(unsigned int i = 0; i < enemies.size(); i++) {
 	enemies[i]->update(player, deltaTime);	
     }
+    pointLight2->position = glm::vec3(item->pos.x + item->width / 2, item->pos.y + item->height / 2, pointLightPositions[3].z);
     item->update(deltaTime);
 }
 
@@ -155,13 +156,13 @@ void PlayState::draw() {
     //directionalLight->update(lightingShader);
     pointLight1->updateLight1(lightingShader);
     
-    pointLight2->position = glm::vec3(item->pos.x, item->pos.y, pointLightPositions[1].z);
+
     pointLight2->updateLight2(lightingShader);
 
 
     pointLight3->updateLight3(lightingShader);
 
-    pointLight4->updateLight4(lightingShader);
+    //pointLight4->updateLight4(lightingShader);
 
     // Create camera transformations
     glm::mat4 projectionMatrix = camera->getCameraMatrix();

@@ -20,6 +20,7 @@ public:
     glm::vec2 rotatePoint(glm::vec2 Pos, float angle);
     void update(glm::vec2 Pos);
     GLuint textureID;
+    GLuint normalID;
     glm::vec2 pos;
     float width, height;
     Vertex vertexData[4];
