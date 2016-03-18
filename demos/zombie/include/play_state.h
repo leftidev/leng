@@ -16,6 +16,7 @@
 #include "enemy.h"
 #include "collision.h"
 #include "item.h"
+#include "timer.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -43,10 +44,10 @@ private:
     leng::Shader lampShader{"assets/shaders/lamp.vert", "assets/shaders/lamp.frag"};
 
     glm::vec3 pointLightPositions[4] = {
-	glm::vec3(1500, 1500, -1.0f), // white
-	glm::vec3(200, 200, -1.0f), // red
-	glm::vec3(300, 300, -1.0f), // blue
-	glm::vec3(700, 700, -5.0f) // green
+	glm::vec3(1500, 1500, 1.0f), // white
+	glm::vec3(200, 200, 1.0f), // red
+	glm::vec3(300, 300, 1.0f), // blue
+	glm::vec3(700, 700, 5.0f) // green
     };
 
     leng::DirectionalLight* directionalLight = new leng::DirectionalLight;
@@ -60,6 +61,7 @@ private:
     leng::Item* item = new leng::Item{1800, 1800, 32, 32, "assets/textures/simple_axe.png", "Hand Gun"};
     bool freecam = false;
     bool normalMapping = true;
+    leng::Timer timer;
 };
 
 #endif // PLAY_STATE_H

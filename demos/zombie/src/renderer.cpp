@@ -77,11 +77,13 @@ void Renderer::setSpriteAngle(leng::Sprite& sprite, float angle) {
 void Renderer::draw(leng::Sprite& sprite, leng::Shader& shader, float angle) {
     updateVertices(sprite);
     
+    // Bind diffuse map
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, sprite.textureID);
-    glUniform1i(glGetUniformLocation(shader.Program, "material.diffuse"), 0);
+    // Bind specular map
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, sprite.normalID);
+    glUniform1i(glGetUniformLocation(shader.Program, "material.diffuse"), 0);
     glUniform1i(glGetUniformLocation(shader.Program, "material.normalMap"), 1);
     
     modelLoc = glGetUniformLocation(shader.Program, "model");

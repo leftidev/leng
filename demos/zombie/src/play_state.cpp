@@ -42,10 +42,10 @@ void PlayState::init() {
     directionalLight->specular = glm::vec3(0.0f, 0.0f, 0.0f);
     // Center light
     pointLight1->position = pointLightPositions[0];
-    pointLight1->ambient = glm::vec3(0.6f, 0.6f, 0.6f);
+    pointLight1->ambient = glm::vec3(0.45f, 0.45f, 0.45f);
     pointLight1->diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
     pointLight1->specular = glm::vec3(0.0f, 0.0f, 0.0f);
-    pointLight1->constant = 1.5f;
+    pointLight1->constant = 0.9f;
     pointLight1->linear = 0.004f;
     pointLight1->quadratic = 0.000014f;
     // Item light
@@ -72,16 +72,15 @@ void PlayState::init() {
     pointLight4->constant = 1.0f;
     pointLight4->linear = 0.007f;
     pointLight4->quadratic = 0.0002f;
-
 }
 
 void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) {
     if(inputManager->isPressed(SDLK_i)) {
-	camera->scale += camera->movementSpeed * 0.05f * deltaTime;
+	camera->scale += camera->movementSpeed * 0.005f * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
     if(inputManager->isPressed(SDLK_k)) {
-	camera->scale -= camera->movementSpeed * 0.05f * deltaTime;
+	camera->scale -= camera->movementSpeed * 0.005f * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
     if(inputManager->isPressed(SDLK_LEFT)) {
@@ -101,6 +100,22 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
     if(inputManager->isPressed(SDLK_DOWN)) {
 	camera->position.y -= camera->movementSpeed * 5 * deltaTime;
         camera->needsMatrixUpdate = true;	
+    }
+
+    // Timer
+    if(inputManager->isPressed(SDLK_s)) {
+	if(timer.isStarted()) {
+	    timer.stop();
+	} else {
+	    timer.start();
+	}
+    }
+    if(inputManager->isPressed(SDLK_p)) {
+	if(timer.isPaused()) {
+	    timer.unpause();
+	} else {
+	    timer.pause();
+	}
     }
     
     // Player input
@@ -138,6 +153,8 @@ void PlayState::update(float deltaTime) {
     }
     pointLight2->position = glm::vec3(item->pos.x + item->width / 2, item->pos.y + item->height / 2, pointLightPositions[3].z);
     item->update(deltaTime);
+
+    std::cout << timer.getTicks() << std::endl;
 }
 
 void PlayState::draw() {
