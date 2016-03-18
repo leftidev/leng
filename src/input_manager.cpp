@@ -4,19 +4,48 @@
 
 namespace leng {
     
-void InputManager::handleKeyboardEvent(SDL_Event event) {
-    keyState[event.key.keysym.sym] = event.key.state;
+void InputManager::pressKey(unsigned int keyID) {
+	keyState[keyID] = true;
 }
 
-void InputManager::handleMouseEvent(SDL_Event event) {
-    keyState[event.button.button] = event.button.state;
+void InputManager::releaseKey(unsigned int keyID) {
+	keyState[keyID] = false;
 }
 
-bool InputManager::isPressed(unsigned int key_code) {
-    return (keyState[key_code] == SDL_PRESSED);
+void InputManager::update() {
+    // Loop through _keyMap using a for each loop(C+11), and copy it over to _previousKeyMap.
+    for (auto& it : keyState)
+	{
+	    prevKeyState[it.first] = it.second;
+	}
 }
-bool InputManager::isReleased(unsigned int key_code) {
-    return (keyState[key_code] == SDL_RELEASED);
+
+bool InputManager::isKeyDown(unsigned int keyID) {
+    auto it = keyState.find(keyID);
+    if (it != keyState.end()) {
+	return it->second;
+    }
+    else {
+	return false;
+    }
+}
+
+bool InputManager::isKeyPressed(unsigned int keyID) {
+    // Check if it is pressed this frame, and wasn't pressed last frame
+    if (isKeyDown(keyID) == true && wasKeyDown(keyID) == false) {
+	return true;
+    }
+    return false;
+}
+
+bool InputManager::wasKeyDown(unsigned int keyID) {
+    auto it = prevKeyState.find(keyID);
+    if (it != prevKeyState.end()) {
+	return it->second;
+    }
+    else {
+	return false;
+    }
 }
 
 void InputManager::setMouseCoords(float x, float y) {

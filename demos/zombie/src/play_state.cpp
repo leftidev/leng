@@ -75,42 +75,42 @@ void PlayState::init() {
 }
 
 void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) {
-    if(inputManager->isPressed(SDLK_i)) {
+    if(inputManager->isKeyDown(SDLK_i)) {
 	camera->scale += camera->movementSpeed * 0.005f * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
-    if(inputManager->isPressed(SDLK_k)) {
+    if(inputManager->isKeyDown(SDLK_k)) {
 	camera->scale -= camera->movementSpeed * 0.005f * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
-    if(inputManager->isPressed(SDLK_LEFT)) {
+    if(inputManager->isKeyDown(SDLK_LEFT)) {
 	//camera->position.x -= camera->movementSpeed * 5 * deltaTime;
         //camera->needsMatrixUpdate = true;
 	normalMapping = false;
     }
-    if(inputManager->isPressed(SDLK_RIGHT)) {
+    if(inputManager->isKeyDown(SDLK_RIGHT)) {
 	//camera->position.x += camera->movementSpeed * 5 * deltaTime;
         //camera->needsMatrixUpdate = true;
 	normalMapping = true;
     }
-    if(inputManager->isPressed(SDLK_UP)) {
+    if(inputManager->isKeyDown(SDLK_UP)) {
 	camera->position.y += camera->movementSpeed * 5 * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
-    if(inputManager->isPressed(SDLK_DOWN)) {
+    if(inputManager->isKeyDown(SDLK_DOWN)) {
 	camera->position.y -= camera->movementSpeed * 5 * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
 
     // Timer
-    if(inputManager->isPressed(SDLK_s)) {
+    if(inputManager->isKeyPressed(SDLK_u)) {
 	if(timer.isStarted()) {
 	    timer.stop();
 	} else {
 	    timer.start();
 	}
     }
-    if(inputManager->isPressed(SDLK_p)) {
+    if(inputManager->isKeyPressed(SDLK_p)) {
 	if(timer.isPaused()) {
 	    timer.unpause();
 	} else {
@@ -119,22 +119,24 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
     }
     
     // Player input
-    if(inputManager->isPressed(SDLK_w))
+    if(inputManager->isKeyDown(SDLK_w))
 	player->upHeld = true;
-    if(inputManager->isPressed(SDLK_s))
-	player->downHeld = true;
-    if(inputManager->isPressed(SDLK_d))
-	player->rightHeld = true;
-    if(inputManager->isPressed(SDLK_a))
-	player->leftHeld = true;
-    
-    if(inputManager->isReleased(SDLK_w))
+    else
 	player->upHeld = false;
-    if(inputManager->isReleased(SDLK_s))
+    
+    if(inputManager->isKeyDown(SDLK_s))
+	player->downHeld = true;
+    else
 	player->downHeld = false;
-    if(inputManager->isReleased(SDLK_d))
+    
+    if(inputManager->isKeyDown(SDLK_d))
+	player->rightHeld = true;
+    else
 	player->rightHeld = false;
-    if(inputManager->isReleased(SDLK_a))
+    
+    if(inputManager->isKeyDown(SDLK_a))
+	player->leftHeld = true;
+    else
 	player->leftHeld = false;
 }
 

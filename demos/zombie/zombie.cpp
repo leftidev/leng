@@ -22,6 +22,7 @@ int main() {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+	inputManager->update();
 	while(SDL_PollEvent(&event)) {
 	    switch(event.type){
 	    case SDL_QUIT:
@@ -32,21 +33,22 @@ int main() {
 		break;
 	    case SDL_KEYUP:
 		if (event.key.keysym.sym == SDLK_ESCAPE) { stateManager->running = false; }
-		inputManager->handleKeyboardEvent(event);
+		inputManager->releaseKey(event.key.keysym.sym);
 		break;
 	    case SDL_KEYDOWN:
-		inputManager->handleKeyboardEvent(event);
+		inputManager->pressKey(event.key.keysym.sym);
 		break;
 	    case SDL_MOUSEBUTTONUP:
-		inputManager->handleMouseEvent(event);
+		inputManager->releaseKey(event.button.button);
 		break;
 	    case SDL_MOUSEBUTTONDOWN:
-		inputManager->handleMouseEvent(event);
+		inputManager->pressKey(event.button.button);
 		break;
 	    }
 	}
-	stateManager->handleEvents(inputManager, deltaTime);
 
+	stateManager->handleEvents(inputManager, deltaTime);
+	
 	// Update logic
 	stateManager->update(deltaTime);
 
