@@ -60,8 +60,8 @@ bool collideWithCircle(Entity* agent, Entity* agent2) {
         glm::vec2 collisionDepthVec = glm::normalize(distVec) * collisionDepth;
 
         // Push them in opposite directions
-        agent2->pos+= collisionDepthVec / 2.0f;
-        agent->pos-= collisionDepthVec / 2.0f;
+        agent2->position+= collisionDepthVec / 2.0f;
+        agent->position-= collisionDepthVec / 2.0f;
 
         return true;
     }

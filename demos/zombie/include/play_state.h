@@ -17,6 +17,7 @@
 #include "collision.h"
 #include "item.h"
 #include "timer.h"
+#include "projectile.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -62,6 +63,7 @@ private:
     bool freecam = false;
     bool normalMapping = true;
     leng::Timer timer;
+    std::vector<leng::Projectile*> projectiles;
 };
 
 #endif // PLAY_STATE_H

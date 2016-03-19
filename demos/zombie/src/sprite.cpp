@@ -7,25 +7,25 @@ namespace leng {
     textureID = leng::ResourceManager::getTexture(path).id;
     normalID = leng::ResourceManager::getTexture(path + "_n").id;
     
-    pos.x = x;
-    pos.y = y;
+    position.x = x;
+    position.y = y;
     width = Width;
     height = Height;
     
     // Top right
-    vertexData[0].setPosition(pos.x + width, pos.y + height);
+    vertexData[0].setPosition(position.x + width, position.y + height);
     vertexData[0].setNormal(0.0f, 0.0f, -1.0f);
     vertexData[0].setUV(1.0f, 1.0f);
     // Bottom right
-    vertexData[1].setPosition(pos.x + width, pos.y);
+    vertexData[1].setPosition(position.x + width, position.y);
     vertexData[1].setNormal(0.0f, 0.0f, -1.0f);
     vertexData[1].setUV(1.0f, 0.0f);
     // Bottom left
-    vertexData[2].setPosition(pos.x, pos.y);
+    vertexData[2].setPosition(position.x, position.y);
     vertexData[2].setNormal(0.0f, 0.0f, -1.0f);
     vertexData[2].setUV(0.0f, 0.0f);
     // Top left
-    vertexData[3].setPosition(pos.x, pos.y + height);
+    vertexData[3].setPosition(position.x, position.y + height);
     vertexData[3].setNormal(0.0f, 0.0f, -1.0f);
     vertexData[3].setUV(0.0f, 1.0f);
 
@@ -50,39 +50,39 @@ void Sprite::setAngle(float angle) {
     tl = rotatePoint(tl, angle) + halfDimensions;
 
     // Top right
-    vertexData[0].setPosition(pos.x + tr.x, pos.y + tr.y);
+    vertexData[0].setPosition(position.x + tr.x, position.y + tr.y);
     vertexData[0].setNormal(0.0f, 0.0f, -1.0f);
     vertexData[0].setUV(1.0f, 1.0f);
     // Bottom right
-    vertexData[1].setPosition(pos.x + br.x, pos.y + br.y);
+    vertexData[1].setPosition(position.x + br.x, position.y + br.y);
     vertexData[1].setNormal(0.0f, 0.0f, -1.0f);
     vertexData[1].setUV(1.0f, 0.0f);
     // Bottom left
-    vertexData[2].setPosition(pos.x + bl.x, pos.y + bl.y);
+    vertexData[2].setPosition(position.x + bl.x, position.y + bl.y);
     vertexData[2].setNormal(0.0f, 0.0f, -1.0f);
     vertexData[2].setUV(0.0f, 0.0f);
     // Top left
-    vertexData[3].setPosition(pos.x + tl.x, pos.y + tl.y);
+    vertexData[3].setPosition(position.x + tl.x, position.y + tl.y);
     vertexData[3].setNormal(0.0f, 0.0f, -1.0f);
     vertexData[3].setUV(0.0f, 1.0f);
 }
 
-glm::vec2 Sprite::rotatePoint(glm::vec2 Pos, float angle) {
+glm::vec2 Sprite::rotatePoint(glm::vec2 Position, float angle) {
     glm::vec2 newV;
-    newV.x = Pos.x * cos(angle) - Pos.y * sin(angle);
-    newV.y = Pos.x * sin(angle) + Pos.y * cos(angle);
+    newV.x = Position.x * cos(angle) - Position.y * sin(angle);
+    newV.y = Position.x * sin(angle) + Position.y * cos(angle);
 
     return newV;
 }
 
-void Sprite::update(glm::vec2 Pos) {
-    pos = Pos;
+void Sprite::update(glm::vec2 Position) {
+    position = Position;
     
     // Update sprite
-    vertexData[0].setPosition(pos.x + width, pos.y + height);
-    vertexData[1].setPosition(pos.x + width, pos.y);
-    vertexData[2].setPosition(pos.x, pos.y);
-    vertexData[3].setPosition(pos.x, pos.y + height);
+    vertexData[0].setPosition(position.x + width, position.y + height);
+    vertexData[1].setPosition(position.x + width, position.y);
+    vertexData[2].setPosition(position.x, position.y);
+    vertexData[3].setPosition(position.x, position.y + height);
 }
     
 } // namespace leng

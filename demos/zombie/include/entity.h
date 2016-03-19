@@ -6,19 +6,21 @@
 
 
 namespace leng {
-    class Entity {
-    public:
-	Entity(float x, float y, float _width, float _height, const std::string& path);
-	~Entity();
-	void update(float deltaTime);
+
+class Entity {
+public:
+    Entity(float x, float y, float _width, float _height, const std::string& path);
+    ~Entity();
+    void update(float deltaTime);
 	
-	glm::vec2 pos;
-	float width, height;
-	Circle bb;
-	Sprite sprite;
-	Velocity vel;
-	bool moving;
-    };
+    glm::vec2 position;
+    float width, height;
+    Circle bb;
+    Sprite sprite;
+    glm::fvec2 velocity;
+    bool moving;
+};
+
 } // namespace leng
 
 #endif // ENTITY_H

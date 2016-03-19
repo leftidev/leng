@@ -7,6 +7,7 @@
 #include "input_manager.h"
 #include "camera_2d.h"
 #include "item.h"
+#include "projectile.h"
 
 namespace leng {
 
@@ -16,6 +17,8 @@ public:
     ~Player();
     void update(leng::InputManager* inputManager, leng::Camera2D* camera, float deltaTime);
     void pickupItem(leng::Item* item);
+    void shootProjectile(std::vector<Projectile*>& projectiles);
+	
     bool upHeld;
     bool downHeld;
     bool leftHeld;

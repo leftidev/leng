@@ -9,8 +9,8 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     rightHeld = false;
     leftHeld = false;
     
-    vel.y = 0.35f;
-    vel.x = 0.35f;
+    velocity.y = 0.35f;
+    velocity.x = 0.35f;
 }
 
 Player::~Player() {
@@ -23,22 +23,22 @@ void Player::update(leng::InputManager* inputManager, leng::Camera2D* camera, fl
     Entity::update(deltaTime);
 
     if(upHeld) {
-	pos.y += vel.y * deltaTime;
+	position.y += velocity.y * deltaTime;
     }
     if(downHeld) {
-	pos.y -= vel.y * deltaTime;
+	position.y -= velocity.y * deltaTime;
     }
     if(rightHeld) {
-	pos.x += vel.x * deltaTime;
+	position.x += velocity.x * deltaTime;
     }
     if(leftHeld) {
-	pos.x -= vel.x * deltaTime;
+	position.x -= velocity.x * deltaTime;
     }
     
     // Make player rotate towards cursor
     mouseCoords = inputManager->getMouseCoords();
     mouseCoords = camera->convertScreenToWorld(mouseCoords);
-    centerPosition = pos + glm::vec2(width / 2, height / 2);
+    centerPosition = position + glm::vec2(width / 2, height / 2);
     direction = glm::normalize(mouseCoords - centerPosition);
     angleInRadians = std::atan2(direction.y, direction.x);
     sprite.setAngle(angleInRadians);
@@ -49,6 +49,13 @@ void Player::pickupItem(leng::Item* item) {
     pickup->name = item->name;
     inventory.push_back(pickup);
     std::cout << "Item: " + pickup->name + " picked up." << std::endl;
+}
+
+void Player::shootProjectile(std::vector<Projectile*>& projectiles) {
+    if (projectiles.size() < 10000) {
+	leng::Projectile* projectile = new leng::Projectile(position.x + width / 2, position.y + height / 2, 8.0f, 8.0f, "assets/textures/bullet.png", glm::fvec2(0.4f, 0.4f), direction);
+	projectiles.push_back(projectile);
+    }
 }
     
 } // namespace leng

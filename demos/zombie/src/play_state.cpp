@@ -15,6 +15,9 @@ PlayState::~PlayState() {
     for(unsigned int i = 0; i < enemies.size(); i++) {
 	delete enemies[i];
     }
+    for(unsigned int i = 0; i < projectiles.size(); i++) {
+	delete projectiles[i];
+    }
     delete item;
 }
 
@@ -30,7 +33,7 @@ void PlayState::init() {
     chunk->createMesh(renderer, lightingShader);
     chunk->position = glm::vec3(0, 0, 0);
     
-    for(unsigned int i = 0; i < 2; i++) {
+    for(unsigned int i = 0; i < 100; i++) {
 	leng::Enemy* enemy = new leng::Enemy(500 + (i * 64), 1000, 64, 64, "assets/textures/zombie.png");
 	enemies.push_back(enemy);
     }
@@ -138,6 +141,10 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
 	player->leftHeld = true;
     else
 	player->leftHeld = false;
+    
+    if (inputManager->isKeyPressed(SDL_BUTTON_LEFT)) {
+	player->shootProjectile(projectiles);
+    }
 }
 
 void PlayState::update(float deltaTime) {
@@ -145,18 +152,25 @@ void PlayState::update(float deltaTime) {
     camera->update();
 
     if(!freecam) {
-	camera->setPosition(glm::vec2(player->pos.x + player->width / 2, player->pos.y + player->height / 2));
+	camera->setPosition(glm::vec2(player->position.x + player->width / 2, player->position.y + player->height / 2));
     }
-    pointLight3->position = glm::vec3(player->pos.x +  player->width / 2, player->pos.y +  player->height / 2, pointLightPositions[2].z);
+    pointLight3->position = glm::vec3(player->position.x +  player->width / 2, player->position.y +  player->height / 2, pointLightPositions[2].z);
     player->update(inputManager, camera, deltaTime);
     
     for(unsigned int i = 0; i < enemies.size(); i++) {
 	enemies[i]->update(player, deltaTime);	
     }
-    pointLight2->position = glm::vec3(item->pos.x + item->width / 2, item->pos.y + item->height / 2, pointLightPositions[3].z);
-    item->update(deltaTime);
 
-    std::cout << timer.getTicks() << std::endl;
+    pointLight2->position = glm::vec3(item->position.x + item->width / 2, item->position.y + item->height / 2, pointLightPositions[3].z);
+    
+    if(item->render) {
+	item->update(deltaTime);
+    }
+
+    for(unsigned int i = 0; i < projectiles.size(); i++) {
+	projectiles[i]->update(deltaTime);	
+    }
+    //std::cout << timer.getTicks() << std::endl;
 }
 
 void PlayState::draw() {
@@ -196,7 +210,9 @@ void PlayState::draw() {
     
     // Draw sprites
     renderer->draw(player->sprite, lightingShader);
-
+    for(unsigned int i = 0; i < projectiles.size(); i++) {
+	renderer->draw(projectiles[i]->sprite, lightingShader);
+    }
     for(unsigned int i = 0; i < enemies.size(); i++) {
 	renderer->draw(enemies[i]->sprite, lightingShader);
     }
@@ -234,11 +250,18 @@ void PlayState::doCollisions() {
 	if (collideWithCircle(enemies[i], player)) {
 	    std::cout << "Enemy hits player!" << std::endl;
 	}
+	for(unsigned int j = 0; j < projectiles.size(); j++) {
+	    if(doCirclesIntersect(enemies[i], projectiles[j])) {
+		enemies.erase(enemies.begin() + i);
+		projectiles.erase(projectiles.begin() + j);
+	    }
+	}
+	
     }
     // Collide player with item
     if (doCirclesIntersect(item, player)) {
 	player->pickupItem(item);
 	item->render = false;
-	item->pos = glm::vec2(100000, 100000);
+	item->position = glm::vec2(100000, 100000);
     }
 }

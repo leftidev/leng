@@ -18,10 +18,10 @@ public:
     ~Sprite();
     void setAngle(float angle);
     glm::vec2 rotatePoint(glm::vec2 Pos, float angle);
-    void update(glm::vec2 Pos);
+    void update(glm::vec2 Position);
     GLuint textureID;
     GLuint normalID;
-    glm::vec2 pos;
+    glm::vec2 position;
     float width, height;
     Vertex vertexData[4];
 };
