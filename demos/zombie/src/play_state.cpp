@@ -185,16 +185,11 @@ void PlayState::draw() {
     glUniform3f(viewPosLoc, camera->position.x, camera->position.y, 700.0f);
     // Set material properties
     glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
+
     // Update lights
-    //directionalLight->update(lightingShader);
-    pointLight1->updateLight1(lightingShader);
-    
-
-    pointLight2->updateLight2(lightingShader);
-
-
-    pointLight3->updateLight3(lightingShader);
-
+    pointLight1->updateLight(lightingShader, "0");
+    pointLight2->updateLight(lightingShader, "1");
+    pointLight3->updateLight(lightingShader, "2");
     //pointLight4->updateLight4(lightingShader);
 
     // Create camera transformations
@@ -248,7 +243,10 @@ void PlayState::doCollisions() {
 	}
 	// Collide with player
 	if (collideWithCircle(enemies[i], player)) {
-	    std::cout << "Enemy hits player!" << std::endl;
+	    // std::cout << "Enemy hits player!" << std::endl;
+	    player->health -= 1;
+	    std::cout << player->health << std::endl;
+	    
 	}
 	for(unsigned int j = 0; j < projectiles.size(); j++) {
 	    if(doCirclesIntersect(enemies[i], projectiles[j])) {

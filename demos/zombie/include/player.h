@@ -28,7 +28,7 @@ public:
     glm::vec2 centerPosition;
     glm::vec2 direction;
     float angleInRadians;
-
+    float health = 100.0f;
     std::vector<Item*> inventory;
 };
 

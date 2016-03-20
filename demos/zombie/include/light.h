@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 
 #include "shader.h"
+#include <string>
 
 namespace leng {
 class PointLight {
@@ -17,10 +18,7 @@ public:
     float linear;
     float quadratic;
 
-    void updateLight1(leng::Shader& shader);
-    void updateLight2(leng::Shader& shader);
-    void updateLight3(leng::Shader& shader);
-    void updateLight4(leng::Shader& shader);
+    void updateLight(leng::Shader& shader, const char* lightNr);
 };
 
 class DirectionalLight {
