@@ -2,6 +2,8 @@
 #define PLAY_STATE_H
 
 #include <vector>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 
 #include "game_state.h"
 #include "window.h"
@@ -64,6 +66,9 @@ private:
     bool normalMapping = true;
     leng::Timer timer;
     std::vector<leng::Projectile*> projectiles;
+    int spawnPosition = 0;
+    int spawnPositionX = 0;
+    int spawnPositionY = 0;
 };
 
 #endif // PLAY_STATE_H

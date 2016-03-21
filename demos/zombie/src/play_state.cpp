@@ -1,5 +1,6 @@
 #include "play_state.h"
 
+
 PlayState::PlayState(leng::GameStateManager* stateManager, leng::Window* window, leng::InputManager* inputManager) : GameState(stateManager, window, inputManager) { }
 
 PlayState::~PlayState() {
@@ -32,15 +33,10 @@ void PlayState::init() {
     
     chunk->createMesh(renderer, lightingShader);
     chunk->position = glm::vec3(0, 0, 0);
-    
-    for(unsigned int i = 0; i < 100; i++) {
-	leng::Enemy* enemy = new leng::Enemy(500 + (i * 64), 1000, 64, 64, "assets/textures/zombie.png");
-	enemies.push_back(enemy);
-    }
 
     // Lights init
     directionalLight->direction = glm::vec3(0.0f, 0.0f, 1.0f);
-    directionalLight->ambient = glm::vec3(0.10f, 0.10f, 0.10f);
+    directionalLight->ambient = glm::vec3(0.50f, 0.50f, 0.50f);
     directionalLight->diffuse = glm::vec3(0.10f, 0.10f, 0.10f);
     directionalLight->specular = glm::vec3(0.0f, 0.0f, 0.0f);
     // Center light
@@ -75,6 +71,10 @@ void PlayState::init() {
     pointLight4->constant = 1.0f;
     pointLight4->linear = 0.007f;
     pointLight4->quadratic = 0.0002f;
+
+    // Zombie spawn timer
+    timer.start();
+
 }
 
 void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) {
@@ -104,26 +104,12 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
 	camera->position.y -= camera->movementSpeed * 5 * deltaTime;
         camera->needsMatrixUpdate = true;	
     }
-
-    // Timer
-    if(inputManager->isKeyPressed(SDLK_u)) {
-	if(timer.isStarted()) {
-	    timer.stop();
-	} else {
-	    timer.start();
-	}
-    }
-    if(inputManager->isKeyPressed(SDLK_p)) {
-	if(timer.isPaused()) {
-	    timer.unpause();
-	} else {
-	    timer.pause();
-	}
-    }
     
     // Player input
-    if(inputManager->isKeyDown(SDLK_w))
+    if(inputManager->isKeyDown(SDLK_w)){
 	player->upHeld = true;
+        std::cout << "pos.x: " << player->position.x << " | pos.y: "<< player->position.y << std::endl;
+    }
     else
 	player->upHeld = false;
     
@@ -169,8 +155,47 @@ void PlayState::update(float deltaTime) {
 
     for(unsigned int i = 0; i < projectiles.size(); i++) {
 	projectiles[i]->update(deltaTime);	
+    }    
+
+    // Zombie spawner
+    if(timer.getTicks() > 2500) {
+	timer.stop();
+	timer.start();
+	
+	// initialize random seed
+	srand(time(NULL));
+	// generate a number between 1 and 4
+	spawnPosition = rand() % 4 + 1;
+    
+	std::cout << spawnPosition << std::endl;
+		
+	if(spawnPosition == 1) {
+	    spawnPositionX = 750;
+	    spawnPositionY = rand() % 1400 + 800;
+	    
+	    leng::Enemy* enemy = new leng::Enemy(spawnPositionX, spawnPositionY, 64, 64, "assets/textures/zombie.png", glm::fvec2(0.15f, 0.15f));
+	    enemies.push_back(enemy);
+	} else if(spawnPosition == 2) {
+	    spawnPositionX = rand() % 1700 + 750;
+	    spawnPositionY = 800;
+	    
+	    leng::Enemy* enemy = new leng::Enemy(spawnPositionX, spawnPositionY, 64, 64, "assets/textures/zombie.png", glm::fvec2(0.15f, 0.15f));
+	    enemies.push_back(enemy);
+	} else if(spawnPosition == 3) {
+	    spawnPositionX = 2450;
+	    spawnPositionY = rand() % 1450 + 750;
+	    
+	    leng::Enemy* enemy = new leng::Enemy(spawnPositionX, spawnPositionY, 64, 64, "assets/textures/zombie.png", glm::fvec2(0.15f, 0.15f));
+	    enemies.push_back(enemy);
+	} else if(spawnPosition == 4) {
+	    spawnPositionX = rand() % 1700 + 750;
+	    spawnPositionY = 2200;
+	    
+	    leng::Enemy* enemy = new leng::Enemy(spawnPositionX, spawnPositionY, 64, 64, "assets/textures/zombie.png", glm::fvec2(0.15f, 0.15f));
+	    enemies.push_back(enemy);
+	}
     }
-    //std::cout << timer.getTicks() << std::endl;
+    //std::cout << timer.getTicks() << std::endl;  
 }
 
 void PlayState::draw() {
@@ -187,9 +212,10 @@ void PlayState::draw() {
     glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
 
     // Update lights
+    //directionalLight->update(lightingShader);
     pointLight1->updateLight(lightingShader, "0");
     pointLight2->updateLight(lightingShader, "1");
-    pointLight3->updateLight(lightingShader, "2");
+    //pointLight3->updateLight(lightingShader, "2");
     //pointLight4->updateLight4(lightingShader);
 
     // Create camera transformations

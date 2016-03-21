@@ -8,7 +8,7 @@ namespace leng {
 
 class Enemy : public Entity {
 public:
-    Enemy(float x, float y, float width, float height, const std::string& path);
+    Enemy(float x, float y, float width, float height, const std::string& path, glm::fvec2 Velocity);
     ~Enemy();
     void update(leng::Player* player, float deltaTime);
 

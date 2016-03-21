@@ -14,7 +14,7 @@ int main() {
     stateManager->changeGameState(new PlayState(stateManager, window, inputManager));
 
     float deltaTime = 0.0f; // Time between current frame and last frame
-    float lastFrame = 0.0f; // Time of last frame
+    float lastFrame = 0.0f; // Time of last frames
     
     SDL_Event event;
     while (stateManager->running) {

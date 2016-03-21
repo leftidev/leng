@@ -53,7 +53,7 @@ void Player::pickupItem(leng::Item* item) {
 
 void Player::shootProjectile(std::vector<Projectile*>& projectiles) {
     if (projectiles.size() < 10000) {
-	leng::Projectile* projectile = new leng::Projectile(position.x + width / 2, position.y + height / 2, 8.0f, 8.0f, "assets/textures/bullet.png", glm::fvec2(0.4f, 0.4f), direction);
+	leng::Projectile* projectile = new leng::Projectile(position.x + width / 2, position.y + height / 2, 8.0f, 8.0f, "assets/textures/bullet.png", glm::fvec2(1.0f, 1.0f), direction);
 	projectiles.push_back(projectile);
     }
 }
