@@ -20,6 +20,7 @@
 #include "item.h"
 #include "timer.h"
 #include "projectile.h"
+#include "gun.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -69,6 +70,7 @@ private:
     int spawnPosition = 0;
     int spawnPositionX = 0;
     int spawnPositionY = 0;
+    leng::Gun* handGun = new leng::Gun{1500, 1500, 64, 64, "assets/textures/held_weapons/1h_pistol.png", glm::fvec2(0.0f, 1.0f)};
 };
 
 #endif // PLAY_STATE_H

@@ -5,7 +5,7 @@
 
 int main() {
     leng::Window* window = new leng::Window("leng++ zomb", 1680, 1050);
-    window->setVsync(true);    
+    window->setVsync(true);
     //leng::soundInit();
 
     leng::InputManager* inputManager = new leng::InputManager;

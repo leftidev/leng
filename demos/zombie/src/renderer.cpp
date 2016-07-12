@@ -184,6 +184,5 @@ void Renderer::finishMesh(int meshID, leng::Shader& shader) {
     // Number of vertices rendered
     //std::cout << numVertices << std::endl;
 }
-
     
 } // namespace leng

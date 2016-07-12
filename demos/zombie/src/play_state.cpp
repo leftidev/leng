@@ -141,6 +141,9 @@ void PlayState::update(float deltaTime) {
 	camera->setPosition(glm::vec2(player->position.x + player->width / 2, player->position.y + player->height / 2));
     }
     pointLight3->position = glm::vec3(player->position.x +  player->width / 2, player->position.y +  player->height / 2, pointLightPositions[2].z);
+    
+    handGun->update(glm::vec2(player->position.x + 15, player->position.y - 2), player->angleInRadians, deltaTime);
+    
     player->update(inputManager, camera, deltaTime);
     
     for(unsigned int i = 0; i < enemies.size(); i++) {
@@ -215,7 +218,7 @@ void PlayState::draw() {
     //directionalLight->update(lightingShader);
     pointLight1->updateLight(lightingShader, "0");
     pointLight2->updateLight(lightingShader, "1");
-    //pointLight3->updateLight(lightingShader, "2");
+    pointLight3->updateLight(lightingShader, "2");
     //pointLight4->updateLight4(lightingShader);
 
     // Create camera transformations
@@ -231,6 +234,8 @@ void PlayState::draw() {
     
     // Draw sprites
     renderer->draw(player->sprite, lightingShader);
+    renderer->draw(handGun->sprite, lightingShader);
+    
     for(unsigned int i = 0; i < projectiles.size(); i++) {
 	renderer->draw(projectiles[i]->sprite, lightingShader);
     }
