@@ -18,6 +18,8 @@ public:
     void applyCollisions(glm::fvec2 velocity, std::vector<Entity*> tiles);
     void jump();
     void doubleJump();
+    void gravityBendInvert();
+    void gravityBend();
     
     bool upHeld;
     bool downHeld;
@@ -26,7 +28,8 @@ public:
     bool inAir;
     bool jumped;
     bool canDoubleJump;
-
+    bool normalGravity;
+    
     float GRAVITY;
 };
 

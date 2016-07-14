@@ -20,7 +20,7 @@ Player::~Player() {
 }
     
 void Player::update(leng::InputManager* inputManager, leng::Camera2D* camera, float deltaTime) {
-    Entity::update(deltaTime);
+    Entity::update();
 
     if(upHeld) {
 	position.y += velocity.y * deltaTime;
@@ -34,7 +34,7 @@ void Player::update(leng::InputManager* inputManager, leng::Camera2D* camera, fl
     if(leftHeld) {
 	position.x -= velocity.x * deltaTime;
     }
-    
+    std::cout << "upheld: " << upHeld << std::endl;
     // Make player rotate towards cursor
     mouseCoords = inputManager->getMouseCoords();
     mouseCoords = camera->convertScreenToWorld(mouseCoords);

@@ -9,7 +9,7 @@ Enemy::Enemy(float x, float y, float width, float height, const std::string& pat
 Enemy::~Enemy() { }
     
 void Enemy::update(leng::Player* player, float deltaTime) {
-    Entity::update(deltaTime);
+    Entity::update();
     
     // Make enemy rotate towards player
     direction = glm::normalize(player->position - position);

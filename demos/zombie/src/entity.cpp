@@ -22,11 +22,11 @@ Entity::Entity(float x, float y, float _width, float _height, const std::string&
     
 Entity::~Entity() { }
     
-void Entity::update(float delta_time) {
+void Entity::update() {
     if(moving) {
 	// Update position
-	position.x += velocity.x * delta_time;
-	position.y += velocity.y * delta_time;
+	position.x += velocity.x;
+	position.y += velocity.y;
     }
     // Update bounding box
     bb.position.x = position.x;

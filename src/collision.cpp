@@ -106,4 +106,25 @@ void collideWithTile(glm::vec2 tilePos) {
     }
 }
     */
+
+// AABB (Axis Aligned Bounding Box) collision
+    bool collideWithTile(glm::vec2 position, int width, int height, Entity* agent2) {
+    // The minimum distance before a collision occurs
+	const float MIN_DISTANCE_X = width / 2.0f + agent2->width / 2.0f;
+	const float MIN_DISTANCE_Y = height / 2.0f + agent2->height / 2.0f;
+
+    // Vector from center of agent to center of tile
+	glm::vec2 distVec = (position + glm::vec2(width / 2, height / 2)) - (agent2->position + glm::vec2(agent2->width / 2, agent2->height / 2));
+
+    // Get the depth of the collision
+    float xDepth = MIN_DISTANCE_X - abs(distVec.x);
+    float yDepth = MIN_DISTANCE_Y - abs(distVec.y);
+
+    // If both the depths are > 0, then we collided
+    if (xDepth > 0 && yDepth > 0) {
+        return true;
+    }
+    return false;
+}
+    
 } // namespace leng

@@ -22,6 +22,11 @@ void PlayState::init() {
 	leng::Entity* temp = new leng::Entity(i * 52, -1200, 52, 52, "assets/textures/grass_block_52x52.png");
 	tiles.push_back(temp);	
     }
+    for(unsigned int i = 0; i < 100; i++) {
+	leng::Entity* temp = new leng::Entity(i * 52, 1200, 52, 52, "assets/textures/grass_block_52x52.png");
+	tiles.push_back(temp);	
+    }
+
 }
 
 void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) {
@@ -53,15 +58,11 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
     
     // Player input
     if(inputManager->isKeyDown(SDLK_w))
-	player.upHeld = true;
-    else
-	player.upHeld = false;
+	player.gravityBendInvert();
     
     if(inputManager->isKeyDown(SDLK_s))
-	player.downHeld = true;
-    else
-	player.downHeld = false;
-    
+	player.gravityBend();
+	
     if(inputManager->isKeyDown(SDLK_d))
 	player.rightHeld = true;
     else

@@ -12,7 +12,8 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     inAir = true;
     jumped = true;
     canDoubleJump = false;
-
+    normalGravity = true;
+    
     GRAVITY = 0.25f;
 }
 
@@ -24,13 +25,19 @@ void Player::update(std::vector<leng::Entity*> tiles, float deltaTime) {
     // Player is in air, apply gravity
     if (inAir) {
 	jumped = true;
-    	velocity.y -= GRAVITY;
-	std::cout << "velocity.y: " << velocity.y << std::endl;
+	if(normalGravity) {
+	    velocity.y -= GRAVITY;	    
+	} else {
+	    velocity.y += GRAVITY;
+	}
     } else {
 	velocity.y = 0.0f;
     }
     if(velocity.y < -6.0f) {
     	velocity.y = -6.0f;
+    }
+    if(velocity.y > 6.0f) {
+    	velocity.y = 6.0f;
     }
 
     position.y += velocity.y * deltaTime;
@@ -70,20 +77,37 @@ void Player::applyCollisions(glm::fvec2 velocity, std::vector<Entity*> tiles) {
 		    else if (velocity.x < 0) {
 			position.x = tiles[i]->position.x + tiles[i]->width;
 		    }
+		    if(normalGravity) {
+			// Collide from below
+			if (velocity.y > 0) {
+			    velocity.y = 0;
+			    position.y = tiles[i]->position.y - height;
+			    inAir = true;
+			}
+			// Collide from above
+			else if (velocity.y < 0) {
+			    velocity.y = 0;
+			    position.y = tiles[i]->position.y + tiles[i]->height;
+			    inAir = false;
+			    jumped = false;
+			    canDoubleJump = false;
+			}
+		    } else {
+			// Collide from below
+			if (velocity.y > 0) {
+			    velocity.y = 0;
+			    position.y = tiles[i]->position.y - height;
+			    inAir = false;
+			    jumped = false;
+			    canDoubleJump = false;
+			
+			}
+			// Collide from above
+			else if (velocity.y < 0) {
+			    velocity.y = 0;
+			    position.y = tiles[i]->position.y + tiles[i]->height;
+			    inAir = true;			}
 
-		    // Collide from below
-		    if (velocity.y > 0) {
-			velocity.y = 0;
-			position.y = tiles[i]->position.y - height;
-			inAir = true;
-		    }
-		    // Collide from above
-		    else if (velocity.y < 0) {
-			velocity.y = 0;
-			position.y = tiles[i]->position.y + tiles[i]->height;
-			inAir = false;
-			jumped = false;
-			canDoubleJump = false;
 		    }
 		}
 	}
@@ -93,15 +117,36 @@ void Player::jump() {
     jumped = true;
     inAir = true;
     canDoubleJump = true;
-    
-    velocity.y = 3.0f;
+
+    if(normalGravity) {
+	velocity.y = 3.0f;
+    } else {
+	velocity.y = -3.0f;
+    }
 }
 
 void Player::doubleJump() {
     if(canDoubleJump) {
 	canDoubleJump = false;
-	velocity.y = 3.0f;
+
+	if(normalGravity) {
+	    velocity.y = 3.0f;
+	} else {
+	    velocity.y = -3.0f;
+	}
     }
+}
+
+void Player::gravityBendInvert() {
+    if(normalGravity && !inAir) {
+	normalGravity = false;
+    }
+}
+
+void Player::gravityBend() {
+    if(!normalGravity && !inAir) {
+	normalGravity = true;
+    }	
 }
 
 } // namespace leng

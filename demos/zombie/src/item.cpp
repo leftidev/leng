@@ -10,7 +10,7 @@ Item::Item(float x, float y, float width, float height, const std::string& path,
 Item::~Item() {}
 
 void Item::update(float deltaTime) {
-    Entity::update(deltaTime);
+    Entity::update();
 }
   
 } // namespace leng

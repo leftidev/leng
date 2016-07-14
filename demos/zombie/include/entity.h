@@ -11,7 +11,7 @@ class Entity {
 public:
     Entity(float x, float y, float _width, float _height, const std::string& path);
     ~Entity();
-    void update(float deltaTime);
+    void update();
 	
     glm::vec2 position;
     float width, height;
