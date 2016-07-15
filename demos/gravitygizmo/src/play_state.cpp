@@ -27,6 +27,16 @@ void PlayState::init() {
 	tiles.push_back(temp);	
     }
 
+    currentLevel = 1;
+    
+    initLevel();
+}
+
+void PlayState::initLevel() {
+	// Initialize level 1
+	if (currentLevel == 1) {
+	    level = new leng::Level("assets/levels/level01.txt");
+	}
 }
 
 void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) {
@@ -112,10 +122,12 @@ void PlayState::draw() {
     renderer.draw(player.sprite);
     renderer.draw(enemy.sprite);
     renderer.draw(ball.sprite);
-    for(unsigned int i = 0; i < tiles.size(); i++) {
-	renderer.draw(tiles[i]->sprite);
+
+    // Draw blocks
+    for (unsigned int i = 0; i < level->blocks.size(); i++) {
+	renderer.draw(level->blocks[i]->sprite);
     }
-	
+    
     // Swap buffers
     window->swapWindow();
 }

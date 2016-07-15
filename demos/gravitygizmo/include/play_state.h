@@ -11,10 +11,12 @@
 #include "renderer_2d.h"
 #include "sprite.h"
 #include "camera_2d.h"
+#include "input_manager.h"
+
 #include "player.h"
 #include "enemy.h"
 #include "entity.h"
-#include "input_manager.h"
+#include "level.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -28,6 +30,7 @@ public:
     ~PlayState();
 
     void init() override;
+    void initLevel();
     void handleEvents(leng::InputManager* inputManager, float deltaTime) override;
     void update(float deltaTime) override;
     void draw() override;
@@ -45,6 +48,9 @@ private:
     leng::Renderer2D renderer;
     leng::Camera2D camera;
     std::vector<leng::Entity*> tiles;
+
+    leng::Level* level = nullptr;
+    int currentLevel;
 
 };
 
