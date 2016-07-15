@@ -13,8 +13,11 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     jumped = true;
     canDoubleJump = false;
     normalGravity = true;
-    
-    GRAVITY = 0.25f;
+
+    MOVE_VELOCITY = 1.5f;
+    JUMP_VELOCITY = 2.25f;
+    MAX_GRAVITY_VELOCITY = 2.5f;
+    GRAVITY = 0.20f;
 }
 
 Player::~Player() {}
@@ -33,11 +36,11 @@ void Player::update(std::vector<leng::Block*> blocks, float deltaTime) {
     } else {
 	velocity.y = 0.0f;
     }
-    if(velocity.y < -6.0f) {
-    	velocity.y = -6.0f;
+    if(velocity.y < -MAX_GRAVITY_VELOCITY) {
+    	velocity.y = -MAX_GRAVITY_VELOCITY;
     }
-    if(velocity.y > 6.0f) {
-    	velocity.y = 6.0f;
+    if(velocity.y > MAX_GRAVITY_VELOCITY) {
+    	velocity.y = MAX_GRAVITY_VELOCITY;
     }
 
     position.y += velocity.y * deltaTime;
@@ -46,14 +49,12 @@ void Player::update(std::vector<leng::Block*> blocks, float deltaTime) {
     inAir = true;
     // Check collisions on Y-axis
     applyCollisions(glm::fvec2(0.0f, velocity.y), blocks);
-    
-    //velocity.y = 0.0f;
-    
+   
     // Check movement on x-axis
     if(rightHeld) {
-	velocity.x = 1.5f;
+	velocity.x = MOVE_VELOCITY;
     } else if(leftHeld) {
-	velocity.x = -1.5f;
+	velocity.x = -MOVE_VELOCITY;
     } else {
 	velocity.x = 0.0f;
     }
@@ -119,20 +120,21 @@ void Player::jump() {
     canDoubleJump = true;
 
     if(normalGravity) {
-	velocity.y = 3.0f;
+	velocity.y = JUMP_VELOCITY;
     } else {
-	velocity.y = -3.0f;
+	velocity.y = -JUMP_VELOCITY;
     }
 }
 
 void Player::doubleJump() {
     if(canDoubleJump) {
+	inAir = true;
 	canDoubleJump = false;
 
 	if(normalGravity) {
-	    velocity.y = 3.0f;
+	    velocity.y = JUMP_VELOCITY;
 	} else {
-	    velocity.y = -3.0f;
+	    velocity.y = -JUMP_VELOCITY;
 	}
     }
 }

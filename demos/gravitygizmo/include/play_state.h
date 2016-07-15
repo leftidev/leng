@@ -51,7 +51,7 @@ private:
 
     leng::Level* level = nullptr;
     int currentLevel;
-
+    bool freeCam = false;
 };
 
 #endif // PLAY_STATE_H

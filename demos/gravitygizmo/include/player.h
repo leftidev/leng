@@ -29,8 +29,11 @@ public:
     bool jumped;
     bool canDoubleJump;
     bool normalGravity;
-    
+
+    float MOVE_VELOCITY;
+    float JUMP_VELOCITY;
     float GRAVITY;
+    float MAX_GRAVITY_VELOCITY;
 };
 
     

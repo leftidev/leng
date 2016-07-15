@@ -50,36 +50,42 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
 	camera.scale -= camera.movementSpeed * 0.005f * deltaTime;
         camera.needsMatrixUpdate = true;	
     }
-    if(inputManager->isKeyDown(SDLK_LEFT)) {
+    if(inputManager->isKeyDown(SDLK_a)) {
 	camera.position.x -= camera.movementSpeed * 5 * deltaTime;
         camera.needsMatrixUpdate = true;
     }
-    if(inputManager->isKeyDown(SDLK_RIGHT)) {
+    if(inputManager->isKeyDown(SDLK_d)) {
 	camera.position.x += camera.movementSpeed * 5 * deltaTime;
         camera.needsMatrixUpdate = true;
     }
-    if(inputManager->isKeyDown(SDLK_UP)) {
+    if(inputManager->isKeyDown(SDLK_w)) {
 	camera.position.y += camera.movementSpeed * 5 * deltaTime;
         camera.needsMatrixUpdate = true;	
     }
-    if(inputManager->isKeyDown(SDLK_DOWN)) {
+    if(inputManager->isKeyDown(SDLK_s)) {
 	camera.position.y -= camera.movementSpeed * 5 * deltaTime;
         camera.needsMatrixUpdate = true;	
     }
-    
+    if(inputManager->isKeyDown(SDLK_f)) {
+	if(freeCam) {
+	    freeCam = false;
+	} else {
+	    freeCam = true;
+	}
+    }    
     // Player input
-    if(inputManager->isKeyDown(SDLK_w))
+    if(inputManager->isKeyDown(SDLK_UP))
 	player->gravityBendInvert();
     
-    if(inputManager->isKeyDown(SDLK_s))
+    if(inputManager->isKeyDown(SDLK_DOWN))
 	player->gravityBend();
 	
-    if(inputManager->isKeyDown(SDLK_d))
+    if(inputManager->isKeyDown(SDLK_RIGHT))
 	player->rightHeld = true;
     else
 	player->rightHeld = false;
     
-    if(inputManager->isKeyDown(SDLK_a))
+    if(inputManager->isKeyDown(SDLK_LEFT))
 	player->leftHeld = true;
     else
 	player->leftHeld = false;
@@ -97,7 +103,11 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
 
 void PlayState::update(float deltaTime) {
     doCollisions();
-    camera.setPosition(glm::vec2(player->position.x, player->position.y));
+    
+    if(!freeCam) {
+	camera.setPosition(glm::vec2(player->position.x, player->position.y));	
+    }
+    
     camera.update();
     player->update(level->blocks, deltaTime);
     enemy.update(ball, deltaTime);
