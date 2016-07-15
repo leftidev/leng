@@ -49,13 +49,14 @@ Level::Level(const std::string& fileName) {
 		Block* block = new Block(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, "assets/textures/grass_block_52x52.png", BlockType::SOLID);
 		blocks.push_back(block);
 	    } break;
-		/*
-	    case '*': {
-		Block* temp = new Block();
-		temp->init(GEngine::ResourceManager::getTexture("../assets/Textures/exit_block_52x52.png").id, glm::fvec2(x * TILE_WIDTH, y * TILE_WIDTH), TileType::EXIT);
+	    case 'S': {
+		Block* block = new Block(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, "assets/textures/spike_bot_52x52.png", BlockType::KILL);
 		blocks.push_back(block);
 	    } break;
-		*/
+	    case '*': {
+		Block* block = new Block(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, "assets/textures/exit_block_52x52.png", BlockType::KILL);
+		blocks.push_back(block);
+	    } break;
 	    case '@': {
 		startPlayerPos.x = (float)x * (float)TILE_WIDTH;
 		startPlayerPos.y = (float)y * (float)TILE_WIDTH;

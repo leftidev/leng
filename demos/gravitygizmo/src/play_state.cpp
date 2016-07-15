@@ -30,6 +30,8 @@ void PlayState::init() {
     currentLevel = 1;
     
     initLevel();
+
+    player = new leng::Player(level->startPlayerPos.x, level->startPlayerPos.y, 52, 52, "assets/textures/gizmo_52x52.png");
 }
 
 void PlayState::initLevel() {
@@ -51,7 +53,6 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
     if(inputManager->isKeyDown(SDLK_LEFT)) {
 	camera.position.x -= camera.movementSpeed * 5 * deltaTime;
         camera.needsMatrixUpdate = true;
-	player.upHeld = true;
     }
     if(inputManager->isKeyDown(SDLK_RIGHT)) {
 	camera.position.x += camera.movementSpeed * 5 * deltaTime;
@@ -68,27 +69,27 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
     
     // Player input
     if(inputManager->isKeyDown(SDLK_w))
-	player.gravityBendInvert();
+	player->gravityBendInvert();
     
     if(inputManager->isKeyDown(SDLK_s))
-	player.gravityBend();
+	player->gravityBend();
 	
     if(inputManager->isKeyDown(SDLK_d))
-	player.rightHeld = true;
+	player->rightHeld = true;
     else
-	player.rightHeld = false;
+	player->rightHeld = false;
     
     if(inputManager->isKeyDown(SDLK_a))
-	player.leftHeld = true;
+	player->leftHeld = true;
     else
-	player.leftHeld = false;
+	player->leftHeld = false;
 
     if(inputManager->isKeyPressed(SDLK_SPACE)) {
-	if(player.canDoubleJump) {
-	    player.doubleJump();
+	if(player->canDoubleJump) {
+	    player->doubleJump();
 	}
-	if(!player.jumped) {
-	    player.jump();	    
+	if(!player->jumped) {
+	    player->jump();	    
 	}
     }
 
@@ -96,8 +97,9 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
 
 void PlayState::update(float deltaTime) {
     doCollisions();
+    camera.setPosition(glm::vec2(player->position.x, player->position.y));
     camera.update();
-    player.update(tiles, deltaTime);
+    player->update(level->blocks, deltaTime);
     enemy.update(ball, deltaTime);
     ball.update();
 }
@@ -119,7 +121,7 @@ void PlayState::draw() {
     glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
     renderer.draw(midLine);
-    renderer.draw(player.sprite);
+    renderer.draw(player->sprite);
     renderer.draw(enemy.sprite);
     renderer.draw(ball.sprite);
 

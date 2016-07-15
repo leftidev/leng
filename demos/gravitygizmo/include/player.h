@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "entity.h"
+#include "block.h"
 #include "input_manager.h"
 #include "camera_2d.h"
 #include "collision.h"
@@ -14,8 +14,8 @@ class Player : public Entity {
 public:
     Player(float x, float y, float width, float height, const std::string& path);
     ~Player();
-    void update(std::vector<leng::Entity*> tiles, float deltaTime);
-    void applyCollisions(glm::fvec2 velocity, std::vector<Entity*> tiles);
+    void update(std::vector<leng::Block*> blocks, float deltaTime);
+    void applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks);
     void jump();
     void doubleJump();
     void gravityBendInvert();

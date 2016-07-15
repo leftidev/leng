@@ -19,7 +19,7 @@ Player::Player(float x, float y, float width, float height, const std::string& p
 
 Player::~Player() {}
     
-void Player::update(std::vector<leng::Entity*> tiles, float deltaTime) {
+void Player::update(std::vector<leng::Block*> blocks, float deltaTime) {
     Entity::update();
 
     // Player is in air, apply gravity
@@ -45,7 +45,7 @@ void Player::update(std::vector<leng::Entity*> tiles, float deltaTime) {
     // Assume player is in air, this makes player fall off platform ledges
     inAir = true;
     // Check collisions on Y-axis
-    applyCollisions(glm::fvec2(0.0f, velocity.y), tiles);
+    applyCollisions(glm::fvec2(0.0f, velocity.y), blocks);
     
     //velocity.y = 0.0f;
     
@@ -61,33 +61,33 @@ void Player::update(std::vector<leng::Entity*> tiles, float deltaTime) {
     position.x += velocity.x * deltaTime;
 
     // Check collisions on X-axis
-    applyCollisions(glm::fvec2(velocity.x, 0.0f), tiles);
+    applyCollisions(glm::fvec2(velocity.x, 0.0f), blocks);
 }
 
 // Collisions
-void Player::applyCollisions(glm::fvec2 velocity, std::vector<Entity*> tiles) {
+void Player::applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks) {
 	// Collide with level tiles
-	for (unsigned int i = 0; i < tiles.size(); i++) {
-	    if (collideWithTile(position, width, height, tiles[i])) {
+	for (unsigned int i = 0; i < blocks.size(); i++) {
+	    if (collideWithTile(position, width, height, blocks[i])) {
 		    // Collide from left
 		    if (velocity.x > 0) {
-			position.x = tiles[i]->position.x - width;
+			position.x = blocks[i]->position.x - width;
 		    }
 		    // Collide from right
 		    else if (velocity.x < 0) {
-			position.x = tiles[i]->position.x + tiles[i]->width;
+			position.x = blocks[i]->position.x + blocks[i]->width;
 		    }
 		    if(normalGravity) {
 			// Collide from below
 			if (velocity.y > 0) {
 			    velocity.y = 0;
-			    position.y = tiles[i]->position.y - height;
+			    position.y = blocks[i]->position.y - height;
 			    inAir = true;
 			}
 			// Collide from above
 			else if (velocity.y < 0) {
 			    velocity.y = 0;
-			    position.y = tiles[i]->position.y + tiles[i]->height;
+			    position.y = blocks[i]->position.y + blocks[i]->height;
 			    inAir = false;
 			    jumped = false;
 			    canDoubleJump = false;
@@ -96,7 +96,7 @@ void Player::applyCollisions(glm::fvec2 velocity, std::vector<Entity*> tiles) {
 			// Collide from below
 			if (velocity.y > 0) {
 			    velocity.y = 0;
-			    position.y = tiles[i]->position.y - height;
+			    position.y = blocks[i]->position.y - height;
 			    inAir = false;
 			    jumped = false;
 			    canDoubleJump = false;
@@ -105,7 +105,7 @@ void Player::applyCollisions(glm::fvec2 velocity, std::vector<Entity*> tiles) {
 			// Collide from above
 			else if (velocity.y < 0) {
 			    velocity.y = 0;
-			    position.y = tiles[i]->position.y + tiles[i]->height;
+			    position.y = blocks[i]->position.y + blocks[i]->height;
 			    inAir = true;			}
 
 		    }
