@@ -128,7 +128,7 @@ void PlayState::update(float deltaTime) {
     if(player->bubble) {
 	player->bubble->update(level->blocks, level->enemies, deltaTime);
 	if(player->bubble->position.x < player->bubble->startPosition.x - player->bubble->PROJECTILE_REACH || player->bubble->position.x > player->bubble->startPosition.x + player->bubble->PROJECTILE_REACH) {
-	    player->bubble = nullptr;
+	    player->bubble->destroyed = true;
 	}
 	if(player->bubble->destroyed) {
 	    player->bubble = nullptr;

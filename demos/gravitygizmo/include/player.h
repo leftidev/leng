@@ -9,7 +9,13 @@
 #include "collision.h"
 #include "projectile.h"
 
+enum Direction {
+    RIGHT,
+    LEFT
+};
+    
 namespace leng {
+
 
 class Player : public Entity {
 public:
@@ -33,13 +39,16 @@ public:
     bool canDoubleJump;
     bool normalGravity;
 
+    Direction direction;
+    
     bool levelCompleted;
 
-    float MOVE_VELOCITY;
+    float MAX_MOVE_VELOCITY;
     float JUMP_VELOCITY;
     float GRAVITY;
     float MAX_GRAVITY_VELOCITY;
-
+    float ACCELERATION;
+    
     glm::vec2 startPosition;
 
     Projectile* bubble = nullptr;

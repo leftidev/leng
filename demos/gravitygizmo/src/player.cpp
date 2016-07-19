@@ -14,11 +14,14 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     canDoubleJump = false;
     normalGravity = true;
 
-    MOVE_VELOCITY = 1.5f;
+    direction = Direction::RIGHT;
+    
+    MAX_MOVE_VELOCITY = 1.25f;
     JUMP_VELOCITY = 1.7f;
     MAX_GRAVITY_VELOCITY = 2.0f;
     GRAVITY = 0.15f;
-
+    ACCELERATION = 0.20f;
+    
     levelCompleted = false;
 
     startPosition.x = x;
@@ -57,9 +60,19 @@ void Player::update(std::vector<leng::Block*> blocks, float deltaTime) {
    
     // Check movement on x-axis
     if(rightHeld) {
-	velocity.x = MOVE_VELOCITY;
+	direction = Direction::RIGHT;
+	// Apply acceleration
+	velocity.x += ACCELERATION;
+	if (velocity.x > MAX_MOVE_VELOCITY) {
+	    velocity.x = MAX_MOVE_VELOCITY;
+	}
     } else if(leftHeld) {
-	velocity.x = -MOVE_VELOCITY;
+	direction = Direction::LEFT;
+	// Apply acceleration
+	velocity.x -= ACCELERATION;
+	if (velocity.x < -MAX_MOVE_VELOCITY) {
+	    velocity.x = -MAX_MOVE_VELOCITY;
+	}
     } else {
 	velocity.x = 0.0f;
     }
@@ -170,7 +183,12 @@ void Player::respawn() {
 
 void Player::shootBubble() {
     if(bubble == nullptr) {
-	bubble = new Projectile(position.x, position.y, 52, 52, "assets/textures/bubble_78x78.png", glm::fvec2(0.5f, 0.0f));
+	if(direction == Direction::RIGHT) {
+	    bubble = new Projectile(position.x + width + 1, position.y, 52, 52, "assets/textures/bubble_78x78.png", glm::fvec2(1.0f, 0.0f));
+	} else {
+	    bubble = new Projectile(position.x - width - 1, position.y, 52, 52, "assets/textures/bubble_78x78.png", glm::fvec2(-1.0f, 0.0f));
+	}
+	
     }
 }
     
