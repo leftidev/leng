@@ -167,5 +167,11 @@ void Player::respawn() {
     position.x = startPosition.x;
     position.y = startPosition.y;
 }
+
+void Player::shootBubble() {
+    if(bubble == nullptr) {
+	bubble = new Projectile(position.x, position.y, 52, 52, "assets/textures/bubble_78x78.png", glm::fvec2(0.5f, 0.0f));
+    }
+}
     
 } // namespace leng

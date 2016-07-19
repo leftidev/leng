@@ -7,6 +7,7 @@
 #include "input_manager.h"
 #include "camera_2d.h"
 #include "collision.h"
+#include "projectile.h"
 
 namespace leng {
 
@@ -21,6 +22,7 @@ public:
     void gravityBendInvert();
     void gravityBend();
     void respawn();
+    void shootBubble();
     
     bool upHeld;
     bool downHeld;
@@ -39,6 +41,8 @@ public:
     float MAX_GRAVITY_VELOCITY;
 
     glm::vec2 startPosition;
+
+    Projectile* bubble = nullptr;
 };
 
     

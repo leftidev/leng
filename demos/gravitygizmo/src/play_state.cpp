@@ -111,7 +111,9 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
 	    player->jump();	    
 	}
     }
-
+    if(inputManager->isKeyPressed(SDLK_LCTRL)) {
+	player->shootBubble();
+    }
 }
 
 void PlayState::update(float deltaTime) {
@@ -123,13 +125,21 @@ void PlayState::update(float deltaTime) {
     
     camera.update();
     player->update(level->blocks, deltaTime);
-
+    if(player->bubble) {
+	player->bubble->update(level->blocks, level->enemies, deltaTime);
+	if(player->bubble->position.x < player->bubble->startPosition.x - player->bubble->PROJECTILE_REACH || player->bubble->position.x > player->bubble->startPosition.x + player->bubble->PROJECTILE_REACH) {
+	    player->bubble = nullptr;
+	}
+	if(player->bubble->destroyed) {
+	    player->bubble = nullptr;
+	}
+    }
+    
     // Player touches exit block
     if(player->levelCompleted) {
 	currentLevel++;
 	stateManager->changeGameState(new PlayState(stateManager, window, inputManager, currentLevel));
-    }
-    
+    }    
     // Player dies when going out of level bounds
     if(player->position.y < -400 || player->position.y > level->levelHeight + 400) {
 	restartLevel();
@@ -164,6 +174,10 @@ void PlayState::draw() {
     for (unsigned int i = 0; i < level->enemies.size(); i++) {
 	renderer.draw(level->enemies[i]->sprite);
     }
+    if(player->bubble) {
+	renderer.draw(player->bubble->sprite);
+    }
+
     // Swap buffers
     window->swapWindow();
 }
