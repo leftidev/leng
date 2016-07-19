@@ -134,6 +134,9 @@ void PlayState::update(float deltaTime) {
     if(player->position.y < -400 || player->position.y > level->levelHeight + 400) {
 	restartLevel();
     }
+    for (unsigned int i = 0; i < level->enemies.size(); i++) {
+	level->enemies[i]->update(level->blocks, deltaTime);
+    }
 }
 
 void PlayState::draw() {
@@ -157,7 +160,10 @@ void PlayState::draw() {
     for (unsigned int i = 0; i < level->blocks.size(); i++) {
 	renderer.draw(level->blocks[i]->sprite);
     }
-    
+    // Draw enemies
+    for (unsigned int i = 0; i < level->enemies.size(); i++) {
+	renderer.draw(level->enemies[i]->sprite);
+    }
     // Swap buffers
     window->swapWindow();
 }

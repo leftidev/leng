@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "block.h"
+#include "enemy.h"
 
 namespace leng {
     
@@ -24,6 +25,7 @@ public:
 
     std::vector<std::string> levelData;
     std::vector<Block*> blocks;
+    std::vector<Enemy*> enemies;
     glm::vec2 startPlayerPos;
 };
 

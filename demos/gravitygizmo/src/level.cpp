@@ -66,6 +66,26 @@ Level::Level(const std::string& fileName) {
 		Block* block = new Block(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, "assets/textures/disappearing_block_52x52.png", BlockType::DISAPPEARING);
 		blocks.push_back(block);
 	    } break;
+	    case 'E': {
+		Enemy* enemy = new Enemy(x * TILE_WIDTH, y * TILE_WIDTH, 78, 78, "assets/textures/enemy_black_78x78.png", EnemyType::X_MOVING, glm::fvec2(7.0f, 0.0f));
+		enemies.push_back(enemy);
+	    } break;
+	    case 'M': {
+		Enemy* enemy = new Enemy(x * TILE_WIDTH, y * TILE_WIDTH, 78, 78, "assets/textures/enemy_black_78x78.png", EnemyType::X_MOVINGJUMPING, glm::fvec2(5.0f, 0.0f));
+		enemies.push_back(enemy);
+	    } break;
+	    case 'J': {
+		Enemy* enemy = new Enemy(x * TILE_WIDTH, y * TILE_WIDTH, 78, 78, "assets/textures/enemy_black_78x78.png", EnemyType::JUMPING, glm::fvec2(0.0f, 0.0f));
+		enemies.push_back(enemy);
+	    } break;
+	    case 'j': {
+		Enemy* enemy = new Enemy(x * TILE_WIDTH, y * TILE_WIDTH, 78, 78, "assets/textures/enemy_black_rev_78x78.png", EnemyType::REVERSEJUMPING, glm::fvec2(0.0f, 0.0f));
+		enemies.push_back(enemy);
+	    } break;
+	    case 'f': {
+		Enemy* enemy = new Enemy(x * TILE_WIDTH, y * TILE_WIDTH, 78, 78, "assets/Textures/enemy_black_78x78.png", EnemyType::STILL, glm::fvec2(0.0f, 0.0f));
+		enemies.push_back(enemy);
+	    } break;
 	    case '@': {
 		startPlayerPos.x = (float)x * (float)TILE_WIDTH;
 		startPlayerPos.y = (float)y * (float)TILE_WIDTH;

@@ -15,9 +15,9 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     normalGravity = true;
 
     MOVE_VELOCITY = 1.5f;
-    JUMP_VELOCITY = 2.25f;
-    MAX_GRAVITY_VELOCITY = 2.5f;
-    GRAVITY = 0.20f;
+    JUMP_VELOCITY = 1.7f;
+    MAX_GRAVITY_VELOCITY = 2.0f;
+    GRAVITY = 0.15f;
 
     levelCompleted = false;
 
