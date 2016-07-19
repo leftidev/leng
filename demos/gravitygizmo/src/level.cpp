@@ -62,6 +62,10 @@ Level::Level(const std::string& fileName) {
 		Block* block = new Block(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, "assets/textures/exit_block_52x52.png", BlockType::EXIT);
 		blocks.push_back(block);
 	    } break;
+	    case 'X': {
+		Block* block = new Block(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, "assets/textures/disappearing_block_52x52.png", BlockType::DISAPPEARING);
+		blocks.push_back(block);
+	    } break;
 	    case '@': {
 		startPlayerPos.x = (float)x * (float)TILE_WIDTH;
 		startPlayerPos.y = (float)y * (float)TILE_WIDTH;
