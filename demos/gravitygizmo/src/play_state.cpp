@@ -38,6 +38,34 @@ void PlayState::initLevel() {
 	// Initialize level 1
 	if (currentLevel == 1) {
 	    level = new leng::Level("assets/levels/level01.txt");
+	} else if (currentLevel == 2) {
+	    level = new leng::Level("assets/levels/level02.txt");
+	} else if (currentLevel == 3) {
+	    level = new leng::Level("assets/levels/level03.txt");
+	} else if (currentLevel == 4) {
+	    level = new leng::Level("assets/levels/level04.txt");
+	} else if (currentLevel == 5) {
+	    level = new leng::Level("assets/levels/level05.txt");
+	} else if (currentLevel == 6) {
+	    level = new leng::Level("assets/levels/level06.txt");
+	} else if (currentLevel == 7) {
+	    level = new leng::Level("assets/levels/level07.txt");
+	} else if (currentLevel == 8) {
+	    level = new leng::Level("assets/levels/level08.txt");
+	} else if (currentLevel == 9) {
+	    level = new leng::Level("assets/levels/level09.txt");
+	} else if (currentLevel == 10) {
+	    level = new leng::Level("assets/levels/level10.txt");
+	} else if (currentLevel == 11) {
+	    level = new leng::Level("assets/levels/level11.txt");
+	} else if (currentLevel == 12) {
+	    level = new leng::Level("assets/levels/level12.txt");
+	} else if (currentLevel == 13) {
+	    level = new leng::Level("assets/levels/level13.txt");
+	} else if (currentLevel == 14) {
+	    level = new leng::Level("assets/levels/level14.txt");
+	} else if (currentLevel == 15) {
+	    level = new leng::Level("assets/levels/level15.txt");
 	}
 }
 

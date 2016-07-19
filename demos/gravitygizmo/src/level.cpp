@@ -53,8 +53,13 @@ Level::Level(const std::string& fileName) {
 		Block* block = new Block(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, "assets/textures/spike_bot_52x52.png", BlockType::KILL);
 		blocks.push_back(block);
 	    } break;
+	    case 's': {
+		Block* block = new Block(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, "assets/textures/spike_top_52x52.png", BlockType::KILLREVERSE);
+		blocks.push_back(block);
+	    } break;
+
 	    case '*': {
-		Block* block = new Block(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, "assets/textures/exit_block_52x52.png", BlockType::KILL);
+		Block* block = new Block(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH, "assets/textures/exit_block_52x52.png", BlockType::EXIT);
 		blocks.push_back(block);
 	    } break;
 	    case '@': {

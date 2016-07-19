@@ -18,6 +18,9 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     JUMP_VELOCITY = 2.25f;
     MAX_GRAVITY_VELOCITY = 2.5f;
     GRAVITY = 0.20f;
+
+    startPosition.x = x;
+    startPosition.y = y;
 }
 
 Player::~Player() {}
@@ -67,51 +70,55 @@ void Player::update(std::vector<leng::Block*> blocks, float deltaTime) {
 
 // Collisions
 void Player::applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks) {
-	// Collide with level tiles
-	for (unsigned int i = 0; i < blocks.size(); i++) {
-	    if (collideWithTile(position, width, height, blocks[i])) {
-		    // Collide from left
-		    if (velocity.x > 0) {
-			position.x = blocks[i]->position.x - width;
+    // Collide with level tiles
+    for (unsigned int i = 0; i < blocks.size(); i++) {
+	if (collideWithTile(position, width, height, blocks[i])) {
+	    if(blocks[i]->type == SOLID || blocks[i]->type == DISAPPEARING) {
+		// Collide from left
+		if (velocity.x > 0) {
+		    position.x = blocks[i]->position.x - width;
+		}
+		// Collide from right
+		else if (velocity.x < 0) {
+		    position.x = blocks[i]->position.x + blocks[i]->width;
+		}
+		if(normalGravity) {
+		    // Collide from below
+		    if (velocity.y > 0) {
+			velocity.y = 0;
+			position.y = blocks[i]->position.y - height;
+			inAir = true;
 		    }
-		    // Collide from right
-		    else if (velocity.x < 0) {
-			position.x = blocks[i]->position.x + blocks[i]->width;
+		    // Collide from above
+		    else if (velocity.y < 0) {
+			velocity.y = 0;
+			position.y = blocks[i]->position.y + blocks[i]->height;
+			inAir = false;
+			jumped = false;
+			canDoubleJump = false;
 		    }
-		    if(normalGravity) {
-			// Collide from below
-			if (velocity.y > 0) {
-			    velocity.y = 0;
-			    position.y = blocks[i]->position.y - height;
-			    inAir = true;
-			}
-			// Collide from above
-			else if (velocity.y < 0) {
-			    velocity.y = 0;
-			    position.y = blocks[i]->position.y + blocks[i]->height;
-			    inAir = false;
-			    jumped = false;
-			    canDoubleJump = false;
-			}
-		    } else {
-			// Collide from below
-			if (velocity.y > 0) {
-			    velocity.y = 0;
-			    position.y = blocks[i]->position.y - height;
-			    inAir = false;
-			    jumped = false;
-			    canDoubleJump = false;
+		} else {
+		    // Collide from below
+		    if (velocity.y > 0) {
+			velocity.y = 0;
+			position.y = blocks[i]->position.y - height;
+			inAir = false;
+			jumped = false;
+			canDoubleJump = false;
 			
-			}
-			// Collide from above
-			else if (velocity.y < 0) {
-			    velocity.y = 0;
-			    position.y = blocks[i]->position.y + blocks[i]->height;
-			    inAir = true;			}
-
+		    }
+		    // Collide from above
+		    else if (velocity.y < 0) { 
+			velocity.y = 0;
+			position.y = blocks[i]->position.y + blocks[i]->height;
+			inAir = true;
 		    }
 		}
+	    } else if(blocks[i]->type == KILL || blocks[i]->type == KILLREVERSE) {
+		respawn();
+	    }
 	}
+    }
 }
 
 void Player::jump() {
@@ -151,4 +158,9 @@ void Player::gravityBend() {
     }	
 }
 
+void Player::respawn() {
+    position.x = startPosition.x;
+    position.y = startPosition.y;
+}
+    
 } // namespace leng

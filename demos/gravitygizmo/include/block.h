@@ -18,7 +18,6 @@ public:
     Block(float x, float y, float width, float height, const std::string& path, BlockType Type);
     ~Block();
 
-private:
     BlockType type;
 };
 

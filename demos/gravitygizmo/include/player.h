@@ -20,6 +20,7 @@ public:
     void doubleJump();
     void gravityBendInvert();
     void gravityBend();
+    void respawn();
     
     bool upHeld;
     bool downHeld;
@@ -34,6 +35,8 @@ public:
     float JUMP_VELOCITY;
     float GRAVITY;
     float MAX_GRAVITY_VELOCITY;
+
+    glm::vec2 startPosition;
 };
 
     
