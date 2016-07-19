@@ -1,6 +1,6 @@
 #include "play_state.h"
 
-PlayState::PlayState(leng::GameStateManager* stateManager, leng::Window* window, leng::InputManager* inputManager) : GameState(stateManager, window, inputManager) { }
+PlayState::PlayState(leng::GameStateManager* stateManager, leng::Window* window, leng::InputManager* inputManager, int CurrentLevel) : GameState(stateManager, window, inputManager), currentLevel(CurrentLevel) { }
 
 PlayState::~PlayState() { }
 
@@ -13,22 +13,7 @@ void PlayState::init() {
     camera.setPosition(glm::vec2(0.0f, 0.0f));
     camera.setScale(0.5f);
     camera.update();
-    
-    //ball.vel.x = 0.5f;
-    //ball.vel.y = 0.5f;
-    //ball.moving = true;    
-    //player.sprite.setAngle(150.0f);
-    for(unsigned int i = 0; i < 100; i++) {
-	leng::Entity* temp = new leng::Entity(i * 52, -1200, 52, 52, "assets/textures/grass_block_52x52.png");
-	tiles.push_back(temp);	
-    }
-    for(unsigned int i = 0; i < 100; i++) {
-	leng::Entity* temp = new leng::Entity(i * 52, 1200, 52, 52, "assets/textures/grass_block_52x52.png");
-	tiles.push_back(temp);	
-    }
-
-    currentLevel = 1;
-    
+        
     initLevel();
 
     player = new leng::Player(level->startPlayerPos.x, level->startPlayerPos.y, 52, 52, "assets/textures/gizmo_52x52.png");
@@ -138,8 +123,17 @@ void PlayState::update(float deltaTime) {
     
     camera.update();
     player->update(level->blocks, deltaTime);
-    enemy.update(ball, deltaTime);
-    ball.update();
+
+    // Player touches exit block
+    if(player->levelCompleted) {
+	currentLevel++;
+	stateManager->changeGameState(new PlayState(stateManager, window, inputManager, currentLevel));
+    }
+    
+    // Player dies when going out of level bounds
+    if(player->position.y < -400 || player->position.y > level->levelHeight + 400) {
+	restartLevel();
+    }
 }
 
 void PlayState::draw() {
@@ -158,11 +152,7 @@ void PlayState::draw() {
     GLuint cameraLoc = shader.getUniformLocation("transform");
     glUniformMatrix4fv(cameraLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-    renderer.draw(midLine);
     renderer.draw(player->sprite);
-    renderer.draw(enemy.sprite);
-    renderer.draw(ball.sprite);
-
     // Draw blocks
     for (unsigned int i = 0; i < level->blocks.size(); i++) {
 	renderer.draw(level->blocks[i]->sprite);
@@ -193,4 +183,8 @@ void PlayState::doCollisions() {
 	ball.vel.y *= -1;
     }
     */
+}
+
+void PlayState::restartLevel() {
+	stateManager->changeGameState(new PlayState(stateManager, window, inputManager, currentLevel));    
 }

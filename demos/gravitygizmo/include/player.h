@@ -31,6 +31,8 @@ public:
     bool canDoubleJump;
     bool normalGravity;
 
+    bool levelCompleted;
+
     float MOVE_VELOCITY;
     float JUMP_VELOCITY;
     float GRAVITY;

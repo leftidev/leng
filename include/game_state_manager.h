@@ -3,12 +3,11 @@
 
 #include <vector>
 
-#include "game_state.h"
-
 namespace leng {
 
 class InputManager;
-    
+class GameState;
+
 class GameStateManager {
 public:
     GameStateManager();

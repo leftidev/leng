@@ -1,5 +1,6 @@
 #include "game_state_manager.h"
 #include "input_manager.h"
+#include "game_state.h"
 
 namespace leng {
     

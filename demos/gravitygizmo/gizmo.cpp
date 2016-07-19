@@ -11,7 +11,7 @@ int main() {
     leng::InputManager* inputManager = new leng::InputManager;
 	
     leng::GameStateManager* stateManager = new leng::GameStateManager;
-    stateManager->changeGameState(new PlayState(stateManager, window, inputManager));
+    stateManager->changeGameState(new PlayState(stateManager, window, inputManager, 1));
 
     float deltaTime = 0.0f; // Time between current frame and last frame
     float lastFrame = 0.0f; // Time of last frames

@@ -5,10 +5,9 @@
 
 #include "window.h"
 #include "input_manager.h"
+#include "game_state_manager.h"
 
 namespace leng {
-
-class GameStateManager;
 
 class GameState {
 public:

@@ -19,6 +19,8 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     MAX_GRAVITY_VELOCITY = 2.5f;
     GRAVITY = 0.20f;
 
+    levelCompleted = false;
+
     startPosition.x = x;
     startPosition.y = y;
 }
@@ -116,6 +118,8 @@ void Player::applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks) {
 		}
 	    } else if(blocks[i]->type == KILL || blocks[i]->type == KILLREVERSE) {
 		respawn();
+	    } else if(blocks[i]->type == EXIT) {
+		levelCompleted = true;
 	    }
 	}
     }
@@ -159,6 +163,7 @@ void Player::gravityBend() {
 }
 
 void Player::respawn() {
+    normalGravity = true;
     position.x = startPosition.x;
     position.y = startPosition.y;
 }
