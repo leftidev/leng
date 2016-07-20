@@ -13,14 +13,15 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     jumped = true;
     canDoubleJump = false;
     normalGravity = true;
-
+    respawn = false;
+    
     direction = Direction::RIGHT;
     
     MAX_MOVE_VELOCITY = 1.25f;
-    JUMP_VELOCITY = 1.7f;
+    JUMP_VELOCITY = 1.70f;
     MAX_GRAVITY_VELOCITY = 2.0f;
-    GRAVITY = 0.15f;
-    ACCELERATION = 0.20f;
+    GRAVITY = 0.10f;
+    ACCELERATION = 0.40f;
     
     levelCompleted = false;
 
@@ -30,7 +31,7 @@ Player::Player(float x, float y, float width, float height, const std::string& p
 
 Player::~Player() {}
     
-void Player::update(std::vector<leng::Block*> blocks, float deltaTime) {
+void Player::update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemies, float deltaTime) {
     Entity::update();
 
     // Player is in air, apply gravity
@@ -56,7 +57,7 @@ void Player::update(std::vector<leng::Block*> blocks, float deltaTime) {
     // Assume player is in air, this makes player fall off platform ledges
     inAir = true;
     // Check collisions on Y-axis
-    applyCollisions(glm::fvec2(0.0f, velocity.y), blocks);
+    applyCollisions(glm::fvec2(0.0f, velocity.y), blocks, enemies);
    
     // Check movement on x-axis
     if(rightHeld) {
@@ -80,11 +81,11 @@ void Player::update(std::vector<leng::Block*> blocks, float deltaTime) {
     position.x += velocity.x * deltaTime;
 
     // Check collisions on X-axis
-    applyCollisions(glm::fvec2(velocity.x, 0.0f), blocks);
+    applyCollisions(glm::fvec2(velocity.x, 0.0f), blocks, enemies);
 }
 
 // Collisions
-void Player::applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks) {
+    void Player::applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks, std::vector<Enemy*> enemies) {
     // Collide with level tiles
     for (unsigned int i = 0; i < blocks.size(); i++) {
 	if (collideWithTile(position, width, height, blocks[i])) {
@@ -130,9 +131,21 @@ void Player::applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks) {
 		    }
 		}
 	    } else if(blocks[i]->type == KILL || blocks[i]->type == KILLREVERSE) {
-		respawn();
+		respawn = true;
 	    } else if(blocks[i]->type == EXIT) {
 		levelCompleted = true;
+	    }
+	}
+    }
+
+    // Collide with enemies
+    for (unsigned int i = 0; i < enemies.size(); i++) {
+	if (collideWithTile(position, width, height, enemies[i])) {
+	    if(enemies[i]->bubbled) {
+		enemies[i]->destroyed = true;
+
+	    } else {
+		respawn = true;
 	    }
 	}
     }
@@ -174,13 +187,13 @@ void Player::gravityBend() {
 	normalGravity = true;
     }	
 }
-
+    /*
 void Player::respawn() {
     normalGravity = true;
     position.x = startPosition.x;
     position.y = startPosition.y;
 }
-
+    */
 void Player::shootBubble() {
     if(bubble == nullptr) {
 	if(direction == Direction::RIGHT) {

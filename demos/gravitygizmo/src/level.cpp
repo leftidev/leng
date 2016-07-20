@@ -83,7 +83,7 @@ Level::Level(const std::string& fileName) {
 		enemies.push_back(enemy);
 	    } break;
 	    case 'f': {
-		Enemy* enemy = new Enemy(x * TILE_WIDTH, y * TILE_WIDTH, 78, 78, "assets/Textures/enemy_black_78x78.png", EnemyType::STILL, glm::fvec2(0.0f, 0.0f));
+		Enemy* enemy = new Enemy(x * TILE_WIDTH, y * TILE_WIDTH, 78, 78, "assets/textures/enemy_black_78x78.png", EnemyType::STILL, glm::fvec2(0.0f, 0.0f));
 		enemies.push_back(enemy);
 	    } break;
 	    case '@': {

@@ -124,7 +124,7 @@ void PlayState::update(float deltaTime) {
     }
     
     camera.update();
-    player->update(level->blocks, deltaTime);
+    player->update(level->blocks, level->enemies, deltaTime);
     if(player->bubble) {
 	player->bubble->update(level->blocks, level->enemies, deltaTime);
 	if(player->bubble->position.x < player->bubble->startPosition.x - player->bubble->PROJECTILE_REACH || player->bubble->position.x > player->bubble->startPosition.x + player->bubble->PROJECTILE_REACH) {
@@ -144,8 +144,22 @@ void PlayState::update(float deltaTime) {
     if(player->position.y < -400 || player->position.y > level->levelHeight + 400) {
 	restartLevel();
     }
+    if(player->respawn) {
+	restartLevel();
+    }
     for (unsigned int i = 0; i < level->enemies.size(); i++) {
 	level->enemies[i]->update(level->blocks, deltaTime);
+	
+	if(level->enemies[i]->destroyed) {
+	    level->enemies.erase(level->enemies.begin() + i);
+	}
+    }
+    if (level->enemies.empty()) {
+	for (unsigned int i = 0; i < level->blocks.size(); i++) {
+	    if (level->blocks[i]->type == leng::BlockType::DISAPPEARING) {
+		level->blocks.erase(level->blocks.begin() + i);
+	    }
+	}
     }
 }
 

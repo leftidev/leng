@@ -33,6 +33,17 @@ void Projectile::applyCollisions(std::vector<Block*> blocks, std::vector<Enemy*>
 	if(collideWithTile(position, width, height, enemies[i])) {
 	    destroyed = true;
 	    enemies[i]->bubbled = true;
+	    if(enemies[i]->type == JUMPING || enemies[i]->type == X_MOVING || enemies[i]->type == STILL || enemies[i]->type == X_MOVINGJUMPING) {
+		enemies[i]->sprite.textureID = leng::ResourceManager::getTexture("assets/textures/pacified_enemy_104x104.png").id;
+		enemies[i]->sprite.position = enemies[i]->position;
+		enemies[i]->sprite.width = 104;
+		enemies[i]->sprite.height = 104;
+	    } else {
+		enemies[i]->sprite.textureID = leng::ResourceManager::getTexture("assets/textures/pacified_enemy_rev_104x104.png").id;
+		enemies[i]->sprite.position = enemies[i]->position;
+		enemies[i]->sprite.width = 104;
+		enemies[i]->sprite.height = 104;
+	    }
 	}
     }
 }

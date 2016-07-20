@@ -3,10 +3,12 @@
 
 #include <vector>
 
-#include "block.h"
 #include "input_manager.h"
 #include "camera_2d.h"
 #include "collision.h"
+
+#include "block.h"
+#include "enemy.h"
 #include "projectile.h"
 
 enum Direction {
@@ -21,13 +23,13 @@ class Player : public Entity {
 public:
     Player(float x, float y, float width, float height, const std::string& path);
     ~Player();
-    void update(std::vector<leng::Block*> blocks, float deltaTime);
-    void applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks);
+    void update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemies, float deltaTime);
+    void applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks, std::vector<Enemy*> enemies);
     void jump();
     void doubleJump();
     void gravityBendInvert();
     void gravityBend();
-    void respawn();
+    //void respawn();
     void shootBubble();
     
     bool upHeld;
@@ -38,7 +40,8 @@ public:
     bool jumped;
     bool canDoubleJump;
     bool normalGravity;
-
+    bool respawn;
+    
     Direction direction;
     
     bool levelCompleted;
