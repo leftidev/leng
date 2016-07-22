@@ -17,8 +17,8 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     
     direction = Direction::RIGHT;
     
-    MAX_MOVE_VELOCITY = 1.25f;
-    JUMP_VELOCITY = 1.70f;
+    MAX_MOVE_VELOCITY = 1.0f;
+    JUMP_VELOCITY = 1.40f;
     MAX_GRAVITY_VELOCITY = 2.0f;
     GRAVITY = 0.10f;
     ACCELERATION = 0.40f;
@@ -85,28 +85,28 @@ void Player::update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemie
 }
 
 // Collisions
-    void Player::applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks, std::vector<Enemy*> enemies) {
+    void Player::applyCollisions(glm::fvec2 Velocity, std::vector<Block*> blocks, std::vector<Enemy*> enemies) {
     // Collide with level tiles
     for (unsigned int i = 0; i < blocks.size(); i++) {
 	if (collideWithTile(position, width, height, blocks[i])) {
 	    if(blocks[i]->type == SOLID || blocks[i]->type == DISAPPEARING) {
 		// Collide from left
-		if (velocity.x > 0) {
+		if (Velocity.x > 0) {
 		    position.x = blocks[i]->position.x - width;
 		}
 		// Collide from right
-		else if (velocity.x < 0) {
+		else if (Velocity.x < 0) {
 		    position.x = blocks[i]->position.x + blocks[i]->width;
 		}
 		if(normalGravity) {
 		    // Collide from below
-		    if (velocity.y > 0) {
+		    if (Velocity.y > 0) {
 			velocity.y = 0;
 			position.y = blocks[i]->position.y - height;
 			inAir = true;
 		    }
 		    // Collide from above
-		    else if (velocity.y < 0) {
+		    else if (Velocity.y < 0) {
 			velocity.y = 0;
 			position.y = blocks[i]->position.y + blocks[i]->height;
 			inAir = false;
@@ -115,7 +115,7 @@ void Player::update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemie
 		    }
 		} else {
 		    // Collide from below
-		    if (velocity.y > 0) {
+		    if (Velocity.y > 0) {
 			velocity.y = 0;
 			position.y = blocks[i]->position.y - height;
 			inAir = false;
@@ -124,7 +124,7 @@ void Player::update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemie
 			
 		    }
 		    // Collide from above
-		    else if (velocity.y < 0) { 
+		    else if (Velocity.y < 0) { 
 			velocity.y = 0;
 			position.y = blocks[i]->position.y + blocks[i]->height;
 			inAir = true;

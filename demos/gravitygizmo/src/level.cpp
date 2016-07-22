@@ -67,11 +67,11 @@ Level::Level(const std::string& fileName) {
 		blocks.push_back(block);
 	    } break;
 	    case 'E': {
-		Enemy* enemy = new Enemy(x * TILE_WIDTH, y * TILE_WIDTH, 78, 78, "assets/textures/enemy_black_78x78.png", EnemyType::X_MOVING, glm::fvec2(7.0f, 0.0f));
+		Enemy* enemy = new Enemy(x * TILE_WIDTH, y * TILE_WIDTH, 78, 78, "assets/textures/enemy_black_78x78.png", EnemyType::X_MOVING, glm::fvec2(7.0f, 0.50f));
 		enemies.push_back(enemy);
 	    } break;
 	    case 'M': {
-		Enemy* enemy = new Enemy(x * TILE_WIDTH, y * TILE_WIDTH, 78, 78, "assets/textures/enemy_black_78x78.png", EnemyType::X_MOVINGJUMPING, glm::fvec2(5.0f, 0.0f));
+		Enemy* enemy = new Enemy(x * TILE_WIDTH, y * TILE_WIDTH, 78, 78, "assets/textures/enemy_black_78x78.png", EnemyType::X_MOVINGJUMPING, glm::fvec2(5.0f, 0.30f));
 		enemies.push_back(enemy);
 	    } break;
 	    case 'J': {

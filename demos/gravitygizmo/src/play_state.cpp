@@ -11,7 +11,7 @@ void PlayState::init() {
 
     camera.init(1680, 1050);
     camera.setPosition(glm::vec2(0.0f, 0.0f));
-    camera.setScale(0.5f);
+    camera.setScale(1.0f);
     camera.update();
         
     initLevel();

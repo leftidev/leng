@@ -22,7 +22,7 @@ public:
     Enemy(float x, float y, float width, float height, const char* path, EnemyType Type, glm::fvec2 Velocity);
     ~Enemy();
     void update(std::vector<leng::Block*> blocks, float deltaTime);
-    void applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks);
+    void applyCollisions(glm::fvec2 Velocity, std::vector<Block*> blocks);
     void applyJump();
     
     bool destroyed;

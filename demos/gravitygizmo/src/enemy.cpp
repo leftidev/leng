@@ -1,5 +1,5 @@
 #include "enemy.h"
-
+#include <iostream>
 namespace leng {
     
 Enemy::Enemy(float x, float y, float width, float height, const char* path, EnemyType Type, glm::fvec2 Velocity) : Entity(x, y, width, height, path), type(Type) {
@@ -58,28 +58,30 @@ void Enemy::update(std::vector<leng::Block*> blocks, float deltaTime) {
     }
 }
 
-void Enemy::applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks) {
+void Enemy::applyCollisions(glm::fvec2 Velocity, std::vector<Block*> blocks) {
     // Collide with level tiles
     for (unsigned int i = 0; i < blocks.size(); i++) {
 	if(collideWithTile(position, width, height, blocks[i])) {
 	    if(blocks[i]->type == SOLID || blocks[i]->type == DISAPPEARING) {
 		// Collide from left
-		if (velocity.x > 0) {
+		if (Velocity.x > 0) {
+		    velocity.x *= -1;
 		    position.x = blocks[i]->position.x - width;
 		}
 		// Collide from right
-		else if (velocity.x < 0) {
+		else if (Velocity.x < 0) {
+		    velocity.x *= -1;
 		    position.x = blocks[i]->position.x + blocks[i]->width;
 		}
 		if (type == JUMPING || type == X_MOVINGJUMPING) {
 		    // Collide from below
-		    if (velocity.y > 0) {
+		    if (Velocity.y > 0) {
 			velocity.y = 0;
 			position.y = blocks[i]->position.y - height;
 			inAir = true;
 		    }
 		    // Collide from above
-		    else if (velocity.y < 0) {
+		    else if (Velocity.y < 0) {
 			velocity.y = 0;
 			position.y = blocks[i]->position.y + blocks[i]->height;
 			inAir = false;
@@ -87,14 +89,14 @@ void Enemy::applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks) {
 		    }
 		} else if (type == REVERSEJUMPING) {
 		    // Collide from below
-		    if (velocity.y > 0) {
+		    if (Velocity.y > 0) {
 			velocity.y = 0;
 			position.y = blocks[i]->position.y - height;
 			inAir = false;
 			jumped = false;			
 		    }
 		    // Collide from above
-		    else if (velocity.y < 0) { 
+		    else if (Velocity.y < 0) { 
 			velocity.y = 0;
 			position.y = blocks[i]->position.y + blocks[i]->height;
 			inAir = true;

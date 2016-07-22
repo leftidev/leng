@@ -24,7 +24,7 @@ public:
     Player(float x, float y, float width, float height, const std::string& path);
     ~Player();
     void update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemies, float deltaTime);
-    void applyCollisions(glm::fvec2 velocity, std::vector<Block*> blocks, std::vector<Enemy*> enemies);
+    void applyCollisions(glm::fvec2 Velocity, std::vector<Block*> blocks, std::vector<Enemy*> enemies);
     void jump();
     void doubleJump();
     void gravityBendInvert();
