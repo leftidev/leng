@@ -6,9 +6,9 @@ PlayState::~PlayState() { }
 
 void PlayState::init() {
     leng::Shader shader("assets/shaders/gizmo.vert", "assets/shaders/gizmo.frag");
-
+    
     renderer.initVAO(shader);
-
+    
     camera.init(1680, 1050);
     camera.setPosition(glm::vec2(0.0f, 0.0f));
     camera.setScale(1.0f);
@@ -18,10 +18,7 @@ void PlayState::init() {
 
     player = new leng::Player(level->startPlayerPos.x, level->startPlayerPos.y, 52, 52, "assets/textures/gizmo_52x52.png");
 
-    // Initialize TTF
-    if(TTF_Init() == -1) {
-	printf("TTF_Init error: %s\n", TTF_GetError());
-    }
+    elapsedTimeTimer.start();
 }
 
 void PlayState::initLevel() {
@@ -166,8 +163,13 @@ void PlayState::update(float deltaTime) {
 	    }
 	}
     }
-
-    text.update(glm::vec2(camera.position.x - text.surface->w / 2, camera.position.y + window->height / 2 - text.surface->h));
+    // Time elapsed
+    char buffer[32];
+    timeSinceLevelStart = elapsedTimeTimer.getTicks() / 1000.0f;
+    snprintf(buffer, 32, "Time: %.2f s.", timeSinceLevelStart);
+    std::cout << buffer << std::endl;
+    
+    timeText.update(glm::vec2(camera.position.x - timeText.surface->w / 2, camera.position.y + window->height / 2 - timeText.surface->h), buffer);
 }
 
 void PlayState::draw() {
@@ -198,7 +200,7 @@ void PlayState::draw() {
     if(player->bubble) {
 	renderer.draw(player->bubble->sprite);
     }
-    renderer.drawText(text);
+    renderer.drawText(timeText);
 
     // Swap buffers
     window->swapWindow();

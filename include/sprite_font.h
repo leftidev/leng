@@ -14,6 +14,7 @@ public:
     SpriteFont(float x, float y, float Size, const char* fontPath, const char* text);
     ~SpriteFont();
     void update(glm::vec2 Position);
+    void update(glm::vec2 Position, const char* text);
     
     float size;
     Vertex3 vertexData2[4];

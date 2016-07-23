@@ -1,4 +1,4 @@
-#include "window.h"
+ #include "window.h"
 #include "game_state_manager.h"
 #include "input_manager.h"
 #include "play_state.h"

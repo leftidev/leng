@@ -2,6 +2,7 @@
 #define PLAY_STATE_H
 
 #include <vector>
+#include <string>
 
 #include "game_state.h"
 #include "window.h"
@@ -13,6 +14,7 @@
 #include "camera_2d.h"
 #include "input_manager.h"
 #include "sprite_font.h"
+#include "timer.h"
 
 #include "player.h"
 #include "enemy.h"
@@ -45,10 +47,14 @@ private:
     leng::Player* player = nullptr;
     leng::Renderer2D renderer;
     leng::Camera2D camera;
-    leng::SpriteFont text{500, 1000, 50, "assets/fonts/centurygothic.ttf", "Time: "};
+    leng::SpriteFont timeText{500, 1000, 50, "assets/fonts/centurygothic.ttf", "Time: "};
     leng::Level* level = nullptr;
+    leng::Timer elapsedTimeTimer;
+    
     int currentLevel;
     bool freeCam = false;
+    float timeSinceLevelStart;
+    
 };
 
 #endif // PLAY_STATE_H
