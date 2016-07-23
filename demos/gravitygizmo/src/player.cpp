@@ -21,7 +21,9 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     JUMP_VELOCITY = 1.40f;
     MAX_GRAVITY_VELOCITY = 2.0f;
     GRAVITY = 0.10f;
-    ACCELERATION = 0.40f;
+    ACCELERATION = 0.40;
+    
+    deaths = 0;
     
     levelCompleted = false;
 
@@ -132,6 +134,8 @@ void Player::update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemie
 		}
 	    } else if(blocks[i]->type == KILL || blocks[i]->type == KILLREVERSE) {
 		respawn = true;
+		restart();
+		deaths++;
 	    } else if(blocks[i]->type == EXIT) {
 		levelCompleted = true;
 	    }
@@ -146,6 +150,8 @@ void Player::update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemie
 
 	    } else {
 		respawn = true;
+		restart();
+		deaths++;
 	    }
 	}
     }
@@ -187,13 +193,15 @@ void Player::gravityBend() {
 	normalGravity = true;
     }	
 }
-    /*
-void Player::respawn() {
+    
+void Player::restart() {
+    velocity.x = 0.0f;
+    velocity.y = 0.0f;
     normalGravity = true;
     position.x = startPosition.x;
     position.y = startPosition.y;
 }
-    */
+
 void Player::shootBubble() {
     if(bubble == nullptr) {
 	if(direction == Direction::RIGHT) {

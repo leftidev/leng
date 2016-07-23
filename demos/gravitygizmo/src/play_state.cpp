@@ -2,7 +2,10 @@
 
 PlayState::PlayState(leng::GameStateManager* stateManager, leng::Window* window, leng::InputManager* inputManager, int CurrentLevel) : GameState(stateManager, window, inputManager), currentLevel(CurrentLevel) { }
 
-PlayState::~PlayState() { }
+PlayState::~PlayState() {
+    delete player;
+    delete level;
+}
 
 void PlayState::init() {
     leng::Shader shader("assets/shaders/gizmo.vert", "assets/shaders/gizmo.frag");
@@ -119,14 +122,16 @@ void PlayState::handleEvents(leng::InputManager* inputManager, float deltaTime) 
 }
 
 void PlayState::update(float deltaTime) {
-    doCollisions();
+    //doCollisions();
     
     if(!freeCam) {
 	camera.setPosition(glm::vec2(player->position.x, player->position.y));	
     }
     
     camera.update();
+    
     player->update(level->blocks, level->enemies, deltaTime);
+    
     if(player->bubble) {
 	player->bubble->update(level->blocks, level->enemies, deltaTime);
 	if(player->bubble->position.x < player->bubble->startPosition.x - player->bubble->PROJECTILE_REACH || player->bubble->position.x > player->bubble->startPosition.x + player->bubble->PROJECTILE_REACH) {
@@ -144,9 +149,13 @@ void PlayState::update(float deltaTime) {
     }    
     // Player dies when going out of level bounds
     if(player->position.y < -400 || player->position.y > level->levelHeight + 400) {
+	player->deaths++;
+	player->restart();
+	player->respawn = false;
 	restartLevel();
     }
     if(player->respawn) {
+	player->respawn = false;
 	restartLevel();
     }
     for (unsigned int i = 0; i < level->enemies.size(); i++) {
@@ -163,6 +172,7 @@ void PlayState::update(float deltaTime) {
 	    }
 	}
     }
+    /*
     // Update HUD elements
     char buffer[32];
     // Time elapsed
@@ -172,7 +182,29 @@ void PlayState::update(float deltaTime) {
     // Current level
     snprintf(buffer, 32, "Level %i", currentLevel);    
     levelText.update(glm::vec2(camera.position.x - window->width / 2, camera.position.y + window->height / 2 - levelText.surface->h), buffer);
-
+    // Enemies left
+    snprintf(buffer, 32, "Enemies left: %i", (int)level->enemies.size());    
+    enemiesText.update(glm::vec2(camera.position.x - window->width / 2, camera.position.y - window->height / 2), buffer);
+    // Enemies left
+    snprintf(buffer, 32, "Deaths: %i", player->deaths);    
+    deathsText.update(glm::vec2(camera.position.x + window->width / 2 - deathsText.surface->w, camera.position.y + window->height / 2 - deathsText.surface->h), buffer);
+    */
+        // Update HUD elements
+    char buffer[32];
+    // Time elapsed
+    timeSinceLevelStart = elapsedTimeTimer.getTicks() / 1000.0f;
+    snprintf(buffer, 32, "Time: %.2f s.", timeSinceLevelStart);    
+    timeText.update(glm::vec2(camera.position.x, camera.position.y + window->height / 2), buffer);
+    // Current level
+    snprintf(buffer, 32, "Level %i", currentLevel);    
+    levelText.update(glm::vec2(camera.position.x - window->width / 2, camera.position.y + window->height / 2), buffer);
+    // Enemies left
+    snprintf(buffer, 32, "Enemies left: %i", (int)level->enemies.size());    
+    enemiesText.update(glm::vec2(camera.position.x - window->width / 2, camera.position.y - window->height / 2), buffer);
+    // Enemies left
+    snprintf(buffer, 32, "Deaths: %i", player->deaths);    
+    deathsText.update(glm::vec2(camera.position.x + window->width / 2, camera.position.y + window->height / 2), buffer);
+    
 }
 
 void PlayState::draw() {
@@ -203,8 +235,11 @@ void PlayState::draw() {
     if(player->bubble) {
 	renderer.draw(player->bubble->sprite);
     }
+    
     renderer.drawText(timeText);
     renderer.drawText(levelText);
+    renderer.drawText(enemiesText);
+    renderer.drawText(deathsText);
     
     // Swap buffers
     window->swapWindow();
@@ -234,7 +269,12 @@ void PlayState::doCollisions() {
 }
 
 void PlayState::restartLevel() {
-	stateManager->changeGameState(new PlayState(stateManager, window, inputManager, currentLevel));    
+    //stateManager->changeGameState(new PlayState(stateManager, window, inputManager, currentLevel));
+    level = nullptr;
+    initLevel();
+    
+    elapsedTimeTimer.stop();
+    elapsedTimeTimer.start();
 }
 
 void PlayState::TTF() {

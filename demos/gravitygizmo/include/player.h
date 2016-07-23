@@ -29,7 +29,7 @@ public:
     void doubleJump();
     void gravityBendInvert();
     void gravityBend();
-    //void respawn();
+    void restart();
     void shootBubble();
     
     bool upHeld;
@@ -51,6 +51,7 @@ public:
     float GRAVITY;
     float MAX_GRAVITY_VELOCITY;
     float ACCELERATION;
+    int deaths;
     
     glm::vec2 startPosition;
 

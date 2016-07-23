@@ -102,9 +102,13 @@ Level::Level(const std::string& fileName) {
 
 Level::~Level()
 {
-    // Delete the tiles
+    // Delete the blocks
     for (unsigned int i = 0; i < blocks.size(); i++) {
         delete blocks[i];
+    }
+    // Delete the tiles
+    for (unsigned int i = 0; i < enemies.size(); i++) {
+        delete enemies[i];
     }
 }
 

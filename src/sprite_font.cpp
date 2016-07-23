@@ -15,7 +15,7 @@ namespace leng {
     
     //SDL_Color color = {255, 255, 255, 255};
     color = Color;
-    surface = TTF_RenderUTF8_Blended(font, text, color);
+    SDL_Surface* surface = TTF_RenderUTF8_Blended(font, text, color);
 
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -24,7 +24,7 @@ namespace leng {
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
-
+        
     // Top right
     vertexData2[0].setPosition(position.x + surface->w, position.y + surface->h);
     vertexData2[0].setColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -41,44 +41,45 @@ namespace leng {
     vertexData2[3].setPosition(position.x, position.y + surface->h);
     vertexData2[3].setColor(1.0f, 1.0f, 1.0f, 1.0f);
     vertexData2[3].setUV(0.0f, 1.0f);
+
+    SDL_FreeSurface(surface);
+    surface = nullptr;
 }
     
 SpriteFont::~SpriteFont() {
-    SDL_FreeSurface(surface);
     // free the font
     TTF_CloseFont(font);
-    font = NULL;    
+    font = NULL;
+    glDeleteTextures(1, &texture);
 }
 
 void SpriteFont::update(glm::vec2 Position) {
     position = Position;
-
+    /*
     // Update sprite font
     vertexData2[0].setPosition(position.x + surface->w, position.y + surface->h);
     vertexData2[1].setPosition(position.x + surface->w, position.y);
     vertexData2[2].setPosition(position.x, position.y);
     vertexData2[3].setPosition(position.x, position.y + surface->h);
+    */
 }
 
 void SpriteFont::update(glm::vec2 Position, const char* text) {
     position = Position;
 
+    SDL_Surface* surface = TTF_RenderUTF8_Blended(font, text, color);
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+    
     // Update sprite font
     vertexData2[0].setPosition(position.x + surface->w, position.y + surface->h);
     vertexData2[1].setPosition(position.x + surface->w, position.y);
     vertexData2[2].setPosition(position.x, position.y);
     vertexData2[3].setPosition(position.x, position.y + surface->h);
-
-    //SDL_Color color = {255, 255, 255, 255};
-    surface = TTF_RenderUTF8_Blended(font, text, color);
-
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+    
+    SDL_FreeSurface(surface);
+    surface = nullptr;
 }
     
 } // namespace leng

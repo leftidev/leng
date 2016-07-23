@@ -21,7 +21,6 @@ public:
     GLuint texture;
     TTF_Font *font;
     glm::vec2 position;
-    SDL_Surface *surface;
     SDL_Color color;
 };
 

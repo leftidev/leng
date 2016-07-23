@@ -47,12 +47,13 @@ private:
     leng::Player* player = nullptr;
     leng::Renderer2D renderer;
     leng::Camera2D camera;
-    leng::SpriteFont timeText{500, 1000, 50, "assets/fonts/centurygothic.ttf", "Timer", {255, 255, 255, 255}};
-    leng::SpriteFont levelText{500, 1000, 50, "assets/fonts/centurygothic.ttf", "Level", {255, 255, 255, 255}};
-
+    leng::SpriteFont timeText{0, 0, 50, "assets/fonts/centurygothic.ttf", "Timer", {255, 255, 255, 255}};
+    leng::SpriteFont levelText{0, 0, 50, "assets/fonts/centurygothic.ttf", "Level", {255, 255, 255, 255}};
+    leng::SpriteFont deathsText{0, 0, 50, "assets/fonts/centurygothic.ttf", "Deaths", {255, 255, 255, 255}};
+    leng::SpriteFont enemiesText{0, 0, 50, "assets/fonts/centurygothic.ttf", "Enemies", {255, 255, 255, 255}};
+	
     leng::Level* level = nullptr;
     leng::Timer elapsedTimeTimer;
-    
     int currentLevel;
     bool freeCam = false;
     float timeSinceLevelStart;
