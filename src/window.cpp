@@ -37,6 +37,12 @@ Window::Window(std::string title, int width, int height) {
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // Initialize SDL_ttf
+    if(TTF_Init() == -1) {
+	printf("TTF_Init error: %s\n", TTF_GetError());
+    }
+
 }
 
 Window::~Window() {

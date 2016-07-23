@@ -5,6 +5,7 @@
 
 #include "shader.h"
 #include "sprite.h"
+#include "sprite_font.h"
 
 namespace leng {
 
@@ -14,8 +15,9 @@ public:
     ~Renderer2D();
     void initVAO(leng::Shader& shader);
     void updateVertices(leng::Sprite& sprite);
+    void updateVertices(leng::SpriteFont& spriteFont);
     void draw(leng::Sprite& sprite);
-    
+    void drawText(leng::SpriteFont& spriteFont);    
 private:
     GLuint VBO;
     GLuint VAO;

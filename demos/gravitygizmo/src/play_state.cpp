@@ -17,6 +17,11 @@ void PlayState::init() {
     initLevel();
 
     player = new leng::Player(level->startPlayerPos.x, level->startPlayerPos.y, 52, 52, "assets/textures/gizmo_52x52.png");
+
+    // Initialize TTF
+    if(TTF_Init() == -1) {
+	printf("TTF_Init error: %s\n", TTF_GetError());
+    }
 }
 
 void PlayState::initLevel() {
@@ -161,6 +166,8 @@ void PlayState::update(float deltaTime) {
 	    }
 	}
     }
+
+    text.update(glm::vec2(camera.position.x - 840, camera.position.y - 500));
 }
 
 void PlayState::draw() {
@@ -191,6 +198,7 @@ void PlayState::draw() {
     if(player->bubble) {
 	renderer.draw(player->bubble->sprite);
     }
+    renderer.drawText(text);
 
     // Swap buffers
     window->swapWindow();
@@ -221,4 +229,38 @@ void PlayState::doCollisions() {
 
 void PlayState::restartLevel() {
 	stateManager->changeGameState(new PlayState(stateManager, window, inputManager, currentLevel));    
+}
+
+void PlayState::TTF() {
+    // Initialize TTF
+    if(TTF_Init() == -1) {
+	printf("TTF_Init error: %s\n", TTF_GetError());
+    }
+    // load font.ttf at size 16 into font
+    TTF_Font *font;
+    font = TTF_OpenFont("assets/fonts/centurygothic.ttf", 16);
+    if(!font) {
+	printf("TTF_OpenFont error: %s\n", TTF_GetError());
+	// handle error
+    }
+    // Render some UTF8 text in blended black to a new surface
+    // then blit to the upper left of the screen
+    // then free the text surface
+    //SDL_Surface *screen;
+    SDL_Color color = {255, 255, 255, 255};
+    SDL_Surface *surface = TTF_RenderUTF8_Blended(font, "Hello World!", color);
+
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+    
+    SDL_FreeSurface(surface);
+ 
+    // free the font
+    TTF_CloseFont(font);
+    font = NULL;
+    
+    // Quit TTF
+    TTF_Quit();
 }

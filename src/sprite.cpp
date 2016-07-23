@@ -48,7 +48,32 @@ namespace leng {
 
     setAngle(angle);
 }
+Sprite::Sprite(float x, float y, float Width, float Height) {
+    position.x = x;
+    position.y = y;
+    width = Width;
+    height = Height;
+    
+    // Top right
+    vertexData2[0].setPosition(position.x + width, position.y + height);
+    vertexData2[0].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[0].setUV(1.0f, 1.0f);
+    // Bottom right
+    vertexData2[1].setPosition(position.x + width, position.y);
+    vertexData2[1].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[1].setUV(1.0f, 0.0f);
+    // Bottom left
+    vertexData2[2].setPosition(position.x, position.y);
+    vertexData2[2].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[2].setUV(0.0f, 0.0f);
+    // Top left
+    vertexData2[3].setPosition(position.x, position.y + height);
+    vertexData2[3].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[3].setUV(0.0f, 1.0f);
 
+    
+}
+    
 Sprite::~Sprite() { }
 
 void Sprite::setAngle(float angle) {

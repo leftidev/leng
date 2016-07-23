@@ -1,5 +1,5 @@
 #include "renderer_2d.h"
-
+#include "SDL2/SDL_ttf.h"
 namespace leng {
     
 Renderer2D::Renderer2D() {
@@ -44,10 +44,28 @@ void Renderer2D::updateVertices(leng::Sprite& sprite) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void Renderer2D::updateVertices(leng::SpriteFont& spriteFont) {
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(spriteFont.vertexData2), spriteFont.vertexData2, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void Renderer2D::draw(leng::Sprite& sprite) {
     updateVertices(sprite);
     
     glBindTexture(GL_TEXTURE_2D, sprite.textureID);
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
+void Renderer2D::drawText(leng::SpriteFont& spriteFont) {
+    updateVertices(spriteFont);
+
+    glBindTexture(GL_TEXTURE_2D, spriteFont.texture);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

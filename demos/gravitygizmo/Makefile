@@ -13,7 +13,7 @@ CFLAGS_DBG = -g -std=c++11 -Wall -Wextra -Werror -Wwrite-strings -pedantic-error
 CFLAGS_REL = -O3 -std=c++11 -Wall -Wextra -Werror -Wwrite-strings -pedantic-errors -Wno-unused
 
 # external libraries
-LFLAGS = -lSDL2 -lSDL2_mixer -lGL -lGLEW -lSOIL -lm
+LFLAGS = -lSDL2 -lSDL2_mixer -lSDL2_ttf -lGL -lGLEW -lSOIL -lm
 
 # the build target executable:
 TARGET = gizmo

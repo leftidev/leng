@@ -12,6 +12,7 @@
 #include "sprite.h"
 #include "camera_2d.h"
 #include "input_manager.h"
+#include "sprite_font.h"
 
 #include "player.h"
 #include "enemy.h"
@@ -36,6 +37,7 @@ public:
     void draw() override;
     void doCollisions();
     void restartLevel();
+    void TTF();
     
 private:
     leng::Shader shader{"assets/shaders/gizmo.vert", "assets/shaders/gizmo.frag"};
@@ -43,7 +45,7 @@ private:
     leng::Player* player = nullptr;
     leng::Renderer2D renderer;
     leng::Camera2D camera;
-
+    leng::SpriteFont text{500, 1000, 150, "assets/fonts/centurygothic.ttf", "Hello There!"};
     leng::Level* level = nullptr;
     int currentLevel;
     bool freeCam = false;

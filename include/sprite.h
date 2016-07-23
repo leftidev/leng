@@ -15,6 +15,7 @@ namespace leng {
 class Sprite {
 public:
     Sprite(float x, float y, float Width, float Height, const std::string& path, float angle = 0.0f);
+    Sprite(float x, float y, float Width, float Height);
     ~Sprite();
     
     void setAngle(float angle);
