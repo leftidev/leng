@@ -20,6 +20,7 @@ public:
     GLuint texture;
     TTF_Font *font;
     glm::vec2 position;
+    SDL_Surface *surface;
 };
 
 } // namespace leng

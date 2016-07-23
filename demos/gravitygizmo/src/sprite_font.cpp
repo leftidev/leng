@@ -31,7 +31,7 @@ SpriteFont::SpriteFont(float x, float y, float Size, const char* fontPath, const
     }
     
     SDL_Color color = {255, 255, 255, 255};
-    SDL_Surface *surface = TTF_RenderUTF8_Blended(font, text, color);
+    surface = TTF_RenderUTF8_Blended(font, text, color);
 
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -41,24 +41,24 @@ SpriteFont::SpriteFont(float x, float y, float Size, const char* fontPath, const
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
 
-    SDL_FreeSurface(surface);
+    //SDL_FreeSurface(surface);
     // free the font
     TTF_CloseFont(font);
     font = NULL;    
 }
     
 SpriteFont::~SpriteFont() {
-	
+    SDL_FreeSurface(surface);
 }
 
 void SpriteFont::update(glm::vec2 Position) {
     position = Position;
 
     // Update sprite font
-    vertexData2[0].setPosition(position.x + size, position.y + size);
-    vertexData2[1].setPosition(position.x + size, position.y);
+    vertexData2[0].setPosition(position.x + surface->w, position.y + surface->h);
+    vertexData2[1].setPosition(position.x + surface->w, position.y);
     vertexData2[2].setPosition(position.x, position.y);
-    vertexData2[3].setPosition(position.x, position.y + size);
+    vertexData2[3].setPosition(position.x, position.y + surface->h);
 }
     
 } // namespace leng

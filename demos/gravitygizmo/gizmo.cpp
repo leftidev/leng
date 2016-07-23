@@ -6,7 +6,7 @@
 int main() {
     leng::Window* window = new leng::Window("leng++ gravity gizmo", 1680, 1050);
     window->setVsync(true);
-    //leng::soundInit();
+    leng::soundInit();
 
     leng::InputManager* inputManager = new leng::InputManager;
 	
