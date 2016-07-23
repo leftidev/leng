@@ -11,14 +11,16 @@ namespace leng {
 
 class Window {
 public:
-    Window(std::string title, int width, int height);
+    Window(std::string title, int Width, int Height);
     ~Window();
     void enableDepthTest();
     void swapWindow();
     void setVsync(bool flag);
     
     SDL_Window* window;
-    
+
+    int width;
+    int height;
 private:
     SDL_GLContext context;
 };

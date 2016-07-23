@@ -5,7 +5,10 @@
 
 namespace leng {
     
-Window::Window(std::string title, int width, int height) {
+Window::Window(std::string title, int Width, int Height) {
+    width = Width;
+    height = Height;
+    
     // Initialize SDL
     if(SDL_Init(SDL_INIT_VIDEO) != 0) {
 	std::cout << "Could not initialize SDL: " << SDL_GetError() << std::endl;

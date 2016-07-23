@@ -5,23 +5,6 @@ SpriteFont::SpriteFont(float x, float y, float Size, const char* fontPath, const
     position.x = x;
     position.y = y;
     size = Size;
-    
-    // Top right
-    vertexData2[0].setPosition(position.x + size, position.y + size);
-    vertexData2[0].setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    vertexData2[0].setUV(1.0f, 1.0f);
-    // Bottom right
-    vertexData2[1].setPosition(position.x + size, position.y);
-    vertexData2[1].setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    vertexData2[1].setUV(1.0f, 0.0f);
-    // Bottom left
-    vertexData2[2].setPosition(position.x, position.y);
-    vertexData2[2].setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    vertexData2[2].setUV(0.0f, 0.0f);
-    // Top left
-    vertexData2[3].setPosition(position.x, position.y + size);
-    vertexData2[3].setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    vertexData2[3].setUV(0.0f, 1.0f);
 
     // load font.ttf at size 16 into fonts
     font = TTF_OpenFont(fontPath, size);
@@ -45,6 +28,23 @@ SpriteFont::SpriteFont(float x, float y, float Size, const char* fontPath, const
     // free the font
     TTF_CloseFont(font);
     font = NULL;    
+
+    // Top right
+    vertexData2[0].setPosition(position.x + surface->w, position.y + surface->h);
+    vertexData2[0].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[0].setUV(1.0f, 1.0f);
+    // Bottom right
+    vertexData2[1].setPosition(position.x + surface->w, position.y);
+    vertexData2[1].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[1].setUV(1.0f, 0.0f);
+    // Bottom left
+    vertexData2[2].setPosition(position.x, position.y);
+    vertexData2[2].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[2].setUV(0.0f, 0.0f);
+    // Top left
+    vertexData2[3].setPosition(position.x, position.y + surface->h);
+    vertexData2[3].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[3].setUV(0.0f, 1.0f);
 }
     
 SpriteFont::~SpriteFont() {

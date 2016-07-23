@@ -45,7 +45,7 @@ private:
     leng::Player* player = nullptr;
     leng::Renderer2D renderer;
     leng::Camera2D camera;
-    leng::SpriteFont text{500, 1000, 20, "assets/fonts/centurygothic.ttf", "I'm just writing shit here!"};
+    leng::SpriteFont text{500, 1000, 50, "assets/fonts/centurygothic.ttf", "Time: "};
     leng::Level* level = nullptr;
     int currentLevel;
     bool freeCam = false;

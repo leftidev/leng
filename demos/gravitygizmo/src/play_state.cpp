@@ -167,7 +167,7 @@ void PlayState::update(float deltaTime) {
 	}
     }
 
-    text.update(glm::vec2(camera.position.x - 840, camera.position.y - 500));
+    text.update(glm::vec2(camera.position.x - text.surface->w / 2, camera.position.y + window->height / 2 - text.surface->h));
 }
 
 void PlayState::draw() {
