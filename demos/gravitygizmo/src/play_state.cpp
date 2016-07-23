@@ -163,13 +163,16 @@ void PlayState::update(float deltaTime) {
 	    }
 	}
     }
-    // Time elapsed
+    // Update HUD elements
     char buffer[32];
+    // Time elapsed
     timeSinceLevelStart = elapsedTimeTimer.getTicks() / 1000.0f;
-    snprintf(buffer, 32, "Time: %.2f s.", timeSinceLevelStart);
-    std::cout << buffer << std::endl;
-    
+    snprintf(buffer, 32, "Time: %.2f s.", timeSinceLevelStart);    
     timeText.update(glm::vec2(camera.position.x - timeText.surface->w / 2, camera.position.y + window->height / 2 - timeText.surface->h), buffer);
+    // Current level
+    snprintf(buffer, 32, "Level %i", currentLevel);    
+    levelText.update(glm::vec2(camera.position.x - window->width / 2, camera.position.y + window->height / 2 - levelText.surface->h), buffer);
+
 }
 
 void PlayState::draw() {
@@ -201,7 +204,8 @@ void PlayState::draw() {
 	renderer.draw(player->bubble->sprite);
     }
     renderer.drawText(timeText);
-
+    renderer.drawText(levelText);
+    
     // Swap buffers
     window->swapWindow();
 }

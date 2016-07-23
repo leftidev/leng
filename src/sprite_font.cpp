@@ -1,7 +1,7 @@
 #include "sprite_font.h"
 
 namespace leng {
-SpriteFont::SpriteFont(float x, float y, float Size, const char* fontPath, const char* text) {
+    SpriteFont::SpriteFont(float x, float y, float Size, const char* fontPath, const char* text, SDL_Color Color) {
     position.x = x;
     position.y = y;
     size = Size;
@@ -13,7 +13,8 @@ SpriteFont::SpriteFont(float x, float y, float Size, const char* fontPath, const
 	// handle error
     }
     
-    SDL_Color color = {255, 255, 255, 255};
+    //SDL_Color color = {255, 255, 255, 255};
+    color = Color;
     surface = TTF_RenderUTF8_Blended(font, text, color);
 
     glGenTextures(1, &texture);
@@ -68,7 +69,7 @@ void SpriteFont::update(glm::vec2 Position, const char* text) {
     vertexData2[2].setPosition(position.x, position.y);
     vertexData2[3].setPosition(position.x, position.y + surface->h);
 
-    SDL_Color color = {255, 255, 255, 255};
+    //SDL_Color color = {255, 255, 255, 255};
     surface = TTF_RenderUTF8_Blended(font, text, color);
 
     glGenTextures(1, &texture);
@@ -78,6 +79,6 @@ void SpriteFont::update(glm::vec2 Position, const char* text) {
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
-    }
+}
     
 } // namespace leng

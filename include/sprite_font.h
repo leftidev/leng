@@ -11,7 +11,7 @@ namespace leng {
 
 class SpriteFont {
 public:
-    SpriteFont(float x, float y, float Size, const char* fontPath, const char* text);
+    SpriteFont(float x, float y, float Size, const char* fontPath, const char* text, SDL_Color Color);
     ~SpriteFont();
     void update(glm::vec2 Position);
     void update(glm::vec2 Position, const char* text);
@@ -22,6 +22,7 @@ public:
     TTF_Font *font;
     glm::vec2 position;
     SDL_Surface *surface;
+    SDL_Color color;
 };
 
 } // namespace leng

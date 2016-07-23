@@ -47,7 +47,9 @@ private:
     leng::Player* player = nullptr;
     leng::Renderer2D renderer;
     leng::Camera2D camera;
-    leng::SpriteFont timeText{500, 1000, 50, "assets/fonts/centurygothic.ttf", "Time: "};
+    leng::SpriteFont timeText{500, 1000, 50, "assets/fonts/centurygothic.ttf", "Timer", {255, 255, 255, 255}};
+    leng::SpriteFont levelText{500, 1000, 50, "assets/fonts/centurygothic.ttf", "Level", {255, 255, 255, 255}};
+
     leng::Level* level = nullptr;
     leng::Timer elapsedTimeTimer;
     
