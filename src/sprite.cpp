@@ -3,7 +3,7 @@
 
 namespace leng {
 
-    Sprite::Sprite(float x, float y, float Width, float Height, const std::string& path, float angle) {
+Sprite::Sprite(float x, float y, float Width, float Height, const std::string& path, float angle) {
     textureID = leng::ResourceManager::getTexture(path).id;
     normalID = leng::ResourceManager::getTexture(path + "_n").id;
     
@@ -11,6 +11,8 @@ namespace leng {
     position.y = y;
     width = Width;
     height = Height;
+
+    color = ColorRGBA8(1.0f, 1.0f, 1.0f, 1.0f);
     
     // Top right
     vertexData[0].setPosition(position.x + width, position.y + height);
@@ -31,19 +33,19 @@ namespace leng {
 
     // Top right
     vertexData2[0].setPosition(position.x + width, position.y + height);
-    vertexData2[0].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[0].color = color;
     vertexData2[0].setUV(1.0f, 1.0f);
     // Bottom right
     vertexData2[1].setPosition(position.x + width, position.y);
-    vertexData2[1].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[1].color = color;
     vertexData2[1].setUV(1.0f, 0.0f);
     // Bottom left
     vertexData2[2].setPosition(position.x, position.y);
-    vertexData2[2].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[2].color = color;
     vertexData2[2].setUV(0.0f, 0.0f);
     // Top left
     vertexData2[3].setPosition(position.x, position.y + height);
-    vertexData2[3].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[3].color = color;
     vertexData2[3].setUV(0.0f, 1.0f);	
 
     setAngle(angle);
@@ -56,22 +58,20 @@ Sprite::Sprite(float x, float y, float Width, float Height) {
     
     // Top right
     vertexData2[0].setPosition(position.x + width, position.y + height);
-    vertexData2[0].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[0].color = color;
     vertexData2[0].setUV(1.0f, 1.0f);
     // Bottom right
     vertexData2[1].setPosition(position.x + width, position.y);
-    vertexData2[1].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[1].color = color;
     vertexData2[1].setUV(1.0f, 0.0f);
     // Bottom left
     vertexData2[2].setPosition(position.x, position.y);
-    vertexData2[2].setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    vertexData2[2].color = color;
     vertexData2[2].setUV(0.0f, 0.0f);
     // Top left
     vertexData2[3].setPosition(position.x, position.y + height);
-    vertexData2[3].setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    vertexData2[3].setUV(0.0f, 1.0f);
-
-    
+    vertexData2[3].color = color;
+    vertexData2[3].setUV(0.0f, 1.0f);	
 }
     
 Sprite::~Sprite() { }
@@ -110,24 +110,15 @@ void Sprite::setAngle(float angle) {
 
     // Top right
     vertexData2[0].setPosition(position.x + tr.x, position.y + tr.y);
-    vertexData2[0].setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    vertexData2[0].setUV(1.0f, 1.0f);
     // Bottom right
     vertexData2[1].setPosition(position.x + br.x, position.y + br.y);
-    vertexData2[1].setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    vertexData2[1].setUV(1.0f, 0.0f);
     // Bottom left
     vertexData2[2].setPosition(position.x + bl.x, position.y + bl.y);
-    vertexData2[2].setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    vertexData2[2].setUV(0.0f, 0.0f);
     // Top left
     vertexData2[3].setPosition(position.x + tl.x, position.y + tl.y);
-    vertexData2[3].setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    vertexData2[3].setUV(0.0f, 1.0f);
-
 }
 
-glm::vec2 Sprite::rotatePoint(glm::vec2 Position, float angle) {
+glm::vec2 Sprite::rotatePoint(const glm::vec2& Position, float angle) {
     glm::vec2 newV;
     newV.x = Position.x * cos(angle) - Position.y * sin(angle);
     newV.y = Position.x * sin(angle) + Position.y * cos(angle);
@@ -135,7 +126,7 @@ glm::vec2 Sprite::rotatePoint(glm::vec2 Position, float angle) {
     return newV;
 }
 
-void Sprite::update(glm::vec2 Position) {
+void Sprite::update(const glm::vec2& Position) {
     position = Position;
     
     // Update sprite
@@ -149,6 +140,11 @@ void Sprite::update(glm::vec2 Position) {
     vertexData2[1].setPosition(position.x + width, position.y);
     vertexData2[2].setPosition(position.x, position.y);
     vertexData2[3].setPosition(position.x, position.y + height);
+
+    vertexData2[0].color = color;
+    vertexData2[1].color = color;
+    vertexData2[2].color = color;
+    vertexData2[3].color = color;
 }
     
 } // namespace leng

@@ -14,6 +14,7 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     canDoubleJump = false;
     normalGravity = true;
     respawn = false;
+    deathFlicker = true;
     
     direction = Direction::RIGHT;
     
@@ -21,7 +22,7 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     JUMP_VELOCITY = 1.40f;
     MAX_GRAVITY_VELOCITY = 2.0f;
     GRAVITY = 0.10f;
-    ACCELERATION = 0.40;
+    ACCELERATION = 0.35;
     
     deaths = 0;
     
@@ -31,59 +32,86 @@ Player::Player(float x, float y, float width, float height, const std::string& p
     startPosition.y = y;
 }
 
-Player::~Player() {}
+Player::~Player() {
+    delete bubble;
+}
     
 void Player::update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemies, float deltaTime) {
     Entity::update();
-
-    // Player is in air, apply gravity
-    if (inAir) {
-	jumped = true;
-	if(normalGravity) {
-	    velocity.y -= GRAVITY;	    
-	} else {
-	    velocity.y += GRAVITY;
-	}
-    } else {
-	velocity.y = 0.0f;
-    }
-    if(velocity.y < -MAX_GRAVITY_VELOCITY) {
-    	velocity.y = -MAX_GRAVITY_VELOCITY;
-    }
-    if(velocity.y > MAX_GRAVITY_VELOCITY) {
-    	velocity.y = MAX_GRAVITY_VELOCITY;
-    }
-
-    position.y += velocity.y * deltaTime;
-
-    // Assume player is in air, this makes player fall off platform ledges
-    inAir = true;
-    // Check collisions on Y-axis
-    applyCollisions(glm::fvec2(0.0f, velocity.y), blocks, enemies);
-   
-    // Check movement on x-axis
-    if(rightHeld) {
-	direction = Direction::RIGHT;
-	// Apply acceleration
-	velocity.x += ACCELERATION;
-	if (velocity.x > MAX_MOVE_VELOCITY) {
-	    velocity.x = MAX_MOVE_VELOCITY;
-	}
-    } else if(leftHeld) {
-	direction = Direction::LEFT;
-	// Apply acceleration
-	velocity.x -= ACCELERATION;
-	if (velocity.x < -MAX_MOVE_VELOCITY) {
-	    velocity.x = -MAX_MOVE_VELOCITY;
-	}
-    } else {
-	velocity.x = 0.0f;
-    }
     
-    position.x += velocity.x * deltaTime;
+    if(!deathFlicker) {
+	// Player is in air, apply gravity
+	if (inAir) {
+	    jumped = true;
+	    if(normalGravity) {
+		velocity.y -= GRAVITY;	    
+	    } else {
+		velocity.y += GRAVITY;
+	    }
+	} else {
+	    velocity.y = 0.0f;
+	}
+	if(velocity.y < -MAX_GRAVITY_VELOCITY) {
+	    velocity.y = -MAX_GRAVITY_VELOCITY;
+	}
+	if(velocity.y > MAX_GRAVITY_VELOCITY) {
+	    velocity.y = MAX_GRAVITY_VELOCITY;
+	}
 
-    // Check collisions on X-axis
-    applyCollisions(glm::fvec2(velocity.x, 0.0f), blocks, enemies);
+	position.y += velocity.y * deltaTime;
+
+	// Assume player is in air, this makes player fall off platform ledges
+	inAir = true;
+	// Check collisions on Y-axis
+	applyCollisions(glm::fvec2(0.0f, velocity.y), blocks, enemies);
+   
+	// Check movement on x-axis
+	if(rightHeld) {
+	    direction = Direction::RIGHT;
+	    // Apply acceleration
+	    velocity.x += ACCELERATION;
+	    if (velocity.x > MAX_MOVE_VELOCITY) {
+		velocity.x = MAX_MOVE_VELOCITY;
+	    }
+	} else if(leftHeld) {
+	    direction = Direction::LEFT;
+	    // Apply acceleration
+	    velocity.x -= ACCELERATION;
+	    if (velocity.x < -MAX_MOVE_VELOCITY) {
+		velocity.x = -MAX_MOVE_VELOCITY;
+	    }
+	} else {
+	    velocity.x = 0.0f;
+	}
+    
+	position.x += velocity.x * deltaTime;
+
+	// Check collisions on X-axis
+	applyCollisions(glm::fvec2(velocity.x, 0.0f), blocks, enemies);
+    } else {
+	
+	if(deathFlickerCounter == 3) {
+	    deathFlickerCounter = 0;
+	    deathFlicker = false;
+	}
+	
+	if(alphaDown) {
+	    sprite.color.a -= 0.10f;
+	    if(sprite.color.a <= 0.0f) {
+		alphaDown = false;
+		alphaUp = true;
+	    }
+	}
+	if(alphaUp) {
+	    sprite.color.a += 0.10f;
+	    if(sprite.color.a >= 1.0f) {
+		alphaUp = false;
+		alphaDown = true;
+		deathFlickerCounter++;
+	    }
+	}
+
+    }
 }
 
 // Collisions
@@ -195,6 +223,7 @@ void Player::gravityBend() {
 }
     
 void Player::restart() {
+    deathFlicker = true;
     velocity.x = 0.0f;
     velocity.y = 0.0f;
     normalGravity = true;

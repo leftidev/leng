@@ -22,15 +22,29 @@ Renderer2D::~Renderer2D() {
     glDeleteBuffers(1, &EBO);
 }
     
-void Renderer2D::initVAO(leng::Shader& shader) {
+void Renderer2D::initVAO(leng::Shader* shader) {
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
+    /*
     // Enable shader attributes
-    shader.enableAttribute("position", 2, 8, (GLvoid*)0);
-    shader.enableAttribute("color", 4, 8, (GLvoid*)(2 * sizeof(GLfloat)));
-    shader.enableAttribute("text_coord", 2, 8, (GLvoid*)(6 * sizeof(GLfloat)));
+    shader->enableAttribute("position", 2, 8, (GLvoid*)0);
+    shader->enableAttribute("color", 4, 8, (GLvoid*)(2 * sizeof(GLfloat)));
+    shader->enableAttribute("text_coord", 2, 8, (GLvoid*)(6 * sizeof(GLfloat)));
+    */
+    
+    // Tell OpenGL what attribute arrays we need
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    
+    // This is the position attribute pointer
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex3), (void*)offsetof(Vertex3, position));
+    // This is the color attribute pointer
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex3), (void*)offsetof(Vertex3, color));
+    // This is the UV attribute pointer
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex3), (void*)offsetof(Vertex3, uv));
     
     glBindVertexArray(0);
 }

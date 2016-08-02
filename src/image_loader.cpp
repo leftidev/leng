@@ -36,6 +36,8 @@ Texture ImageLoader::loadImage(const std::string& path) {
     glBindTexture(GL_TEXTURE_2D, 0);
 
     return texture;
+    
+    //glDeleteTextures(1, &texture.id);
 }
     
 } // namespace leng

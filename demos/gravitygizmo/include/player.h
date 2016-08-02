@@ -41,6 +41,10 @@ public:
     bool canDoubleJump;
     bool normalGravity;
     bool respawn;
+    bool deathFlicker;
+    bool alphaDown = true;
+    bool alphaUp = false;
+    int deathFlickerCounter = 0;
     
     Direction direction;
     

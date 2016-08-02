@@ -2,6 +2,7 @@
 #define GAME_STATE_MANAGER_H
 
 #include <vector>
+#include <memory>
 
 namespace leng {
 

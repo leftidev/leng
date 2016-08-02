@@ -19,14 +19,15 @@ public:
     ~Sprite();
     
     void setAngle(float angle);
-    glm::vec2 rotatePoint(glm::vec2 Pos, float angle);
-    void update(glm::vec2 Position);
+    glm::vec2 rotatePoint(const glm::vec2& Position, float angle);
+    void update(const glm::vec2& Position);
     GLuint textureID;
     GLuint normalID;
     glm::vec2 position;
     float width, height;
     Vertex vertexData[4];
     Vertex3 vertexData2[4];
+    ColorRGBA8 color;
 };
 
 } // namespace leng

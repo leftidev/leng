@@ -35,6 +35,7 @@ struct Position3D {
     float y;
     float z;
 };
+
 struct ColorRGBA8 {
 ColorRGBA8() : r(0), g(0), b(0), a(0) { }
 ColorRGBA8(float R, float G, float B, float A) :

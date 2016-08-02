@@ -6,7 +6,7 @@ namespace leng {
     position.y = y;
     size = Size;
 
-    // load font.ttf at size 16 into fonts
+    // Load font
     font = TTF_OpenFont(fontPath, size);
     if(!font) {
 	printf("TTF_OpenFont error: %s\n", TTF_GetError());
@@ -15,16 +15,25 @@ namespace leng {
     
     //SDL_Color color = {255, 255, 255, 255};
     color = Color;
+    // Render with SDL_ttf
     SDL_Surface* surface = TTF_RenderUTF8_Blended(font, text, color);
 
+    // Surface for accessing size (width and height)
+    sizeSurface = TTF_RenderUTF8_Blended(font, text, color);
+
+    // Generate texture handle
     glGenTextures(1, &texture);
+    // Bind the texture
     glBindTexture(GL_TEXTURE_2D, texture);
+    // Set texture parameters
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    // Send data to graphics card
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
-        
+
+    //////////// Make own shader for rendering text, setColor and setUV aren't needed
     // Top right
     vertexData2[0].setPosition(position.x + surface->w, position.y + surface->h);
     vertexData2[0].setColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -47,6 +56,8 @@ namespace leng {
 }
     
 SpriteFont::~SpriteFont() {
+    SDL_FreeSurface(sizeSurface);
+    sizeSurface = nullptr;
     // free the font
     TTF_CloseFont(font);
     font = NULL;
@@ -67,12 +78,15 @@ void SpriteFont::update(glm::vec2 Position) {
 void SpriteFont::update(glm::vec2 Position, const char* text) {
     position = Position;
 
+    // Render with SDL_ttf
     SDL_Surface* surface = TTF_RenderUTF8_Blended(font, text, color);
 
+    // Bind the texture
     glBindTexture(GL_TEXTURE_2D, texture);
+    // Send data to graphics card
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
     
-    // Update sprite font
+    // Update sprite font position
     vertexData2[0].setPosition(position.x + surface->w, position.y + surface->h);
     vertexData2[1].setPosition(position.x + surface->w, position.y);
     vertexData2[2].setPosition(position.x, position.y);
