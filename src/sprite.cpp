@@ -140,11 +140,38 @@ void Sprite::update(const glm::vec2& Position) {
     vertexData2[1].setPosition(position.x + width, position.y);
     vertexData2[2].setPosition(position.x, position.y);
     vertexData2[3].setPosition(position.x, position.y + height);
-
+    
     vertexData2[0].color = color;
     vertexData2[1].color = color;
     vertexData2[2].color = color;
     vertexData2[3].color = color;
+}
+
+void Sprite::originalDirection() {
+    vertexData2[0].setUV(1.0f, 1.0f);
+    vertexData2[1].setUV(1.0f, 0.0f);
+    vertexData2[2].setUV(0.0f, 0.0f);
+    vertexData2[3].setUV(0.0f, 1.0f);
+}
+void Sprite::reverse() {
+    vertexData2[0].setUV(-1.0f, 1.0f);
+    vertexData2[1].setUV(-1.0f, 0.0f);
+    vertexData2[2].setUV(0.0f, 0.0f);
+    vertexData2[3].setUV(0.0f, 1.0f);
+}
+
+void Sprite::flip() {
+    vertexData2[0].setUV(1.0f, -1.0f);
+    vertexData2[1].setUV(1.0f, 0.0f);
+    vertexData2[2].setUV(0.0f, 0.0f);
+    vertexData2[3].setUV(0.0f, -1.0f);
+}
+
+void Sprite::reverseFlip() {
+    vertexData2[0].setUV(-1.0f, -1.0f);
+    vertexData2[1].setUV(-1.0f, 0.0f);
+    vertexData2[2].setUV(0.0f, 0.0f);
+    vertexData2[3].setUV(0.0f, -1.0f);
 }
     
 } // namespace leng

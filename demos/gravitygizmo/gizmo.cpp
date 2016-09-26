@@ -15,7 +15,7 @@ int main() {
     leng::Shader shader{"assets/shaders/gizmo.vert", "assets/shaders/gizmo.frag"};
 
     leng::GameStateManager stateManager;
-    stateManager.changeGameState(new PlayState(&stateManager, &window, &inputManager, &shader, 1));
+    stateManager.changeGameState(new PlayState(&stateManager, &window, &inputManager, &shader, 2));
     float deltaTime = 0.0f; // Time between current frame and last frame
     float lastFrame = 0.0f; // Time of last frames
     

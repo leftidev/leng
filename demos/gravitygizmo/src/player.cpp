@@ -68,6 +68,12 @@ void Player::update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemie
 	// Check movement on x-axis
 	if(rightHeld) {
 	    direction = Direction::RIGHT;
+	    if(normalGravity) {
+		sprite.originalDirection();
+	    } else {
+		sprite.flip();
+	    }
+
 	    // Apply acceleration
 	    velocity.x += ACCELERATION;
 	    if (velocity.x > MAX_MOVE_VELOCITY) {
@@ -75,6 +81,12 @@ void Player::update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemie
 	    }
 	} else if(leftHeld) {
 	    direction = Direction::LEFT;
+	    if(normalGravity) {
+		sprite.reverse();
+	    } else {
+		sprite.reverseFlip();
+	    }
+
 	    // Apply acceleration
 	    velocity.x -= ACCELERATION;
 	    if (velocity.x < -MAX_MOVE_VELOCITY) {
@@ -213,12 +225,24 @@ void Player::doubleJump() {
 void Player::gravityBendInvert() {
     if(normalGravity && !inAir) {
 	normalGravity = false;
+	
+	if(direction == Direction::RIGHT) {
+	    sprite.flip();
+	} else if (direction == Direction::LEFT) {
+	    sprite.reverseFlip();
+	}
     }
 }
 
 void Player::gravityBend() {
     if(!normalGravity && !inAir) {
 	normalGravity = true;
+
+	if(direction == Direction::RIGHT) {
+	    sprite.originalDirection();
+	} else if (direction == Direction::LEFT) {
+	    sprite.reverse();
+	}
     }	
 }
     

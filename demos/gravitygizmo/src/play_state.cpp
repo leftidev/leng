@@ -171,7 +171,6 @@ void PlayState::update(float deltaTime) {
 	    player->bubble = nullptr;
 	}
     }
-    
     // Player touches exit block
     if(player->levelCompleted) {
 	currentLevel++;
