@@ -23,7 +23,7 @@ Renderer2D::~Renderer2D() {
     glDeleteBuffers(1, &EBO);
 }
     
-void Renderer2D::initVAO(leng::Shader* shader) {
+void Renderer2D::initVAO() {
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

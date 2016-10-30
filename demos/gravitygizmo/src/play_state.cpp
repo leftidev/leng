@@ -4,7 +4,7 @@
 
 PlayState::PlayState(leng::GameStateManager* stateManager, leng::Window* window, leng::InputManager* inputManager, leng::Shader* Shader, int CurrentLevel) : GameState(stateManager, window, inputManager), shader(Shader), currentLevel(CurrentLevel) {
     
-    renderer.initVAO(shader);
+    renderer.initVAO();
     
     camera.init(1680, 1050);
     //camera.setPosition(glm::vec2(0.0f, 0.0f));

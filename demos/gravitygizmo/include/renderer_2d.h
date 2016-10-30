@@ -13,7 +13,7 @@ class Renderer2D {
 public:
     Renderer2D();
     ~Renderer2D();
-    void initVAO(leng::Shader* shader);
+    void initVAO();
     void updateVertices(leng::Sprite& sprite);
     void updateVertices(leng::SpriteFont& spriteFont);
     void draw(leng::Sprite& sprite);

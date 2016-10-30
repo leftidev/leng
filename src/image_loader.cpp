@@ -5,7 +5,7 @@
 namespace leng {
     
 Texture ImageLoader::loadImage(const std::string& path) {
-    Texture texture = {};
+    Texture texture = {0, 0, 0};
     // Generate and bind texture
     glGenTextures(1, &texture.id);
     glBindTexture(GL_TEXTURE_2D, texture.id);
