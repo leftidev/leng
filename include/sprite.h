@@ -22,9 +22,9 @@ public:
     glm::vec2 rotatePoint(const glm::vec2& Position, float angle);
     void update(const glm::vec2& Position);
     void originalDirection();
-    void reverse();
-    void flip();
-    void reverseFlip();
+    void flipX();
+    void flipY();
+    void flipXY();
     GLuint textureID;
     GLuint normalID;
     glm::vec2 position;

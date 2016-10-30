@@ -1,5 +1,6 @@
 #include "renderer_2d.h"
 #include "SDL2/SDL_ttf.h"
+
 namespace leng {
     
 Renderer2D::Renderer2D() {

@@ -71,7 +71,7 @@ void Player::update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemie
 	    if(normalGravity) {
 		sprite.originalDirection();
 	    } else {
-		sprite.flip();
+		sprite.flipY();
 	    }
 
 	    // Apply acceleration
@@ -82,9 +82,9 @@ void Player::update(std::vector<leng::Block*> blocks, std::vector<Enemy*> enemie
 	} else if(leftHeld) {
 	    direction = Direction::LEFT;
 	    if(normalGravity) {
-		sprite.reverse();
+		sprite.flipX();
 	    } else {
-		sprite.reverseFlip();
+		sprite.flipXY();
 	    }
 
 	    // Apply acceleration
@@ -227,9 +227,9 @@ void Player::gravityBendInvert() {
 	normalGravity = false;
 	
 	if(direction == Direction::RIGHT) {
-	    sprite.flip();
+	    sprite.flipY();
 	} else if (direction == Direction::LEFT) {
-	    sprite.reverseFlip();
+	    sprite.flipXY();
 	}
     }
 }
@@ -241,7 +241,7 @@ void Player::gravityBend() {
 	if(direction == Direction::RIGHT) {
 	    sprite.originalDirection();
 	} else if (direction == Direction::LEFT) {
-	    sprite.reverse();
+	    sprite.flipX();
 	}
     }	
 }

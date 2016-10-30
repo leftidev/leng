@@ -153,21 +153,21 @@ void Sprite::originalDirection() {
     vertexData2[2].setUV(0.0f, 0.0f);
     vertexData2[3].setUV(0.0f, 1.0f);
 }
-void Sprite::reverse() {
+void Sprite::flipX() {
     vertexData2[0].setUV(-1.0f, 1.0f);
     vertexData2[1].setUV(-1.0f, 0.0f);
     vertexData2[2].setUV(0.0f, 0.0f);
     vertexData2[3].setUV(0.0f, 1.0f);
 }
 
-void Sprite::flip() {
+void Sprite::flipY() {
     vertexData2[0].setUV(1.0f, -1.0f);
     vertexData2[1].setUV(1.0f, 0.0f);
     vertexData2[2].setUV(0.0f, 0.0f);
     vertexData2[3].setUV(0.0f, -1.0f);
 }
 
-void Sprite::reverseFlip() {
+void Sprite::flipXY() {
     vertexData2[0].setUV(-1.0f, -1.0f);
     vertexData2[1].setUV(-1.0f, 0.0f);
     vertexData2[2].setUV(0.0f, 0.0f);
